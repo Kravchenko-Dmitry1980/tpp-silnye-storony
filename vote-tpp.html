@@ -292,6 +292,17 @@
   </div>
 </div>
 
+<div class="qa-section" style="margin-top:24px; padding-top:18px; border-top:1px solid rgba(228,201,150,0.3); background:rgba(228,201,150,0.05); padding:16px; border-radius:14px;">
+  <div class="qa-title" style="color:#e4c996;">🎁 Спецпредложение для членов ТПП КК</div>
+  <p style="font-size:12px; color:#c7bfd4; margin-bottom:12px; line-height:1.4;">Забронируйте бесплатный психометрический аудит 1 ключевой позиции или отдела продаж от агентства «Сильные стороны»:</p>
+  <div style="display:flex; flex-direction:column; gap:8px;">
+    <input type="text" id="leadName" placeholder="Ваше имя и компания" style="background:#191421; border:1px solid #3c2f4e; border-radius:10px; padding:10px 12px; font-size:13px; color:#f7f4ff; outline:none;">
+    <input type="text" id="leadContact" placeholder="Телефон или Telegram" style="background:#191421; border:1px solid #3c2f4e; border-radius:10px; padding:10px 12px; font-size:13px; color:#f7f4ff; outline:none;">
+    <button onclick="sendLead()" style="background:#e4c996; color:#0c0a10; font-weight:800; font-size:13px; border:none; border-radius:10px; padding:12px; cursor:pointer;">Забронировать аудит (0 ₽)</button>
+  </div>
+  <div id="leadStatus" style="font-size:12px; color:#65f2cf; font-weight:700; margin-top:8px; display:none;">✔ Заявка принята! Эксперты свяжутся с вами в течение дня.</div>
+</div>
+
 <script>
   let myVote = -1;
   // Local simulated vote tally or synchronized with server
@@ -355,6 +366,17 @@
     setTimeout(() => {
       footer.innerText = '✔ Ваш голос учтен! Данные обновлены на экране зала';
     }, 3000);
+  }
+
+  function sendLead() {
+    const name = document.getElementById('leadName').value.trim();
+    const contact = document.getElementById('leadContact').value.trim();
+    if (!name || !contact) {
+      alert('Пожалуйста, укажите имя и контакт');
+      return;
+    }
+    document.getElementById('leadStatus').style.display = 'block';
+    if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
   }
 
   // Initial draw
