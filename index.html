@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HR Агентство «Сильные стороны» · Комплексный акмеологический подход & AI · ТПП КК</title>
+<title>Бизнес-Консилиум ТПП КК · HR Агентство «Сильные стороны» & AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --bg-dark: #0c0a10;
-    --card-bg: rgba(22, 17, 30, 0.84);
-    --card-border: rgba(75, 58, 98, 0.6);
+    --bg-dark: #09070d;
+    --card-bg: rgba(20, 15, 28, 0.86);
+    --card-border: rgba(75, 58, 98, 0.65);
     --mint: #65f2cf;
     --mint-glow: rgba(101, 242, 207, 0.45);
     --gold: #e4c996;
@@ -20,9 +20,10 @@
     --purple: #9f6aff;
     --purple-glow: rgba(159, 106, 255, 0.4);
     --red: #f87171;
+    --red-glow: rgba(248, 113, 113, 0.4);
     --green: #34d399;
     --text-light: #f7f4ff;
-    --text-muted: #a49bb3;
+    --text-muted: #a79eb8;
     --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
@@ -44,16 +45,161 @@
     top: 0; left: 0; width: 100%; height: 100%;
     object-fit: cover;
     z-index: 0;
-    opacity: 0.28;
-    transition: opacity 0.8s ease;
+    opacity: 0.32;
+    transition: opacity 1s ease, filter 1s ease;
     filter: brightness(0.65) contrast(1.2);
   }
   #videoOverlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle at 50% 30%, rgba(20, 16, 28, 0.45) 0%, rgba(12, 10, 16, 0.94) 85%);
+    background: radial-gradient(circle at 50% 35%, rgba(20, 16, 28, 0.45) 0%, rgba(9, 7, 13, 0.95) 85%);
     z-index: 1;
     pointer-events: none;
+  }
+
+  /* ==================== INTRO / TEASER OVERLAY SCREEN ==================== */
+  #introScreen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 500;
+    background: radial-gradient(circle at 50% 40%, rgba(28, 20, 42, 0.85) 0%, rgba(7, 5, 11, 0.98) 80%);
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 24px;
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  #introScreen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.08);
+  }
+
+  .intro-logo {
+    height: 64px;
+    width: auto;
+    filter: drop-shadow(0 4px 20px var(--gold-glow));
+    margin-bottom: 16px;
+    animation: floatLogo 3.5s ease-in-out infinite alternate;
+  }
+  @keyframes floatLogo {
+    0% { transform: translateY(0); filter: drop-shadow(0 4px 15px var(--gold-glow)); }
+    100% { transform: translateY(-8px); filter: drop-shadow(0 8px 30px var(--mint-glow)); }
+  }
+
+  .intro-badge {
+    background: rgba(228, 201, 150, 0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 6px 18px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alarm-dot {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--red);
+    animation: alarmBlink 0.9s infinite;
+  }
+  @keyframes alarmBlink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.2; transform: scale(1.3); }
+  }
+
+  .intro-title {
+    font-size: 46px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    color: var(--text-light);
+    max-width: 980px;
+    margin-bottom: 12px;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.8);
+  }
+  .intro-title span {
+    background: linear-gradient(135deg, var(--gold), var(--mint));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .intro-subtitle {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 780px;
+    line-height: 1.45;
+    margin-bottom: 24px;
+  }
+
+  /* TENSION LIVE TICKER */
+  .tension-card {
+    background: rgba(25, 18, 30, 0.9);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 25px rgba(248, 113, 113, 0.15);
+    border-radius: 18px;
+    padding: 16px 28px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .tension-counter-val {
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--red);
+    text-shadow: 0 0 20px var(--red-glow);
+    font-variant-numeric: tabular-nums;
+  }
+  .tension-divider {
+    width: 1px;
+    height: 48px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* BIG START BUTTON */
+  .start-btn {
+    background: linear-gradient(135deg, var(--gold), var(--mint));
+    border: none;
+    color: #0c0a10;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 18px 46px;
+    border-radius: 99px;
+    cursor: pointer;
+    box-shadow: 0 0 30px var(--gold-glow), 0 8px 32px rgba(0,0,0,0.6);
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .start-btn:hover {
+    transform: scale(1.06) translateY(-2px);
+    box-shadow: 0 0 45px var(--mint-glow), 0 12px 40px rgba(0,0,0,0.8);
+  }
+  .start-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* ==================== STAGE APP COCKPIT ==================== */
+  .stage-cockpit {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
   }
 
   /* TOP PROGRESS BAR */
@@ -85,8 +231,8 @@
     align-items: center;
     gap: 12px;
   }
-  .brand-logo-img {
-    height: 38px;
+  .brand-logo-small {
+    height: 36px;
     width: auto;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
   }
@@ -176,13 +322,12 @@
   .ivan-stage-avatar {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     background: rgba(25, 20, 33, 0.85);
     border: 1px solid var(--card-border);
     backdrop-filter: blur(16px);
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 99px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
     cursor: pointer;
     transition: all 0.3s ease;
   }
@@ -192,15 +337,15 @@
   }
   .orb-wrapper {
     position: relative;
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   .orb-core {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     background: radial-gradient(circle, var(--mint) 20%, var(--purple) 85%);
     border-radius: 50%;
     box-shadow: 0 0 14px var(--mint);
@@ -208,8 +353,8 @@
   }
   .orb-ring {
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border: 1.5px dashed var(--mint);
     border-radius: 50%;
     animation: orbSpin 8s linear infinite;
@@ -225,7 +370,7 @@
     display: flex;
     align-items: center;
     gap: 2px;
-    height: 14px;
+    height: 12px;
   }
   .wave-bar {
     width: 3px;
@@ -239,17 +384,17 @@
   .wave-active .wave-bar:nth-child(4) { animation: barDance 0.3s infinite alternate 0.05s; }
   @keyframes barDance {
     0% { height: 3px; }
-    100% { height: 14px; }
+    100% { height: 12px; }
   }
 
-  /* SCENE STRUCTURE */
-  .scenes-wrapper {
+  /* ==================== MODULES (SCENES) ==================== */
+  .modules-container {
     position: relative;
     width: 100vw;
     height: 100vh;
     z-index: 10;
   }
-  .scene {
+  .module {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     opacity: 0;
@@ -264,20 +409,19 @@
     margin: 0 auto;
     right: 0;
   }
-  .scene.active {
+  .module.active {
     opacity: 1;
     pointer-events: auto;
     transform: scale(1) translateY(0);
   }
 
-  /* HEADINGS */
-  .act-header {
+  .mod-header {
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
   }
-  .act-tag {
+  .mod-tag {
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -288,7 +432,7 @@
     align-items: center;
     gap: 8px;
   }
-  .act-title {
+  .mod-title {
     font-size: 32px;
     font-weight: 900;
     letter-spacing: -0.02em;
@@ -296,7 +440,7 @@
     color: var(--text-light);
     text-shadow: 0 4px 18px rgba(0,0,0,0.6);
   }
-  .act-subtitle {
+  .mod-subtitle {
     font-size: 15px;
     color: var(--text-muted);
     margin-top: 6px;
@@ -323,10 +467,50 @@
 
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
   .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 
-  /* ACTION BUTTONS */
+  /* 3D FLIP CARDS */
+  .flip-card-wrapper {
+    perspective: 1000px;
+    height: 120px;
+    cursor: pointer;
+  }
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flip-card-wrapper.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .flip-card-front {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-top: 3px solid var(--gold);
+  }
+  .flip-card-back {
+    background: rgba(22, 28, 38, 0.95);
+    border: 1px solid rgba(101, 242, 207, 0.5);
+    border-top: 3px solid var(--mint);
+    transform: rotateY(180deg);
+    box-shadow: 0 0 30px rgba(101, 242, 207, 0.15);
+  }
+
+  /* ACTION BTNS */
   .action-btn {
     background: linear-gradient(135deg, rgba(228, 201, 150, 0.2), rgba(101, 242, 207, 0.2));
     border: 1px solid var(--gold);
@@ -346,47 +530,6 @@
     color: var(--bg-dark);
     box-shadow: 0 0 20px var(--gold-glow);
     transform: translateY(-2px);
-  }
-
-  /* 3D FLIP CARDS */
-  .flip-card-wrapper {
-    perspective: 1000px;
-    height: 250px;
-    cursor: pointer;
-  }
-  .flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    transform-style: preserve-3d;
-  }
-  .flip-card-wrapper.flipped .flip-card-inner {
-    transform: rotateY(180deg);
-  }
-  .flip-card-front, .flip-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    border-radius: 18px;
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .flip-card-front {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-top: 3px solid var(--gold);
-  }
-  .flip-card-back {
-    background: rgba(22, 28, 38, 0.95);
-    border: 1px solid rgba(101, 242, 207, 0.5);
-    border-top: 3px solid var(--mint);
-    transform: rotateY(180deg);
-    box-shadow: 0 0 30px rgba(101, 242, 207, 0.15);
   }
 
   /* FLOATING REACTION EMOJIS */
@@ -452,565 +595,590 @@
 </video>
 <div id="videoOverlay"></div>
 
-<!-- TOP PROGRESS BAR -->
-<div class="progress-container">
-  <div class="progress-bar" id="progressBar"></div>
+<!-- ==================== EPIC INTRO / TEASER SCREEN (ЗАСТАВКА И НАПРЯЖЕНИЕ) ==================== -->
+<div id="introScreen">
+  <img src="assets/approved-logo.png" alt="Сильные стороны" class="intro-logo">
+  
+  <div class="intro-badge">
+    <div class="alarm-dot"></div>
+    <span>ТПП КРАСНОДАРСКОГО КРАЯ · ЭКСТРЕННЫЙ БИЗНЕС-КОНСИЛИУМ</span>
+  </div>
+
+  <h1 class="intro-title">
+    Кадровый шторм 2026: <span>Старый найм мёртв</span>
+  </h1>
+
+  <p class="intro-subtitle">
+    Безработица на Кубани 1.8%. Подъем зарплат больше не удерживает людей.<br>
+    Как прекратить сжигать миллионы ФОТ и перестроить бизнес на <strong>Акмеологию & AI</strong>.
+  </p>
+
+  <!-- LIVE TENSION TICKER -->
+  <div class="tension-card">
+    <div style="text-align:left;">
+      <div style="font-size:11px; font-weight:800; color:var(--red); text-transform:uppercase; letter-spacing:0.08em; display:flex; align-items:center; gap:6px;">
+        <span class="alarm-dot"></span> Скрытые потери бизнеса Кубани в эту секунду:
+      </div>
+      <div class="tension-counter-val" id="introLossCounter">14 850 320 ₽</div>
+    </div>
+    
+    <div class="tension-divider"></div>
+
+    <div style="text-align:left; max-width:280px; font-size:12px; color:var(--text-muted); line-height:1.4;">
+      Пока предприниматели сидят в зале — компании теряют ФОТ на пустых вакансиях, слитых лидах и выгорании новичков.
+    </div>
+  </div>
+
+  <!-- BIG START TRIGGER -->
+  <button class="start-btn" onclick="activateStage()">
+    <span>⚡ АКТИВИРОВАТЬ БИЗНЕС-КОНСИЛИУМ</span>
+    <span style="font-size:12px; opacity:0.75; font-weight:700;">[ ПРОБЕЛ ]</span>
+  </button>
+  
+  <div style="font-size:11px; color:var(--text-muted); margin-top:14px;">
+    Спикеры: Алексей Бармин · Дмитрий Кравченко · AI Агент «ИВАН»
+  </div>
 </div>
 
-<!-- TOP NAVIGATION -->
-<div class="top-nav">
-  <div class="top-left">
-    <img src="assets/approved-logo.png" alt="Сильные стороны" class="brand-logo-img">
-    <div class="status-badge">
-      <div class="pulse-dot"></div>
-      <span>ТПП КК · КОМИТЕТ ПО РЫНКУ ТРУДА · АКМЕОЛОГИЯ & AI</span>
-    </div>
+<!-- ==================== MAIN INTERACTIVE COCKPIT ==================== -->
+<div class="stage-cockpit">
+
+  <!-- TOP PROGRESS BAR -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <div class="nav-pills">
-    <div class="nav-pill active" onclick="gotoScene(0)">1. Деньги не на первом месте</div>
-    <div class="nav-pill" onclick="gotoScene(1)">2. Наука: Акмеология</div>
-    <div class="nav-pill" onclick="gotoScene(2)">3. Комплексный 5-шаговый подход</div>
-    <div class="nav-pill" onclick="gotoScene(3)">4. Живой кейс: Отдел продаж</div>
-    <div class="nav-pill" onclick="gotoScene(4)">5. Доказанная эффективность</div>
-    <div class="nav-pill" onclick="gotoScene(5)">6. Спецпредложение для ТПП</div>
-  </div>
-
-  <div class="top-right">
-    <div class="ivan-stage-avatar" onclick="triggerIvanVoiceCurrent()">
-      <div class="orb-wrapper">
-        <div class="orb-ring"></div>
-        <div class="orb-core"></div>
+  <!-- TOP NAVIGATION -->
+  <div class="top-nav">
+    <div class="top-left">
+      <img src="assets/approved-logo.png" alt="Сильные стороны" class="brand-logo-small">
+      <div class="status-badge">
+        <div class="pulse-dot"></div>
+        <span>БИЗНЕС-КОНСИЛИУМ · АКТИВНЫЙ РЕЖИМ</span>
       </div>
-      <div style="display:flex; flex-direction:column;">
-        <div style="font-size:12px; font-weight:800; color:var(--mint); display:flex; align-items:center; gap:6px;">
-          <span>ИВАН · AI АГЕНТ</span>
-          <div class="wave-bars" id="topWaveBars">
-            <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
-          </div>
+    </div>
+
+    <div class="nav-pills">
+      <div class="nav-pill active" onclick="gotoModule(0)">1. Проблематика найма</div>
+      <div class="nav-pill" onclick="gotoModule(1)">2. Наука Акмеология</div>
+      <div class="nav-pill" onclick="gotoModule(2)">3. 5-шаговый подход</div>
+      <div class="nav-pill" onclick="gotoModule(3)">4. Кейс: Отдел продаж</div>
+      <div class="nav-pill" onclick="gotoModule(4)">5. Доказанная эффективность</div>
+      <div class="nav-pill" onclick="gotoModule(5)">6. Оффер для зала ТПП</div>
+    </div>
+
+    <div class="top-right">
+      <div class="ivan-stage-avatar" onclick="triggerIvanVoiceCurrent()">
+        <div class="orb-wrapper">
+          <div class="orb-ring"></div>
+          <div class="orb-core"></div>
         </div>
-        <div style="font-size:10px; font-weight:600; color:var(--gold);" id="ivanSubStatus">НА СВЯЗИ · НАЖМИТЕ</div>
-      </div>
-    </div>
-
-    <button class="ctrl-btn" onclick="toggleSpeakerHUD()" title="Шпаргалка спикера [N]">📝 Суфлёр [N]</button>
-    <button class="ctrl-btn" onclick="toggleFullscreen()" title="Полный экран [F]">⛶ [F]</button>
-  </div>
-</div>
-
-<!-- FLOATING REACTION EMOJIS LAYER -->
-<div class="reactions-container" id="reactionsContainer"></div>
-
-<!-- SCENES WRAPPER -->
-<div class="scenes-wrapper">
-
-  <!-- ==================== СЦЕНА 1: ДЕНЬГИ ЧАЩЕ ВСЕГО НЕ НА ПЕРВОМ МЕСТЕ ==================== -->
-  <div class="scene active" id="scene-0">
-    <div class="act-header">
-      <div>
-        <div class="act-tag">⚡ ПРОВОКАЦИЯ И ДИАЛОГ С ЗАЛОМ · СЛАЙД 6</div>
-        <h1 class="act-title">Деньги чаще всего НЕ на первом месте!</h1>
-        <p class="act-subtitle">Почему повышение окладов больше не удерживает людей? Исследования показывают: сотрудникам критически важны другие факторы.</p>
-      </div>
-      <button class="action-btn" onclick="triggerIvanVoice(0)">🎙️ ИВАН, анализируй мотивы</button>
-    </div>
-
-    <div class="grid-2">
-      <!-- LEFT: WHAT EMPLOYEES REALLY VALUE (AUTHENTIC FROM BASE SLIDE 6) -->
-      <div class="glass-card" style="border-top:3px solid var(--gold);">
-        <h3 style="font-size:16px; font-weight:800; color:var(--gold); margin-bottom:14px;">Что на самом деле важно для сотрудников:</h3>
-        
-        <div style="display:flex; flex-direction:column; gap:9px;">
-          <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--mint); display:flex; justify-content:space-between;">
-            <span><strong>Психологический комфорт:</strong> с руководством и в коллективе</span>
-            <span style="color:var(--mint); font-weight:700;">№ 1</span>
-          </div>
-          <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--gold); display:flex; justify-content:space-between;">
-            <span><strong>Самореализация:</strong> отсутствие мелочного контроля над сильными</span>
-            <span style="color:var(--gold); font-weight:700;">№ 2</span>
-          </div>
-          <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--purple); display:flex; justify-content:space-between;">
-            <span><strong>Вызов и масштаб:</strong> амбициозные задачи, обеспеченные ресурсами</span>
-            <span style="color:var(--purple); font-weight:700;">№ 3</span>
-          </div>
-          <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--mint); display:flex; justify-content:space-between;">
-            <span><strong>Статус и признание:</strong> сильный бренд компании, значимая роль</span>
-            <span style="color:var(--mint); font-weight:700;">№ 4</span>
-          </div>
-          <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--gold); display:flex; justify-content:space-between;">
-            <span><strong>Быть лидером:</strong> принцип «Сильный к сильному»</span>
-            <span style="color:var(--gold); font-weight:700;">№ 5</span>
-          </div>
-          <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--red); display:flex; justify-content:space-between;">
-            <span><strong>Персонификация требований</strong> при трудоустройстве и адаптации</span>
-            <span style="color:var(--red); font-weight:700;">Ключ</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: LIVE PULSE FROM AUDIENCE SMARTPHONES -->
-      <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h3 style="font-size:16px; font-weight:800; color:var(--text-light);">Голосование зала через QR-код:</h3>
-            <span style="font-size:12px; color:var(--mint); font-weight:700;">142 участника в эфире</span>
-          </div>
-
-          <div style="display:flex; gap:16px; align-items:center; margin-bottom:16px;">
-            <img src="assets/tpp-vote-qr.png" alt="QR" style="width:130px; height:130px; border-radius:12px; border:2px solid var(--gold); background:#fff; padding:6px;">
-            <div style="font-size:13px; color:var(--text-muted); line-height:1.45;">
-              Наведите камеру смартфона на QR-код или откройте ссылку.<br>
-              <strong style="color:var(--gold);">Вопрос залу:</strong> <em>Что для ваших ключевых сотрудников сегодня важнее денег?</em>
+        <div style="display:flex; flex-direction:column;">
+          <div style="font-size:11px; font-weight:800; color:var(--mint); display:flex; align-items:center; gap:6px;">
+            <span>ИВАН · AI АГЕНТ</span>
+            <div class="wave-bars" id="topWaveBars">
+              <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
             </div>
           </div>
+          <div style="font-size:9.5px; font-weight:600; color:var(--gold);" id="ivanSubStatus">НА СВЯЗИ · ГОТОВ</div>
+        </div>
+      </div>
 
-          <!-- Dynamic bars -->
+      <button class="ctrl-btn" onclick="toggleIntro()" title="Вернуть заставку">🎬 Заставка</button>
+      <button class="ctrl-btn" onclick="toggleSpeakerHUD()" title="Суфлёр [N]">📝 Суфлёр [N]</button>
+      <button class="ctrl-btn" onclick="toggleFullscreen()" title="Полный экран [F]">⛶ [F]</button>
+    </div>
+  </div>
+
+  <!-- FLOATING REACTION EMOJIS LAYER -->
+  <div class="reactions-container" id="reactionsContainer"></div>
+
+  <!-- ==================== MODULES ==================== -->
+  <div class="modules-container">
+
+    <!-- MODULE 0: ДЕНЬГИ ЧАЩЕ ВСЕГО НЕ НА ПЕРВОМ МЕСТЕ -->
+    <div class="module active" id="mod-0">
+      <div class="mod-header">
+        <div>
+          <div class="mod-tag">⚡ МОДУЛЬ 01 · ПРОВОКАЦИЯ И ДИАЛОГ С ЗАЛОМ · СЛАЙД 6</div>
+          <h1 class="mod-title">Деньги чаще всего НЕ на первом месте!</h1>
+          <p class="mod-subtitle">Почему увеличение оклада не останавливает текучку? Исследования показывают 6 ключевых факторов истинной мотивации людей.</p>
+        </div>
+        <button class="action-btn" onclick="triggerIvanVoice(0)">🎙️ ИВАН, анализируй мотивы</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="glass-card" style="border-top:3px solid var(--gold);">
+          <h3 style="font-size:16px; font-weight:800; color:var(--gold); margin-bottom:12px;">Что на самом деле важно для сотрудников:</h3>
           <div style="display:flex; flex-direction:column; gap:8px;">
-            <div>
-              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
-                <span>Психологический комфорт и атмосфера</span>
-                <strong style="color:var(--mint);">48%</strong>
-              </div>
-              <div style="width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:99px;"><div style="width:48%; height:100%; background:var(--mint); border-radius:99px;"></div></div>
+            <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--mint); display:flex; justify-content:space-between;">
+              <span><strong>Психологический комфорт:</strong> с руководством и в коллективе</span>
+              <span style="color:var(--mint); font-weight:700;">№ 1</span>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
-                <span>Самореализация и свобода от рутины</span>
-                <strong style="color:var(--gold);">32%</strong>
-              </div>
-              <div style="width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:99px;"><div style="width:32%; height:100%; background:var(--gold); border-radius:99px;"></div></div>
+            <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--gold); display:flex; justify-content:space-between;">
+              <span><strong>Самореализация:</strong> свобода от мелочного микроконтроля</span>
+              <span style="color:var(--gold); font-weight:700;">№ 2</span>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
-                <span>Только деньги (оклад + проценты)</span>
-                <strong style="color:var(--red);">20%</strong>
-              </div>
-              <div style="width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:99px;"><div style="width:20%; height:100%; background:var(--red); border-radius:99px;"></div></div>
+            <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--purple); display:flex; justify-content:space-between;">
+              <span><strong>Вызов и масштаб:</strong> амбициозные задачи с ресурсами</span>
+              <span style="color:var(--purple); font-weight:700;">№ 3</span>
             </div>
-          </div>
-        </div>
-
-        <div style="background:rgba(228,201,150,0.08); padding:10px 14px; border-radius:10px; border:1px solid rgba(228,201,150,0.3); font-size:12px; color:var(--gold);">
-          💡 <strong>Вывод Алексея Бармина:</strong> Пытаться удержать людей только деньгами — значит проиграть кадровой инфляции. Нужно попадать в природу человека!
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== СЦЕНА 2: НАУЧНАЯ БАЗА · АКМЕОЛОГИЯ И БУКВЕННЫЙ КОД ==================== -->
-  <div class="scene" id="scene-1">
-    <div class="act-header">
-      <div>
-        <div class="act-tag">🧠 НАУЧНЫЙ ФУНДАМЕНТ ПРОЕКТА · СЛАЙДЫ 3, 4, 7</div>
-        <h1 class="act-title">Акмеология — наука о достижении вершин</h1>
-        <p class="act-subtitle">Упорядоченная, научно-обоснованная система для улучшения сотрудничества между людьми. Развивай сильные стороны, а слабые замещай!</p>
-      </div>
-      <button class="action-btn" onclick="triggerIvanVoice(1)">🎙️ ИВАН, раскрой буквенный код</button>
-    </div>
-
-    <div class="grid-2">
-      <!-- LEFT: ACMEOLOGY AXIOMS & SCIENTIFIC ROOTS -->
-      <div class="glass-card" style="border-top:3px solid var(--purple);">
-        <h3 style="font-size:16px; font-weight:800; color:var(--purple); margin-bottom:12px;">Научная база и постулаты (Слайды 3 и 4):</h3>
-
-        <div style="display:flex; flex-direction:column; gap:10px; font-size:13px; line-height:1.45;">
-          <div style="background:rgba(255,255,255,0.03); padding:10px 12px; border-radius:10px; border-left:3px solid var(--mint);">
-            <strong style="color:var(--mint);">З. Фрейд & К.Г. Юнг:</strong> 16 типов личности, шкалы интроверсии и экстраверсии, архетипы поведения.
-          </div>
-          <div style="background:rgba(255,255,255,0.03); padding:10px 12px; border-radius:10px; border-left:3px solid var(--gold);">
-            <strong style="color:var(--gold);">АНХ при Президенте РФ:</strong> Кафедра акмеологии и психологии (под ред. академика А.А. Деркача). Построение эффективных команд в бизнесе и государственном управлении.
-          </div>
-          <div style="background:rgba(255,255,255,0.03); padding:10px 12px; border-radius:10px; border-left:3px solid var(--purple);">
-            <strong style="color:var(--purple);">СФУ & Краснов И.З.:</strong> Тестирующая валидированная программа выявления сильных сторон и предрасположенностей человека.
-          </div>
-        </div>
-
-        <div style="margin-top:14px; padding:12px; background:rgba(101,242,207,0.08); border-radius:12px; border:1px solid rgba(101,242,207,0.3); font-size:12px; line-height:1.45; color:var(--text-light);">
-          🎯 <strong>Главный закон акмеологии:</strong><br>
-          <em>«Познав себя — поймешь другого, поняв других — соберешь команду. Нужно развивать свои сильные стороны, а слабые стороны замещать сильными сторонами других людей!»</em>
-        </div>
-      </div>
-
-      <!-- RIGHT: 4 SCALES OF THE LETTER CODE (SLIDE 7) -->
-      <div class="glass-card" style="border-top:3px solid var(--gold);">
-        <h3 style="font-size:16px; font-weight:800; color:var(--gold); margin-bottom:12px;">Буквенный код личности (4 базовые шкалы Юнга):</h3>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <!-- SCALE 1 -->
-          <div class="flip-card-wrapper" onclick="toggleFlip(this)" style="height:115px;">
-            <div class="flip-card-inner">
-              <div class="flip-card-front" style="padding:12px;">
-                <div style="font-size:10px; font-weight:800; color:var(--mint); text-transform:uppercase;">УСТАНОВКИ ЛИЧНОСТИ</div>
-                <div style="font-size:15px; font-weight:800; margin-top:4px;">I или E</div>
-                <div style="font-size:11px; color:var(--text-muted);">Интроверт vs Экстраверт</div>
-                <div style="font-size:10px; color:var(--gold);">👆 Кликните для сути</div>
-              </div>
-              <div class="flip-card-back" style="padding:12px;">
-                <div style="font-size:11px; color:var(--mint); font-weight:700;">Откуда берется энергия:</div>
-                <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">E — энергия от людей и сцены.<br>I — глубокая фокусировка внутри себя.</div>
-              </div>
+            <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--mint); display:flex; justify-content:space-between;">
+              <span><strong>Статус и признание:</strong> сильный бренд, ценная позиция</span>
+              <span style="color:var(--mint); font-weight:700;">№ 4</span>
             </div>
-          </div>
-
-          <!-- SCALE 2 -->
-          <div class="flip-card-wrapper" onclick="toggleFlip(this)" style="height:115px;">
-            <div class="flip-card-inner">
-              <div class="flip-card-front" style="padding:12px;">
-                <div style="font-size:10px; font-weight:800; color:var(--gold); text-transform:uppercase;">ВОСПРИЯТИЕ ДАННЫХ</div>
-                <div style="font-size:15px; font-weight:800; margin-top:4px;">N или S</div>
-                <div style="font-size:11px; color:var(--text-muted);">Интуитивный vs Сенсорный</div>
-                <div style="font-size:10px; color:var(--gold);">👆 Кликните для сути</div>
-              </div>
-              <div class="flip-card-back" style="padding:12px;">
-                <div style="font-size:11px; color:var(--gold); font-weight:700;">Как обрабатывает мир:</div>
-                <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">N — видит тренды, смыслы, будущее.<br>S — видит факты, детали, здесь и сейчас.</div>
-              </div>
+            <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--gold); display:flex; justify-content:space-between;">
+              <span><strong>Быть лидером:</strong> принцип «Сильный к сильному»</span>
+              <span style="color:var(--gold); font-weight:700;">№ 5</span>
             </div>
-          </div>
-
-          <!-- SCALE 3 -->
-          <div class="flip-card-wrapper" onclick="toggleFlip(this)" style="height:115px;">
-            <div class="flip-card-inner">
-              <div class="flip-card-front" style="padding:12px;">
-                <div style="font-size:10px; font-weight:800; color:var(--purple); text-transform:uppercase;">ОБЩЕНИЕ С МИРОМ</div>
-                <div style="font-size:15px; font-weight:800; margin-top:4px;">F или T</div>
-                <div style="font-size:11px; color:var(--text-muted);">Чувствующий vs Мыслительный</div>
-                <div style="font-size:10px; color:var(--gold);">👆 Кликните для сути</div>
-              </div>
-              <div class="flip-card-back" style="padding:12px;">
-                <div style="font-size:11px; color:var(--purple); font-weight:700;">Критерий оценки:</div>
-                <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">F — эмпатия, ценности, отношения.<br>T — логика, структура, сухая целесообразность.</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SCALE 4 -->
-          <div class="flip-card-wrapper" onclick="toggleFlip(this)" style="height:115px;">
-            <div class="flip-card-inner">
-              <div class="flip-card-front" style="padding:12px;">
-                <div style="font-size:10px; font-weight:800; color:var(--red); text-transform:uppercase;">ПРИНЯТИЕ РЕШЕНИЙ</div>
-                <div style="font-size:15px; font-weight:800; margin-top:4px;">P или J</div>
-                <div style="font-size:11px; color:var(--text-muted);">Воспринимающий vs Решающий</div>
-                <div style="font-size:10px; color:var(--gold);">👆 Кликните для сути</div>
-              </div>
-              <div class="flip-card-back" style="padding:12px;">
-                <div style="font-size:11px; color:var(--mint); font-weight:700;">Стиль действий:</div>
-                <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">P — гибкость, спонтанность, адаптация.<br>J — четкий план, дедлайн, регламент.</div>
-              </div>
+            <div style="padding:9px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid var(--red); display:flex; justify-content:space-between;">
+              <span><strong>Персонификация требований</strong> при трудоустройстве</span>
+              <span style="color:var(--red); font-weight:700;">Ключ</span>
             </div>
           </div>
         </div>
 
-        <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:10px;">
-          * Всего 16 психотипов. Ошибка в расстановке = 100% выгорание человека и слив ФОТ компании.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== СЦЕНА 3: КОМПЛЕКСНЫЙ 5-ШАГОВЫЙ ПОДХОД ==================== -->
-  <div class="scene" id="scene-2">
-    <div class="act-header">
-      <div>
-        <div class="act-tag">🚀 ТЕХНОЛОГИЯ СИЛЬНЫХ СТОРОН · СЛАЙДЫ 8–12</div>
-        <h1 class="act-title">Комплексный 5-шаговый подход к кадрам</h1>
-        <p class="act-subtitle">От структуры PMBOK до искусственного интеллекта. Полноценная экосистема управления эффективностью команды.</p>
-      </div>
-      <button class="action-btn" onclick="triggerIvanVoice(2)">🎙️ ИВАН, покажи шаги системы</button>
-    </div>
-
-    <!-- 5 STEPS PIPELINE (AUTHENTIC FROM SLIDES 8, 9, 10, 11, 12) -->
-    <div class="grid-5" style="align-items:stretch;">
-      <!-- STEP 1 -->
-      <div class="glass-card" style="border-top:3px solid var(--mint); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:10px; font-weight:800; color:var(--mint); text-transform:uppercase;">ШАГ 01 · СЛАЙД 8</div>
-          <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">PMBOK & Стандарты РФ</h4>
-          <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
-            Применяем принципы проектного менеджмента национальных стандартов РФ и PMBOK. Выстраиваем структуру (функциональная, матричная, проектная) под цели компании.
-          </p>
-        </div>
-        <div style="font-size:10px; color:var(--mint); font-weight:700; margin-top:10px;">Архитектура ролей</div>
-      </div>
-
-      <!-- STEP 2 -->
-      <div class="glass-card" style="border-top:3px solid var(--gold); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:10px; font-weight:800; color:var(--gold); text-transform:uppercase;">ШАГ 02 · СЛАЙД 9</div>
-          <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">AI-Матрица ролей и KPI</h4>
-          <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
-            Искусственный интеллект знает, какие типы личностей лучше всего подходят на свои роли в структуре, сопоставляет их с задачами и формирует достижимые KPI.
-          </p>
-        </div>
-        <div style="font-size:10px; color:var(--gold); font-weight:700; margin-top:10px;">Сопоставление с целями</div>
-      </div>
-
-      <!-- STEP 3 -->
-      <div class="glass-card" style="border-top:3px solid var(--purple); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:10px; font-weight:800; color:var(--purple); text-transform:uppercase;">ШАГ 03 · СЛАЙД 10</div>
-          <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">Тестирование личности</h4>
-          <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
-            Наша тестирующая программа (метод Краснова И.З.) выявляет психотип, сопоставляя сильные и слабые стороны с обязанностями для идеального распределения.
-          </p>
-        </div>
-        <div style="font-size:10px; color:var(--purple); font-weight:700; margin-top:10px;">Текущие + кандидаты</div>
-      </div>
-
-      <!-- STEP 4 -->
-      <div class="glass-card" style="border-top:3px solid var(--mint); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:10px; font-weight:800; color:var(--mint); text-transform:uppercase;">ШАГ 04 · СЛАЙД 11</div>
-          <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">Замещение рутины AI</h4>
-          <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
-            AI рекомендует, какие функции заменить AI-агентами: Нейро-HR, Нейро-Аналитик, Нейро-Продажник, Нейро-Секретарь, Агент ИВАН. Человек освобождается для творчества!
-          </p>
-        </div>
-        <div style="font-size:10px; color:var(--mint); font-weight:700; margin-top:10px;">Снятие 70% рутины</div>
-      </div>
-
-      <!-- STEP 5 -->
-      <div class="glass-card" style="border-top:3px solid var(--gold); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:10px; font-weight:800; color:var(--gold); text-transform:uppercase;">ШАГ 05 · СЛАЙД 12</div>
-          <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">Персональный трек (ИПР)</h4>
-          <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
-            AI выстраивает персональный трек обучения сотрудника под его обязанности, образование и предрасположенности по акмеологии с замером динамики.
-          </p>
-        </div>
-        <div style="font-size:10px; color:var(--gold); font-weight:700; margin-top:10px;">Индивидуальный рост</div>
-      </div>
-    </div>
-
-    <div style="margin-top:18px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:12px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:13px; color:var(--text-light);">
-        ⚡ <strong>В чем уникальность агентства «Сильные стороны»?</strong> Мы объединили строгость проектного управления, глубину акмеологии и скорость искусственного интеллекта.
-      </span>
-      <span style="font-size:12px; font-weight:800; color:var(--gold);">Полный цикл решения кадрового кризиса</span>
-    </div>
-  </div>
-
-  <!-- ==================== СЦЕНА 4: ЖИВОЙ КЕЙС · ОТДЕЛ ПРОДАЖ ==================== -->
-  <div class="scene" id="scene-3">
-    <div class="act-header">
-      <div>
-        <div class="act-tag">🔬 ПРАКТИЧЕСКИЙ РАЗБОР · СЛАЙД 13 & ДОКУМЕНТ ОП</div>
-        <h1 class="act-title">Живой кейс: Менеджер прямых переговоров (ENFP)</h1>
-        <p class="act-subtitle">Реальный пример работы системы: как перераспределение компетенций и снятие рутины AI-агентом подняли конверсию на 40%.</p>
-      </div>
-      <button class="action-btn" onclick="triggerIvanVoice(3)">🎙️ ИВАН, разбери кейс ОП</button>
-    </div>
-
-    <div class="grid-2">
-      <!-- LEFT: CASE DIAGNOSIS & COMPETENCY MAP -->
-      <div class="glass-card" style="border-top:3px solid var(--red);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h3 style="font-size:16px; font-weight:800; color:var(--red);">Проблема: Слив сделок и выгорание</h3>
-          <span style="font-size:11px; padding:3px 8px; border-radius:6px; background:rgba(248,113,113,0.2); color:var(--red); font-weight:700;">Психотип ENFP (Коммуникатор)</span>
-        </div>
-
-        <p style="font-size:12.5px; color:var(--text-muted); line-height:1.45; margin-bottom:12px;">
-          <strong>Входная ситуация:</strong> Сейлз харизматичен, блестяще держит первый контакт, но план выполняется на 60%. 
-          Причина: 65% его рабочего времени уходило на монотонное заполнение CRM, составление отчетов и рутинный расчет КП. 
-          Для психотипа ENFP это каторга, ведущая к саботажу и выгоранию!
-        </p>
-
-        <h4 style="font-size:13px; font-weight:800; color:var(--gold); margin-bottom:8px;">Карта ключевых компетенций из нашей библиотеки (SLS):</h4>
-        <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
-          <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:8px;">
-            <span>SLS-04. Выявление скрытой потребности</span>
-            <strong style="color:var(--mint);">Вес: 17% (Сильная сторона ENFP)</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:8px;">
-            <span>SLS-07. Аргументация ценности продукта</span>
-            <strong style="color:var(--mint);">Вес: 15% (Сильная сторона ENFP)</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:8px;">
-            <span>CRM-01. Заполнение карточек сделок и отчеты</span>
-            <strong style="color:var(--red);">Слабая сторона ➔ Заменена AI-агентом!</strong>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: THE SOLUTION AND MEASURED RESULT -->
-      <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:11px; font-weight:800; color:var(--mint); letter-spacing:0.1em; text-transform:uppercase;">РЕШЕНИЕ АГЕНТСТВА «СИЛЬНЫЕ СТОРОНЫ»:</div>
-          <h3 style="font-size:18px; font-weight:900; color:var(--text-light); margin:8px 0 10px;">Симбиоз человека и AI-агента ИВАН</h3>
-
-          <div style="display:flex; flex-direction:column; gap:10px; font-size:12.5px; line-height:1.45;">
-            <div style="background:rgba(101,242,207,0.08); padding:10px; border-radius:10px; border-left:3px solid var(--mint);">
-              1. <strong>Человек делает то, где он гениален:</strong> Менеджер проводит живые встречи, выявляет скрытые мотивы ЛПР и закрывает сделки.
-            </div>
-            <div style="background:rgba(228,201,150,0.08); padding:10px; border-radius:10px; border-left:3px solid var(--gold);">
-              2. <strong>AI-агент берет на себя рутину:</strong> ИВАН сам расшифровывает звонки, заносит данные в CRM, готовит драфт КП за 30 секунд и напоминает о следующем шаге.
-            </div>
-          </div>
-
-          <!-- KEY METRICS BOX -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
-            <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; border-left:3px solid var(--mint);">
-              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Конверсия в сделки:</div>
-              <div style="font-size:24px; font-weight:900; color:var(--mint);">+40% <span style="font-size:13px; font-weight:400; color:var(--text-light);">(с 18% до 25%)</span></div>
-            </div>
-            <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; border-left:3px solid var(--gold);">
-              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Высвобождено времени:</div>
-              <div style="font-size:24px; font-weight:900; color:var(--gold);">18 часов <span style="font-size:13px; font-weight:400; color:var(--text-light);">/ неделю</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div style="font-size:12px; color:var(--gold); font-weight:700; margin-top:10px;">
-          🎯 Итог: Без раздувания ФОТ и без найма новых сотрудников выручка выросла почти в 1.5 раза!
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== СЦЕНА 5: ДОКАЗАННАЯ ЭФФЕКТИВНОСТЬ (АНО МИКС) ==================== -->
-  <div class="scene" id="scene-4">
-    <div class="act-header">
-      <div>
-        <div class="act-tag">📊 ДОКАЗАННЫЕ РЕЗУЛЬТАТЫ · СЛАЙД 15</div>
-        <h1 class="act-title">Доказанная эффективность акмеологического подхода</h1>
-        <p class="act-subtitle">Официальные исследования АНО «МИКС» (2020–2024 гг.) подтверждают кратную окупаемость внедрения технологии в бизнесе.</p>
-      </div>
-      <button class="action-btn" onclick="triggerIvanVoice(4)">🎙️ ИВАН, озвучь цифры МИКС</button>
-    </div>
-
-    <!-- 5 BIG NUMBERS CARDS (AUTHENTIC FROM SLIDE 15) -->
-    <div class="grid-3" style="margin-bottom:16px;">
-      <div class="glass-card" style="border-top:3px solid var(--gold); text-align:center; padding:24px 16px;">
-        <div style="font-size:38px; font-weight:900; color:var(--gold); text-shadow:0 0 20px var(--gold-glow);">В 1.7 раза</div>
-        <h4 style="font-size:15px; font-weight:800; margin:8px 0 6px;">Прибыльнее компании</h4>
-        <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-          Компании, использующие акмеологический подход, показывают чистую прибыль в 1.7 раза выше конкурентов на том же рынке.
-        </p>
-      </div>
-
-      <div class="glass-card" style="border-top:3px solid var(--mint); text-align:center; padding:24px 16px;">
-        <div style="font-size:38px; font-weight:900; color:var(--mint); text-shadow:0 0 20px var(--mint-glow);">+40%</div>
-        <h4 style="font-size:15px; font-weight:800; margin:8px 0 6px;">Конверсия продаж</h4>
-        <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-          Увеличение конверсии коммерческого блока при использовании технологии сильных сторон и снятии рутины AI-агентами.
-        </p>
-      </div>
-
-      <div class="glass-card" style="border-top:3px solid var(--purple); text-align:center; padding:24px 16px;">
-        <div style="font-size:38px; font-weight:900; color:var(--purple); text-shadow:0 0 20px var(--purple-glow);">+60%</div>
-        <h4 style="font-size:15px; font-weight:800; margin:8px 0 6px;">Вовлеченность команды</h4>
-        <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-          Увеличение вовлеченности сотрудников в рабочий процесс: люди работают с азартом, когда задачи соответствуют их природе.
-        </p>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-left:4px solid var(--mint);">
-        <div>
-          <div style="font-size:26px; font-weight:900; color:var(--mint);">75% сотрудников</div>
-          <div style="font-size:12.5px; color:var(--text-light); margin-top:2px;">Заявляют о положительном влиянии подхода при распределении обязанностей в команде</div>
-        </div>
-      </div>
-      <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-left:4px solid var(--gold);">
-        <div>
-          <div style="font-size:26px; font-weight:900; color:var(--gold);">78% сотрудников</div>
-          <div style="font-size:12.5px; color:var(--text-light); margin-top:2px;">Утверждают, что акмеологический подход кратно повышает их личную производительность</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== СЦЕНА 6: СПЕЦПРЕДЛОЖЕНИЕ ДЛЯ ТПП ==================== -->
-  <div class="scene" id="scene-5">
-    <div class="act-header">
-      <div>
-        <div class="act-tag">🎁 СПЕЦИАЛЬНЫЙ ОФФЕР ДЛЯ ЧЛЕНОВ ТПП КК · СЛАЙД 16</div>
-        <h1 class="act-title">Акмеологический экспресс-аудит вашей команды</h1>
-        <p class="act-subtitle">Специальное предложение только для участников заседания Комитета по рынку труда ТПП Краснодарского края.</p>
-      </div>
-      <button class="action-btn" onclick="triggerIvanVoice(5)">🎙️ ИВАН, подведи итог встречи</button>
-    </div>
-
-    <div class="grid-2">
-      <!-- QR SCANNER CARD -->
-      <div class="glass-card" style="border-top:3px solid var(--gold); display:flex; flex-direction:column; align-items:center; text-align:center; padding:28px;">
-        <div style="position:relative; margin-bottom:14px;">
-          <img src="assets/tpp-vote-qr.png" alt="QR" style="width:180px; height:180px; border-radius:16px; border:3px solid var(--gold); box-shadow:0 0 30px var(--gold-glow); background:#fff; padding:8px;">
-        </div>
-        <h3 style="font-size:20px; font-weight:900; color:var(--gold); margin-bottom:6px;">Сканируйте смартфоном</h3>
-        <p style="font-size:13px; color:var(--text-muted); max-width:320px;">
-          Откройте камеру телефона ➔ Заполните экспресс-заявку ➔ Получите акмеологический профиль ключевого сотрудника за 24 часа.
-        </p>
-      </div>
-
-      <!-- WHAT PARTICIPANTS GET -->
-      <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <span style="font-size:11px; font-weight:800; color:var(--mint); text-transform:uppercase; letter-spacing:0.1em;">ЧТО ВХОДИТ В БЕСПЛАТНЫЙ ПАКЕТ ТПП:</span>
-          
-          <div style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <span style="background:var(--mint); color:var(--bg-dark); font-weight:900; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px;">1</span>
-              <div>
-                <div style="font-size:13.5px; font-weight:700; color:var(--text-light);">Тестирование по валидированной программе Краснова И.З.</div>
-                <div style="font-size:11.5px; color:var(--text-muted);">Определение типа личности по 4 шкалам буквенного кода.</div>
-              </div>
-            </div>
-
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <span style="background:var(--mint); color:var(--bg-dark); font-weight:900; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px;">2</span>
-              <div>
-                <div style="font-size:13.5px; font-weight:700; color:var(--text-light);">Карта сильных сторон и зон риска выгорания</div>
-                <div style="font-size:11.5px; color:var(--text-muted);">Точное сопоставление врожденных предрасположенностей с должностными обязанностями.</div>
-              </div>
-            </div>
-
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <span style="background:var(--mint); color:var(--bg-dark); font-weight:900; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px;">3</span>
-              <div>
-                <div style="font-size:13.5px; font-weight:700; color:var(--text-light);">План внедрения AI-агентов (Нейро-HR / ИВАН)</div>
-                <div style="font-size:11.5px; color:var(--text-muted);">Рекомендации по автоматизации до 70% рутинных операций для выбранной роли.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:12px; padding:12px 16px; margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+        <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
           <div>
-            <div style="font-size:12px; font-weight:700; color:var(--text-light);">Контакты команды «Сильные стороны» (Слайд 16):</div>
-            <div style="font-size:11px; color:var(--gold);">+7-938-481-78-00 · +7-996-052-36-36 (Telegram / MAX)</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="font-size:16px; font-weight:800; color:var(--text-light);">Голосование зала через QR-код:</h3>
+              <span style="font-size:12px; color:var(--mint); font-weight:700;">142 участника в эфире</span>
+            </div>
+
+            <div style="display:flex; gap:16px; align-items:center; margin-bottom:16px;">
+              <img src="assets/tpp-vote-qr.png" alt="QR" style="width:130px; height:130px; border-radius:12px; border:2px solid var(--gold); background:#fff; padding:6px;">
+              <div style="font-size:13px; color:var(--text-muted); line-height:1.45;">
+                Наведите камеру смартфона на QR-код.<br>
+                <strong style="color:var(--gold);">Вопрос залу:</strong> <em>Что важнее денег для ваших топ-специалистов прямо сейчас?</em>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+                  <span>Психологический комфорт и атмосфера</span>
+                  <strong style="color:var(--mint);">48%</strong>
+                </div>
+                <div style="width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:99px;"><div style="width:48%; height:100%; background:var(--mint); border-radius:99px;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+                  <span>Самореализация и свобода от рутины</span>
+                  <strong style="color:var(--gold);">32%</strong>
+                </div>
+                <div style="width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:99px;"><div style="width:32%; height:100%; background:var(--gold); border-radius:99px;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+                  <span>Только гонка окладов (деньги)</span>
+                  <strong style="color:var(--red);">20%</strong>
+                </div>
+                <div style="width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:99px;"><div style="width:20%; height:100%; background:var(--red); border-radius:99px;"></div></div>
+              </div>
+            </div>
           </div>
-          <span style="font-size:12px; color:var(--mint); font-weight:800;">г. Краснодар</span>
+
+          <div style="background:rgba(228,201,150,0.08); padding:10px 14px; border-radius:10px; border:1px solid rgba(228,201,150,0.3); font-size:12px; color:var(--gold);">
+            💡 <strong>Вывод Алексея Бармина:</strong> Мотивация деньгами живет 87 дней. Системный ответ дает Акмеология!
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- MODULE 1: НАУКА АКМЕОЛОГИЯ И БУКВЕННЫЙ КОД -->
+    <div class="module" id="mod-1">
+      <div class="mod-header">
+        <div>
+          <div class="mod-tag">🧠 НАУЧНАЯ БАЗА · СЛАЙДЫ 3, 4, 7</div>
+          <h1 class="mod-title">Акмеология — наука о достижении вершин</h1>
+          <p class="mod-subtitle">Упорядоченная, научно-обоснованная система улучшения сотрудничества. Развивай сильные стороны, а слабые замещай!</p>
+        </div>
+        <button class="action-btn" onclick="triggerIvanVoice(1)">🎙️ ИВАН, раскрой буквенный код</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="glass-card" style="border-top:3px solid var(--purple);">
+          <h3 style="font-size:16px; font-weight:800; color:var(--purple); margin-bottom:12px;">Научная база и постулаты:</h3>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:13px; line-height:1.45;">
+            <div style="background:rgba(255,255,255,0.03); padding:10px 12px; border-radius:10px; border-left:3px solid var(--mint);">
+              <strong style="color:var(--mint);">З. Фрейд & К.Г. Юнг:</strong> 16 типов личности, шкалы интроверсии/экстраверсии, природные склонности.
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:10px 12px; border-radius:10px; border-left:3px solid var(--gold);">
+              <strong style="color:var(--gold);">АНХ при Президенте РФ:</strong> Кафедра акмеологии и психологии (под ред. акад. А.А. Деркача). Опыт формирования команд в бизнесе и правительстве.
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:10px 12px; border-radius:10px; border-left:3px solid var(--purple);">
+              <strong style="color:var(--purple);">СФУ & Краснов И.З.:</strong> Валидированная тестирующая программа выявления типа личности.
+            </div>
+          </div>
+          <div style="margin-top:14px; padding:12px; background:rgba(101,242,207,0.08); border-radius:12px; border:1px solid rgba(101,242,207,0.3); font-size:12px; line-height:1.45; color:var(--text-light);">
+            🎯 <strong>Золотой закон «Сильных сторон» (Слайд 3):</strong><br>
+            <em>«Познав себя — поймешь другого, поняв других — соберешь команду. Нужно развивать свои сильные стороны, а слабые стороны замещать сильными сторонами других людей или AI-агентов!»</em>
+          </div>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--gold);">
+          <h3 style="font-size:16px; font-weight:800; color:var(--gold); margin-bottom:12px;">Буквенный код (4 шкалы Юнга — Слайд 7):</h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="flip-card-wrapper" onclick="toggleFlip(this)">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <div style="font-size:10px; font-weight:800; color:var(--mint);">УСТАНОВКИ ЛИЧНОСТИ</div>
+                  <div style="font-size:15px; font-weight:800; margin-top:4px;">I или E</div>
+                  <div style="font-size:11px; color:var(--text-muted);">Интроверт vs Экстраверт</div>
+                  <div style="font-size:10px; color:var(--gold);">👆 Кликните</div>
+                </div>
+                <div class="flip-card-back">
+                  <div style="font-size:11px; color:var(--mint); font-weight:700;">Источник энергии:</div>
+                  <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">E — энергия от людей.<br>I — глубокий фокус внутри.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flip-card-wrapper" onclick="toggleFlip(this)">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <div style="font-size:10px; font-weight:800; color:var(--gold);">ВОСПРИЯТИЕ</div>
+                  <div style="font-size:15px; font-weight:800; margin-top:4px;">N или S</div>
+                  <div style="font-size:11px; color:var(--text-muted);">Интуит vs Сенсорик</div>
+                  <div style="font-size:10px; color:var(--gold);">👆 Кликните</div>
+                </div>
+                <div class="flip-card-back">
+                  <div style="font-size:11px; color:var(--gold); font-weight:700;">Обработка данных:</div>
+                  <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">N — тренды и смыслы.<br>S — факты и детали.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flip-card-wrapper" onclick="toggleFlip(this)">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <div style="font-size:10px; font-weight:800; color:var(--purple);">ОБЩЕНИЕ</div>
+                  <div style="font-size:15px; font-weight:800; margin-top:4px;">F или T</div>
+                  <div style="font-size:11px; color:var(--text-muted);">Чувствующий vs Мыслящий</div>
+                  <div style="font-size:10px; color:var(--gold);">👆 Кликните</div>
+                </div>
+                <div class="flip-card-back">
+                  <div style="font-size:11px; color:var(--purple); font-weight:700;">Оценка мира:</div>
+                  <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">F — ценности и контакт.<br>T — логика и система.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flip-card-wrapper" onclick="toggleFlip(this)">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <div style="font-size:10px; font-weight:800; color:var(--red);">ДЕЙСТВИЯ</div>
+                  <div style="font-size:15px; font-weight:800; margin-top:4px;">P или J</div>
+                  <div style="font-size:11px; color:var(--text-muted);">Гибкий vs Решающий</div>
+                  <div style="font-size:10px; color:var(--gold);">👆 Кликните</div>
+                </div>
+                <div class="flip-card-back">
+                  <div style="font-size:11px; color:var(--mint); font-weight:700;">Стиль работы:</div>
+                  <div style="font-size:10.5px; color:#cdd9d5; margin-top:2px;">P — гибкая адаптация.<br>J — жесткий регламент.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:10px;">
+            * Всего 16 типов. Ошибка расстановки = выгорание человека и слив ФОТ.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2: КОМПЛЕКСНЫЙ 5-ШАГОВЫЙ ПОДХОД -->
+    <div class="module" id="mod-2">
+      <div class="mod-header">
+        <div>
+          <div class="mod-tag">🚀 ТЕХНОЛОГИЯ СИЛЬНЫХ СТОРОН · СЛАЙДЫ 8–12</div>
+          <h1 class="mod-title">Комплексный 5-шаговый подход агентства</h1>
+          <p class="mod-subtitle">От структуры PMBOK до искусственного интеллекта. Полноценная экосистема решения кадрового кризиса.</p>
+        </div>
+        <button class="action-btn" onclick="triggerIvanVoice(2)">🎙️ ИВАН, покажи шаги системы</button>
+      </div>
+
+      <div class="grid-5" style="align-items:stretch;">
+        <div class="glass-card" style="border-top:3px solid var(--mint); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:10px; font-weight:800; color:var(--mint);">ШАГ 01 · СЛАЙД 8</div>
+            <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">PMBOK & Стандарты РФ</h4>
+            <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
+              Формируем структуру компании (функциональная, матричная, проектная) строго под задачи бизнеса.
+            </p>
+          </div>
+          <div style="font-size:10px; color:var(--mint); font-weight:700;">Архитектура ролей</div>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--gold); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:10px; font-weight:800; color:var(--gold);">ШАГ 02 · СЛАЙД 9</div>
+            <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">AI-Матрица ролей & KPI</h4>
+            <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
+              Искусственный интеллект знает, какие типы личностей лучше всего подходят на свои роли, и формирует KPI.
+            </p>
+          </div>
+          <div style="font-size:10px; color:var(--gold); font-weight:700;">Сопоставление с целями</div>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--purple); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:10px; font-weight:800; color:var(--purple);">ШАГ 03 · СЛАЙД 10</div>
+            <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">Тестирование личности</h4>
+            <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
+              Программа Краснова И.З. выявляет сильные/слабые стороны текущих сотрудников и кандидатов.
+            </p>
+          </div>
+          <div style="font-size:10px; color:var(--purple); font-weight:700;">Диагностика потенциала</div>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--mint); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:10px; font-weight:800; color:var(--mint);">ШАГ 04 · СЛАЙД 11</div>
+            <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">Замещение рутины AI</h4>
+            <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
+              Внедряем AI-агентов (Нейро-HR, Нейро-Продажник, ИВАН). Забираем 70% рутины с человека.
+            </p>
+          </div>
+          <div style="font-size:10px; color:var(--mint); font-weight:700;">Снятие 18 ч рутины</div>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--gold); padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:10px; font-weight:800; color:var(--gold);">ШАГ 05 · СЛАЙД 12</div>
+            <h4 style="font-size:15px; font-weight:800; margin:6px 0 8px;">Персональный трек (ИПР)</h4>
+            <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
+              AI строит трек обучения под образование и акмеологические предрасположенности сотрудника.
+            </p>
+          </div>
+          <div style="font-size:10px; color:var(--gold); font-weight:700;">Индивидуальный рост</div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:12px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px; color:var(--text-light);">
+          ⚡ <strong>В чем уникальность агентства «Сильные стороны»?</strong> Мы объединили строгость проектного управления PMBOK, глубину акмеологии и скорость искусственного интеллекта.
+        </span>
+        <span style="font-size:12px; font-weight:800; color:var(--gold);">Полный цикл решения кадрового кризиса</span>
+      </div>
+    </div>
+
+    <!-- MODULE 3: ЖИВОЙ КЕЙС · ОТДЕЛ ПРОДАЖ -->
+    <div class="module" id="mod-3">
+      <div class="mod-header">
+        <div>
+          <div class="mod-tag">🔬 ПРАКТИЧЕСКИЙ РАЗБОР · СЛАЙД 13 & ДОКУМЕНТ ОП</div>
+          <h1 class="mod-title">Живой кейс: Менеджер прямых переговоров (ENFP)</h1>
+          <p class="mod-subtitle">Реальный пример работы системы: как перераспределение компетенций и снятие рутины AI-агентом подняли конверсию на 40%.</p>
+        </div>
+        <button class="action-btn" onclick="triggerIvanVoice(3)">🎙️ ИВАН, разбери кейс ОП</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="glass-card" style="border-top:3px solid var(--red);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:16px; font-weight:800; color:var(--red);">Проблема: Слив сделок и выгорание</h3>
+            <span style="font-size:11px; padding:3px 8px; border-radius:6px; background:rgba(248,113,113,0.2); color:var(--red); font-weight:700;">Психотип ENFP (Коммуникатор)</span>
+          </div>
+
+          <p style="font-size:12.5px; color:var(--text-muted); line-height:1.45; margin-bottom:12px;">
+            <strong>Входная ситуация:</strong> Сейлз харизматичен, блестяще держит первый контакт, но план выполняется на 60%. 
+            Причина: 65% времени уходило на монотонное заполнение CRM, составление отчетов и рутинный расчет КП. 
+            Для типа ENFP это каторга, ведущая к саботажу и выгоранию!
+          </p>
+
+          <h4 style="font-size:13px; font-weight:800; color:var(--gold); margin-bottom:8px;">Карта ключевых компетенций из нашей библиотеки (SLS):</h4>
+          <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+            <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:8px;">
+              <span>SLS-04. Выявление скрытой потребности</span>
+              <strong style="color:var(--mint);">Вес: 17% (Сильная сторона ENFP)</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:8px;">
+              <span>SLS-07. Аргументация ценности продукта</span>
+              <strong style="color:var(--mint);">Вес: 15% (Сильная сторона ENFP)</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:8px;">
+              <span>CRM-01. Заполнение карточек сделок и отчеты</span>
+              <strong style="color:var(--red);">Слабая сторона ➔ Заменена AI-агентом!</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:11px; font-weight:800; color:var(--mint); letter-spacing:0.1em; text-transform:uppercase;">РЕШЕНИЕ АГЕНТСТВА «СИЛЬНЫЕ СТОРОНЫ»:</div>
+            <h3 style="font-size:18px; font-weight:900; color:var(--text-light); margin:8px 0 10px;">Симбиоз человека и AI-агента ИВАН</h3>
+
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:12.5px; line-height:1.45;">
+              <div style="background:rgba(101,242,207,0.08); padding:10px; border-radius:10px; border-left:3px solid var(--mint);">
+                1. <strong>Человек делает то, где он гениален:</strong> Менеджер проводит живые встречи, выявляет скрытые мотивы ЛПР и закрывает сделки.
+              </div>
+              <div style="background:rgba(228,201,150,0.08); padding:10px; border-radius:10px; border-left:3px solid var(--gold);">
+                2. <strong>AI-агент берет на себя рутину:</strong> ИВАН сам расшифровывает звонки, заносит данные в CRM, готовит драфт КП за 30 секунд и напоминает о следующем шаге.
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
+              <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; border-left:3px solid var(--mint);">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Конверсия в сделки:</div>
+                <div style="font-size:24px; font-weight:900; color:var(--mint);">+40% <span style="font-size:13px; font-weight:400; color:var(--text-light);">(с 18% до 25%)</span></div>
+              </div>
+              <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; border-left:3px solid var(--gold);">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Высвобождено времени:</div>
+                <div style="font-size:24px; font-weight:900; color:var(--gold);">18 часов <span style="font-size:13px; font-weight:400; color:var(--text-light);">/ неделю</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:12px; color:var(--gold); font-weight:700; margin-top:10px;">
+            🎯 Итог: Без раздувания ФОТ и без найма новых людей выручка выросла почти в 1.5 раза!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 4: ДОКАЗАННАЯ ЭФФЕКТИВНОСТЬ (АНО МИКС) -->
+    <div class="module" id="mod-4">
+      <div class="mod-header">
+        <div>
+          <div class="mod-tag">📊 ДОКАЗАННЫЕ РЕЗУЛЬТАТЫ · СЛАЙД 15</div>
+          <h1 class="mod-title">Доказанная эффективность акмеологического подхода</h1>
+          <p class="mod-subtitle">Официальные исследования АНО «МИКС» (2020–2024 гг.) подтверждают кратную окупаемость внедрения технологии в бизнесе.</p>
+        </div>
+        <button class="action-btn" onclick="triggerIvanVoice(4)">🎙️ ИВАН, озвучь цифры МИКС</button>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:16px;">
+        <div class="glass-card" style="border-top:3px solid var(--gold); text-align:center; padding:24px 16px;">
+          <div style="font-size:38px; font-weight:900; color:var(--gold); text-shadow:0 0 20px var(--gold-glow);">В 1.7 раза</div>
+          <h4 style="font-size:15px; font-weight:800; margin:8px 0 6px;">Прибыльнее компании</h4>
+          <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+            Компании, использующие акмеологический подход, показывают прибыль в 1.7 раза выше конкурентов.
+          </p>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--mint); text-align:center; padding:24px 16px;">
+          <div style="font-size:38px; font-weight:900; color:var(--mint); text-shadow:0 0 20px var(--mint-glow);">+40%</div>
+          <h4 style="font-size:15px; font-weight:800; margin:8px 0 6px;">Конверсия продаж</h4>
+          <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+            Увеличение конверсии коммерческого блока при использовании технологии сильных сторон и снятии рутины AI.
+          </p>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--purple); text-align:center; padding:24px 16px;">
+          <div style="font-size:38px; font-weight:900; color:var(--purple); text-shadow:0 0 20px var(--purple-glow);">+60%</div>
+          <h4 style="font-size:15px; font-weight:800; margin:8px 0 6px;">Вовлеченность команды</h4>
+          <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+            Увеличение вовлеченности сотрудников: люди работают с азартом, когда задачи соответствуют их природе.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-left:4px solid var(--mint);">
+          <div>
+            <div style="font-size:26px; font-weight:900; color:var(--mint);">75% сотрудников</div>
+            <div style="font-size:12.5px; color:var(--text-light); margin-top:2px;">Заявляют о положительном влиянии подхода при распределении обязанностей в команде</div>
+          </div>
+        </div>
+        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-left:4px solid var(--gold);">
+          <div>
+            <div style="font-size:26px; font-weight:900; color:var(--gold);">78% сотрудников</div>
+            <div style="font-size:12.5px; color:var(--text-light); margin-top:2px;">Утверждают, что акмеологический подход кратно повышает их личную производительность</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 5: СПЕЦПРЕДЛОЖЕНИЕ ДЛЯ ТПП -->
+    <div class="module" id="mod-5">
+      <div class="mod-header">
+        <div>
+          <div class="mod-tag">🎁 СПЕЦИАЛЬНЫЙ ОФФЕР ДЛЯ ЧЛЕНОВ ТПП КК · СЛАЙД 16</div>
+          <h1 class="mod-title">Акмеологический экспресс-аудит вашей команды</h1>
+          <p class="mod-subtitle">Специальное предложение только для участников заседания Комитета по рынку труда ТПП Краснодарского края.</p>
+        </div>
+        <button class="action-btn" onclick="triggerIvanVoice(5)">🎙️ ИВАН, подведи итог встречи</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="glass-card" style="border-top:3px solid var(--gold); display:flex; flex-direction:column; align-items:center; text-align:center; padding:28px;">
+          <div style="position:relative; margin-bottom:14px;">
+            <img src="assets/tpp-vote-qr.png" alt="QR" style="width:180px; height:180px; border-radius:16px; border:3px solid var(--gold); box-shadow:0 0 30px var(--gold-glow); background:#fff; padding:8px;">
+          </div>
+          <h3 style="font-size:20px; font-weight:900; color:var(--gold); margin-bottom:6px;">Сканируйте смартфоном</h3>
+          <p style="font-size:13px; color:var(--text-muted); max-width:320px;">
+            Откройте камеру телефона ➔ Заполните заявку ➔ Получите акмеологический профиль ключевого сотрудника за 24 часа.
+          </p>
+        </div>
+
+        <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <span style="font-size:11px; font-weight:800; color:var(--mint); text-transform:uppercase; letter-spacing:0.1em;">ЧТО ВХОДИТ В БЕСПЛАТНЫЙ ПАКЕТ ТПП:</span>
+            
+            <div style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <span style="background:var(--mint); color:var(--bg-dark); font-weight:900; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px;">1</span>
+                <div>
+                  <div style="font-size:13.5px; font-weight:700; color:var(--text-light);">Тестирование по валидированной программе Краснова И.З.</div>
+                  <div style="font-size:11.5px; color:var(--text-muted);">Определение типа личности по 4 шкалам буквенного кода.</div>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <span style="background:var(--mint); color:var(--bg-dark); font-weight:900; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px;">2</span>
+                <div>
+                  <div style="font-size:13.5px; font-weight:700; color:var(--text-light);">Карта сильных сторон и зон риска выгорания</div>
+                  <div style="font-size:11.5px; color:var(--text-muted);">Сопоставление врожденных предрасположенностей с обязанностями.</div>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <span style="background:var(--mint); color:var(--bg-dark); font-weight:900; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px;">3</span>
+                <div>
+                  <div style="font-size:13.5px; font-weight:700; color:var(--text-light);">План внедрения AI-агентов (Нейро-HR / ИВАН)</div>
+                  <div style="font-size:11.5px; color:var(--text-muted);">Рекомендации по автоматизации до 70% рутинных операций роли.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:12px; padding:12px 16px; margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-light);">Контакты команды «Сильные стороны» (Слайд 16):</div>
+              <div style="font-size:11px; color:var(--gold);">+7-938-481-78-00 · +7-996-052-36-36 (Telegram / MAX)</div>
+            </div>
+            <span style="font-size:12px; color:var(--mint); font-weight:800;">г. Краснодар</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-</div>
+  <!-- BOTTOM BAR: REACTIONS & NAVIGATION -->
+  <div class="bottom-nav">
+    <div style="display:flex; gap:8px; background:rgba(22, 17, 30, 0.85); border:1px solid var(--card-border); backdrop-filter:blur(14px); padding:6px 14px; border-radius:99px;">
+      <span style="font-size:11px; font-weight:700; color:var(--text-muted); display:flex; align-items:center; margin-right:4px;">Эмоции зала:</span>
+      <button class="ctrl-btn" onclick="sendReaction('🔥')" style="padding:4px 8px; font-size:15px; border:none; background:none;">🔥</button>
+      <button class="ctrl-btn" onclick="sendReaction('🚀')" style="padding:4px 8px; font-size:15px; border:none; background:none;">🚀</button>
+      <button class="ctrl-btn" onclick="sendReaction('💡')" style="padding:4px 8px; font-size:15px; border:none; background:none;">💡</button>
+      <button class="ctrl-btn" onclick="sendReaction('🤝')" style="padding:4px 8px; font-size:15px; border:none; background:none;">🤝</button>
+      <button class="ctrl-btn" onclick="sendReaction('👏')" style="padding:4px 8px; font-size:15px; border:none; background:none;">👏</button>
+    </div>
 
-<!-- BOTTOM BAR: REACTIONS & NAVIGATION -->
-<div class="bottom-nav">
-  <div style="display:flex; gap:8px; background:rgba(22, 17, 30, 0.85); border:1px solid var(--card-border); backdrop-filter:blur(14px); padding:6px 14px; border-radius:99px;">
-    <span style="font-size:11px; font-weight:700; color:var(--text-muted); display:flex; align-items:center; margin-right:4px;">Эмоции зала:</span>
-    <button class="ctrl-btn" onclick="sendReaction('🔥')" style="padding:4px 8px; font-size:15px; border:none; background:none;">🔥</button>
-    <button class="ctrl-btn" onclick="sendReaction('🚀')" style="padding:4px 8px; font-size:15px; border:none; background:none;">🚀</button>
-    <button class="ctrl-btn" onclick="sendReaction('💡')" style="padding:4px 8px; font-size:15px; border:none; background:none;">💡</button>
-    <button class="ctrl-btn" onclick="sendReaction('🤝')" style="padding:4px 8px; font-size:15px; border:none; background:none;">🤝</button>
-    <button class="ctrl-btn" onclick="sendReaction('👏')" style="padding:4px 8px; font-size:15px; border:none; background:none;">👏</button>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button class="ctrl-btn" onclick="prevModule()" title="Назад [←]">◀ Назад</button>
+      <span style="font-size:12px; font-weight:700; color:var(--gold); min-width:60px; text-align:center;" id="sceneIndicator">1 / 6</span>
+      <button class="ctrl-btn" onclick="nextModule()" title="Вперед [→]">Вперед ▶</button>
+    </div>
   </div>
 
-  <div style="display:flex; gap:10px; align-items:center;">
-    <button class="ctrl-btn" onclick="prevScene()" title="Назад [←]">◀ Назад</button>
-    <span style="font-size:12px; font-weight:700; color:var(--gold); min-width:60px; text-align:center;" id="sceneIndicator">1 / 6</span>
-    <button class="ctrl-btn" onclick="nextScene()" title="Вперед [→]">Вперед ▶</button>
-  </div>
 </div>
 
 <!-- SPEAKER HUD (PROMPTER) -->
 <div id="speakerHUD">
   <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:800; color:var(--gold); margin-bottom:8px;">
-    <span>СУФЛЁР СПИКЕРА · ПОДСКАЗКИ ТАЙМИНГА</span>
+    <span>СУФЛЁР СПИКЕРА · РЕЖИССЕРСКИЕ ПОДСКАЗКИ</span>
     <span style="cursor:pointer;" onclick="toggleSpeakerHUD()">✕ ЗАКРЫТЬ</span>
   </div>
   <div style="font-size:12.5px; line-height:1.45; color:#e0d8f0;" id="hudContent">
@@ -1035,7 +1203,15 @@
       osc.connect(gain);
       gain.connect(ctx.destination);
       const now = ctx.currentTime;
-      if (type === 'click') {
+      if (type === 'start') {
+        // Dramatic bass drop and rise
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(80, now);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 0.4);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.5);
+        osc.start(now); osc.stop(now + 0.5);
+      } else if (type === 'click') {
         osc.frequency.setValueAtTime(600, now);
         osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
         gain.gain.setValueAtTime(0.08, now);
@@ -1057,60 +1233,99 @@
     } catch(e) {}
   }
 
-  // SCENE NAVIGATION
-  let currentScene = 0;
-  const totalScenes = 6;
+  // TENSION LOSS COUNTER
+  let lossVal = 14850320;
+  setInterval(() => {
+    lossVal += Math.floor(Math.random() * 240) + 120;
+    const el = document.getElementById('introLossCounter');
+    if (el) el.innerText = lossVal.toLocaleString('ru-RU') + ' ₽';
+  }, 1000);
+
+  // ACTIVATE STAGE FROM INTRO
+  let introActive = true;
+  function activateStage() {
+    playSound('start');
+    const screen = document.getElementById('introScreen');
+    screen.classList.add('hidden');
+    introActive = false;
+    triggerIvanVoice(0);
+  }
+
+  function toggleIntro() {
+    playSound('click');
+    const screen = document.getElementById('introScreen');
+    if (introActive) {
+      screen.classList.add('hidden');
+      introActive = false;
+    } else {
+      screen.classList.remove('hidden');
+      introActive = true;
+    }
+  }
+
+  // MODULE NAVIGATION
+  let currentMod = 0;
+  const totalMods = 6;
 
   const hudNotes = [
-    "<strong>СЦЕНА 1 · ДЕНЬГИ НЕ НА ПЕРВОМ МЕСТЕ (Слайд 6):</strong><br>• Алексей: «Кто поднимал зарплату, а человек всё равно ушел через пару месяцев? Поднимите руки!»<br>• Раскрываем 6 факторов: психологический комфорт, самореализация, отсутствие микроконтроля, статус, сильный к сильному.<br>• Жмем кнопку ИВАНА: Агент подтверждает статистику.",
-    "<strong>СЦЕНА 2 · АКМЕОЛОГИЯ И БУКВЕННЫЙ КОД (Слайды 3, 4, 7):</strong><br>• Алексей: «Акмеология — наука о достижении вершин. Кафедра в АНХ при Президенте РФ, Фрейд, Юнг, исследования СФУ и Краснова И.З.»<br>• Кликаем по карточкам 4 шкал Юнга (I/E, N/S, F/T, P/J).<br>• Постулат: «Развивай сильные стороны, а слабые замещай сильными сторонами других!»",
-    "<strong>СЦЕНА 3 · КОМПЛЕКСНЫЙ 5-ШАГОВЫЙ ПОДХОД (Слайды 8–12):</strong><br>• Алексей и Дмитрий по очереди: 1. Стандарты РФ & PMBOK ➔ 2. AI-матрица ролей ➔ 3. Тестирование Краснова ➔ 4. AI-агенты (ИВАН, Нейро-HR) ➔ 5. Индивидуальный трек обучения.",
-    "<strong>СЦЕНА 4 · ЖИВОЙ КЕЙС: ОТДЕЛ ПРОДАЖ (Слайд 13 & Документ ОП):</strong><br>• Дмитрий показывает кейс: Менеджер ENFP (Коммуникатор).<br>• Его сильные стороны (вскрытие мотивов, ценность) тонули в CRM и отчетах (65% времени).<br>• Сняли рутину агентом ИВАНОМ ➔ конверсия выросла на 40%!",
-    "<strong>СЦЕНА 5 · ДОКАЗАННАЯ ЭФФЕКТИВНОСТЬ (Слайд 15):</strong><br>• Алексей приводит данные АНО «МИКС» (2020-2024): в 1.7 раза прибыльнее, +40% конверсия продаж, +60% вовлеченность, 78% рост производительности.",
-    "<strong>СЦЕНА 6 · СПЕЦПРЕДЛОЖЕНИЕ ДЛЯ ТПП КК (Слайд 16):</strong><br>• Приглашаем всех к сканированию QR-кода на бесплатный экспресс-аудит 1 ключевой позиции по методу Краснова.<br>• ИВАН произносит напутственное слово предпринимателям Кубани."
+    "<strong>МОДУЛЬ 1 · ДЕНЬГИ НЕ НА ПЕРВОМ МЕСТЕ (Слайд 6):</strong><br>• Алексей: «Кто поднимал зарплату, а человек всё равно ушел через пару месяцев? Поднимите руки!»<br>• Раскрываем 6 факторов: психологический комфорт, самореализация, отсутствие микроконтроля, статус, сильный к сильному.<br>• Жмем кнопку ИВАНА: Агент подтверждает статистику.",
+    "<strong>МОДУЛЬ 2 · АКМЕОЛОГИЯ И БУКВЕННЫЙ КОД (Слайды 3, 4, 7):</strong><br>• Алексей: «Акмеология — наука о достижении вершин. Кафедра в АНХ при Президенте РФ, Фрейд, Юнг, исследования СФУ и Краснова И.З.»<br>• Кликаем по карточкам 4 шкал Юнга (I/E, N/S, F/T, P/J).<br>• Постулат: «Развивай сильные стороны, а слабые замещай сильными сторонами других!»",
+    "<strong>МОДУЛЬ 3 · КОМПЛЕКСНЫЙ 5-ШАГОВЫЙ ПОДХОД (Слайды 8–12):</strong><br>• Алексей и Дмитрий по очереди: 1. Стандарты РФ & PMBOK ➔ 2. AI-матрица ролей ➔ 3. Тестирование Краснова ➔ 4. AI-агенты (ИВАН, Нейро-HR) ➔ 5. Индивидуальный трек обучения.",
+    "<strong>МОДУЛЬ 4 · ЖИВОЙ КЕЙС: ОТДЕЛ ПРОДАЖ (Слайд 13 & Документ ОП):</strong><br>• Дмитрий показывает кейс: Менеджер ENFP (Коммуникатор).<br>• Его сильные стороны (вскрытие мотивов, ценность) тонули в CRM и отчетах (65% времени).<br>• Сняли рутину агентом ИВАНОМ ➔ конверсия выросла на 40%!",
+    "<strong>МОДУЛЬ 5 · ДОКАЗАННАЯ ЭФФЕКТИВНОСТЬ (Слайд 15):</strong><br>• Алексей приводит данные АНО «МИКС» (2020-2024): в 1.7 раза прибыльнее, +40% конверсия продаж, +60% вовлеченность, 78% рост производительности.",
+    "<strong>МОДУЛЬ 6 · СПЕЦПРЕДЛОЖЕНИЕ ДЛЯ ТПП КК (Слайд 16):</strong><br>• Приглашаем всех к сканированию QR-кода на бесплатный экспресс-аудит 1 ключевой позиции по методу Краснова.<br>• ИВАН произносит напутственное слово предпринимателям Кубани."
   ];
 
-  function updateScene() {
-    for (let i = 0; i < totalScenes; i++) {
-      const el = document.getElementById(`scene-${i}`);
-      if (el) el.classList.toggle('active', i === currentScene);
+  function updateModule() {
+    for (let i = 0; i < totalMods; i++) {
+      const el = document.getElementById(`mod-${i}`);
+      if (el) el.classList.toggle('active', i === currentMod);
     }
     const pills = document.querySelectorAll('.nav-pill');
-    pills.forEach((p, idx) => p.classList.toggle('active', idx === currentScene));
+    pills.forEach((p, idx) => p.classList.toggle('active', idx === currentMod));
 
-    const pct = ((currentScene + 1) / totalScenes) * 100;
+    const pct = ((currentMod + 1) / totalMods) * 100;
     document.getElementById('progressBar').style.width = pct + '%';
-    document.getElementById('sceneIndicator').innerText = `${currentScene + 1} / ${totalScenes}`;
-    document.getElementById('hudContent').innerHTML = hudNotes[currentScene];
+    document.getElementById('sceneIndicator').innerText = `${currentMod + 1} / ${totalMods}`;
+    document.getElementById('hudContent').innerHTML = hudNotes[currentMod];
     playSound('click');
   }
 
-  function gotoScene(idx) {
-    if (idx >= 0 && idx < totalScenes) {
-      currentScene = idx;
-      updateScene();
+  function gotoModule(idx) {
+    if (idx >= 0 && idx < totalMods) {
+      currentMod = idx;
+      updateModule();
     }
   }
-  function nextScene() {
-    if (currentScene < totalScenes - 1) {
-      currentScene++;
-      updateScene();
+  function nextModule() {
+    if (currentMod < totalMods - 1) {
+      currentMod++;
+      updateModule();
     }
   }
-  function prevScene() {
-    if (currentScene > 0) {
-      currentScene--;
-      updateScene();
+  function prevModule() {
+    if (currentMod > 0) {
+      currentMod--;
+      updateModule();
     }
   }
 
   // KEYBOARD
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextScene();
-    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevScene();
-    else if (e.key === 'f' || e.key === 'F') toggleFullscreen();
-    else if (e.key === 'n' || e.key === 'N') toggleSpeakerHUD();
-    else if (e.key === '1') sendReaction('🔥');
+    if (e.key === ' ' && introActive) {
+      e.preventDefault();
+      activateStage();
+    } else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      nextModule();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      prevModule();
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    } else if (e.key === 'n' || e.key === 'N') {
+      toggleSpeakerHUD();
+    } else if (e.key === 'Escape') {
+      toggleIntro();
+    } else if (e.key === '1') sendReaction('🔥');
     else if (e.key === '2') sendReaction('🚀');
     else if (e.key === '3') sendReaction('💡');
     else if (e.key === '4') sendReaction('🤝');
@@ -1153,7 +1368,7 @@
 
   // AGENT IVAN SPEECH ENGINE
   const ivanPhrases = [
-    "Фиксирую данные исследований: повышение зарплаты удерживает сотрудника в среднем на 87 дней. На первом месте для людей стоят психологический комфорт, признание и отсутствие мелочного контроля. Деньги не решают проблему несовпадения роли и человека.",
+    "Внимание! Ситуационный центр ТПП активирован. Повышение зарплаты удерживает сотрудника в среднем на 87 дней. На первом месте для людей стоят психологический комфорт, признание и отсутствие мелочного контроля. Деньги не решают проблему несовпадения роли и человека.",
     "Акмеология — это наука о вершинах человеческого потенциала. База заложена Зигмундом Фрейдом и Карлом Юнгом, развита кафедрой акмеологии АНХ при Президенте России. Главный принцип: развивай сильные стороны, а слабые замещай сильными сторонами команды или алгоритмами.",
     "Комплексный пятишаговый подход агентства Сильные стороны соединяет стандарты управления проектами, искусственный интеллект, валидированное тестирование Краснова и персональные треки обучения. Это законченная экосистема роста бизнеса.",
     "Разбор кейса отдела продаж. Менеджер с психотипом Коммуникатор тратил 65 процентов времени на заполнение CRM и рутинные отчеты. После внедрения меня как AI-ассистента рутина была снята, а конверсия выросла на 40 процентов.",
@@ -1162,10 +1377,10 @@
   ];
 
   function triggerIvanVoiceCurrent() {
-    triggerIvanVoice(currentScene);
+    triggerIvanVoice(currentMod);
   }
 
-  function triggerIvanVoice(sceneIdx) {
+  function triggerIvanVoice(modIdx) {
     playSound('click');
     sendReaction('🎙️');
     const waveEl = document.getElementById('topWaveBars');
@@ -1174,7 +1389,7 @@
     subStatus.style.color = 'var(--mint)';
     waveEl.classList.add('wave-active');
 
-    const text = ivanPhrases[sceneIdx] || ivanPhrases[0];
+    const text = ivanPhrases[modIdx] || ivanPhrases[0];
 
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -1198,7 +1413,7 @@
   }
 
   // Initialize
-  updateScene();
+  updateModule();
 </script>
 
 </body>
