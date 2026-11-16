@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Пульс бизнеса Кубани · ТПП КК & Сильные стороны</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #0c0a10;
+    color: #f7f4ff;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px 36px;
+    overflow-x: hidden;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #65f2cf;
+    background: rgba(101,242,207,0.12);
+    border: 1px solid rgba(101,242,207,0.3);
+    padding: 5px 12px;
+    border-radius: 99px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  h1 {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  p.subtitle {
+    font-size: 13px;
+    color: #9a92a6;
+    line-height: 1.4;
+  }
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .vote-btn {
+    position: relative;
+    background: #191421;
+    border: 2px solid #2d243b;
+    border-radius: 16px;
+    padding: 16px 18px;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vote-btn:active {
+    transform: scale(0.98);
+  }
+  .vote-btn.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.35);
+    background: #231a30;
+  }
+  .vote-btn .bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0%;
+    background: rgba(var(--accent-rgb), 0.15);
+    pointer-events: none;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .vote-btn-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .door-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .vote-percent {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .door-title {
+    font-size: 16px;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+  }
+  .door-desc {
+    font-size: 12px;
+    color: #9a92a6;
+    line-height: 1.35;
+    position: relative;
+    z-index: 2;
+  }
+  .status-footer {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #827891;
+    min-height: 24px;
+  }
+  .status-footer.active {
+    color: #65f2cf;
+    font-weight: 600;
+  }
+  .reaction-section {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+  }
+  .reaction-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #9a92a6;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .reaction-bar {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .reaction-btn {
+    flex: 1;
+    background: #231c2e;
+    border: 1px solid #3c2f4e;
+    border-radius: 12px;
+    padding: 12px 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #f7f4ff;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.15s ease;
+  }
+  .reaction-btn:active {
+    transform: scale(0.9);
+    background: #3c2f4e;
+  }
+  .floating-emoji {
+    position: fixed;
+    pointer-events: none;
+    font-size: 32px;
+    z-index: 100;
+    animation: floatUp 0.8s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8) translateY(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6) translateY(-100px); }
+  }
+  .qa-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .qa-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #9a92a6;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .qa-box {
+    display: flex;
+    gap: 8px;
+  }
+  .qa-box input {
+    flex: 1;
+    background: #191421;
+    border: 1px solid #3c2f4e;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #f7f4ff;
+    outline: none;
+  }
+  .qa-box input:focus {
+    border-color: #65f2cf;
+  }
+  .qa-box button {
+    background: #65f2cf;
+    color: #0c0a10;
+    font-weight: 800;
+    font-size: 13px;
+    border: none;
+    border-radius: 12px;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .qa-box button:active {
+    transform: scale(0.95);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">ТПП КК · КОМИТЕТ ПО РЫНКУ ТРУДА</div>
+  <h1>Где ваш бизнес теряет деньги прямо сейчас?</h1>
+  <p class="subtitle">Выберите главную кадровую проблему — агент ИВАН сформирует тепловую карту зала в прямом эфире</p>
+</header>
+
+<div class="cards">
+  <!-- Card 1 -->
+  <button class="vote-btn" style="--accent:#65f2cf; --accent-rgb:101,242,207;" onclick="castVote(0)">
+    <div class="bar" id="bar-0"></div>
+    <div class="vote-btn-top">
+      <span class="door-num">ВАРИАНТ 01</span>
+      <span class="vote-percent" id="pct-0">0%</span>
+    </div>
+    <div class="door-title">Слив лидов в продажах</div>
+    <div class="door-desc">Лиды поступают, но конверсия падает. Менеджеры боятся звонить, не вскрывают скрытый мотив или не дожимают до сделки.</div>
+  </button>
+
+  <!-- Card 2 -->
+  <button class="vote-btn" style="--accent:#e4c996; --accent-rgb:228,201,150;" onclick="castVote(1)">
+    <div class="bar" id="bar-1"></div>
+    <div class="vote-btn-top">
+      <span class="door-num">ВАРИАНТ 02</span>
+      <span class="vote-percent" id="pct-1">0%</span>
+    </div>
+    <div class="door-title">Выгорание ключевых экспертов</div>
+    <div class="door-desc">Лучшие специалисты тонут в таблицах, CRM, отчетах и рутине (до 60% времени) вместо генерации прибыли.</div>
+  </button>
+
+  <!-- Card 3 -->
+  <button class="vote-btn" style="--accent:#9f6aff; --accent-rgb:159,106,255;" onclick="castVote(2)">
+    <div class="bar" id="bar-2"></div>
+    <div class="vote-btn-top">
+      <span class="door-num">ВАРИАНТ 03</span>
+      <span class="vote-percent" id="pct-2">0%</span>
+    </div>
+    <div class="door-title">Собственник застрял в рутине</div>
+    <div class="door-desc">Всё замкнуто на первое лицо. Делегировать некому, сотрудники боятся брать ответственность, бизнес буксует.</div>
+  </button>
+
+  <!-- Card 4 -->
+  <button class="vote-btn" style="--accent:#f87171; --accent-rgb:248,113,113;" onclick="castVote(3)">
+    <div class="bar" id="bar-3"></div>
+    <div class="vote-btn-top">
+      <span class="door-num">ВАРИАНТ 04</span>
+      <span class="vote-percent" id="pct-3">0%</span>
+    </div>
+    <div class="door-title">Ошибки найма и текучка</div>
+    <div class="door-desc">Нанимаем по красивому резюме, а увольняем через 2 месяца из-за конфликтов и неспособности работать. Слитый ФОТ.</div>
+  </button>
+</div>
+
+<div class="status-footer" id="statusText">Нажмите на карточку, чтобы проголосовать</div>
+
+<div class="reaction-section">
+  <div class="reaction-title">Живая реакция спикерам в зал</div>
+  <div class="reaction-bar">
+    <button class="reaction-btn" onclick="sendReaction('🔥', event)">🔥 Огонь</button>
+    <button class="reaction-btn" onclick="sendReaction('💡', event)">💡 Мысль</button>
+    <button class="reaction-btn" onclick="sendReaction('🚀', event)">🚀 В точку</button>
+    <button class="reaction-btn" onclick="sendReaction('🤝', event)">🤝 Согласен</button>
+  </div>
+</div>
+
+<div class="qa-section">
+  <div class="qa-title">Вопрос спикерам и агенту ИВАНУ</div>
+  <div class="qa-box">
+    <input type="text" id="qaInput" placeholder="Задайте вопрос по вашей компании...">
+    <button onclick="sendQuestion()">Отправить</button>
+  </div>
+</div>
+
+<script>
+  let myVote = -1;
+  // Local simulated vote tally or synchronized with server
+  let votes = [18, 14, 22, 10]; // baseline seed
+
+  function updateBars() {
+    const total = votes.reduce((a, b) => a + b, 0) || 1;
+    for (let i = 0; i < 4; i++) {
+      const pct = Math.round((votes[i] / total) * 100);
+      document.getElementById(`pct-${i}`).innerText = pct + '%';
+      document.getElementById(`bar-${i}`).style.width = pct + '%';
+    }
+  }
+
+  function castVote(idx) {
+    if (myVote === idx) return;
+    if (myVote >= 0) votes[myVote] = Math.max(0, votes[myVote] - 1);
+    myVote = idx;
+    votes[idx]++;
+
+    const btns = document.querySelectorAll('.vote-btn');
+    btns.forEach((b, i) => {
+      if (i === idx) b.classList.add('selected');
+      else b.classList.remove('selected');
+    });
+
+    const footer = document.getElementById('statusText');
+    footer.innerText = '✔ Ваш голос учтен! Данные обновлены на экране зала';
+    footer.classList.add('active');
+
+    updateBars();
+
+    // Haptic feedback if available
+    if (navigator.vibrate) navigator.vibrate(40);
+  }
+
+  function sendReaction(emoji, e) {
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    el.innerText = emoji;
+    const x = e.clientX || window.innerWidth / 2;
+    const y = e.clientY || window.innerHeight / 2;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 800);
+
+    const footer = document.getElementById('statusText');
+    footer.innerText = `Реакция ${emoji} отправлена на сцену!`;
+    footer.classList.add('active');
+  }
+
+  function sendQuestion() {
+    const inp = document.getElementById('qaInput');
+    const val = inp.value.trim();
+    if (!val) return;
+    inp.value = '';
+    const footer = document.getElementById('statusText');
+    footer.innerText = '✔ Вопрос передан ведущим и агенту ИВАНУ!';
+    footer.classList.add('active');
+    setTimeout(() => {
+      footer.innerText = '✔ Ваш голос учтен! Данные обновлены на экране зала';
+    }, 3000);
+  }
+
+  // Initial draw
+  updateBars();
+</script>
+
+</body>
+</html>

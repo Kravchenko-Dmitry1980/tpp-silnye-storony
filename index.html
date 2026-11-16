@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Сильные стороны & Агент ИВАН · Интерактивная презентация ТПП</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-dark: #0c0a10;
+    --card-bg: rgba(25, 20, 33, 0.78);
+    --card-border: rgba(60, 47, 78, 0.6);
+    --mint: #65f2cf;
+    --mint-glow: rgba(101, 242, 207, 0.4);
+    --gold: #e4c996;
+    --gold-glow: rgba(228, 201, 150, 0.35);
+    --purple: #9f6aff;
+    --purple-glow: rgba(159, 106, 255, 0.35);
+    --red: #f87171;
+    --text-light: #f7f4ff;
+    --text-muted: #9a92a6;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-dark);
+    color: var(--text-light);
+    font-family: var(--font);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* VIDEO BACKDROP */
+  #videoBackdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.32;
+    transition: opacity 0.8s ease;
+    filter: brightness(0.7) contrast(1.15) saturate(1.1);
+  }
+  #videoOverlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 30%, rgba(20, 16, 28, 0.4) 0%, rgba(12, 10, 16, 0.92) 85%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* TOP PROGRESS BAR */
+  .progress-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    z-index: 100;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--mint), var(--gold), var(--purple));
+    box-shadow: 0 0 12px var(--mint);
+    transition: width 0.35s ease-out;
+  }
+
+  /* TOP BAR NAVIGATION */
+  .top-nav {
+    position: fixed;
+    top: 14px; left: 24px; right: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    pointer-events: auto;
+  }
+  .top-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-logo-img {
+    height: 38px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+  }
+  .brand-pill {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(10px);
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mint);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pulse-dot {
+    width: 7px; height: 7px;
+    background: var(--mint);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--mint);
+    animation: livePulse 1.8s infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+
+  .top-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-btn {
+    background: rgba(25, 20, 33, 0.7);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-btn:hover {
+    border-color: var(--mint);
+    background: rgba(45, 36, 59, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(101, 242, 207, 0.2);
+  }
+  .slide-counter {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* SLIDES WRAPPER */
+  .slides-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+  }
+  .slide {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.96) translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    padding: 80px 48px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+  }
+
+  /* TYPOGRAPHY */
+  .slide-header {
+    margin-bottom: 24px;
+    max-width: 1200px;
+  }
+  .slide-tag {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mint);
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+  .slide-title {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.18;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.6);
+  }
+  .slide-subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+
+  /* GLASS CARDS */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 1360px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    width: 100%;
+    max-width: 1360px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 1360px;
+  }
+  .glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(101, 242, 207, 0.4);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 20px rgba(101, 242, 207, 0.15);
+  }
+  .glass-card.card-mint { border-top: 3px solid var(--mint); }
+  .glass-card.card-gold { border-top: 3px solid var(--gold); }
+  .glass-card.card-purple { border-top: 3px solid var(--purple); }
+  .glass-card.card-red { border-top: 3px solid var(--red); }
+
+  .card-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--mint);
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-light);
+  }
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-muted);
+  }
+
+  /* HERO SPECIFIC */
+  .hero-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .hero-logo-box {
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero-logo-big {
+    height: 120px;
+    width: auto;
+    filter: drop-shadow(0 0 35px rgba(228, 201, 150, 0.3));
+    animation: floatRook 4s ease-in-out infinite alternate;
+  }
+  @keyframes floatRook {
+    0% { transform: translateY(0); filter: drop-shadow(0 0 25px rgba(228, 201, 150, 0.25)); }
+    100% { transform: translateY(-8px); filter: drop-shadow(0 0 45px rgba(101, 242, 207, 0.45)); }
+  }
+  .hero-h1 {
+    font-size: 46px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, #ffffff 40%, #e4c996 75%, #65f2cf 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-p {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 760px;
+    line-height: 1.5;
+    margin-bottom: 32px;
+  }
+  .hero-cta-btn {
+    background: linear-gradient(135deg, var(--mint) 0%, #3dd4ad 100%);
+    color: #0c0a10;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 16px 36px;
+    border-radius: 99px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 30px var(--mint-glow);
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-cta-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 45px var(--mint-glow);
+  }
+
+  /* INTERACTIVE AGENT IVAN STAGE */
+  .ivan-stage-box {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 1360px;
+    height: 520px;
+  }
+  .ivan-visual-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--mint);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 0 40px rgba(101, 242, 207, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .ivan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ivan-name-badge {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--mint);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ivan-status-pill {
+    background: rgba(101, 242, 207, 0.12);
+    border: 1px solid var(--mint);
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--mint);
+    text-transform: uppercase;
+  }
+  .ivan-display-screen {
+    flex: 1;
+    margin: 16px 0;
+    background: rgba(12, 10, 16, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #e2e8f0;
+  }
+  .ivan-wave-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 38px;
+  }
+  .wave-bar {
+    width: 4px;
+    background: var(--mint);
+    border-radius: 99px;
+    height: 8px;
+    transition: height 0.1s ease;
+  }
+  .wave-active .wave-bar:nth-child(1) { animation: wave 0.6s infinite alternate; }
+  .wave-active .wave-bar:nth-child(2) { animation: wave 0.7s infinite 0.1s alternate; }
+  .wave-active .wave-bar:nth-child(3) { animation: wave 0.8s infinite 0.2s alternate; }
+  .wave-active .wave-bar:nth-child(4) { animation: wave 0.6s infinite 0.15s alternate; }
+  .wave-active .wave-bar:nth-child(5) { animation: wave 0.75s infinite 0.05s alternate; }
+  .wave-active .wave-bar:nth-child(6) { animation: wave 0.65s infinite 0.25s alternate; }
+  .wave-active .wave-bar:nth-child(7) { animation: wave 0.85s infinite 0.1s alternate; }
+  @keyframes wave {
+    0% { height: 6px; }
+    100% { height: 32px; background: var(--gold); }
+  }
+
+  .ivan-cmd-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .cmd-btn {
+    background: rgba(25, 20, 33, 0.9);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cmd-btn:hover {
+    border-color: var(--mint);
+    background: rgba(35, 28, 46, 0.95);
+    transform: translateX(4px);
+    box-shadow: 0 4px 18px rgba(101, 242, 207, 0.2);
+  }
+  .cmd-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+  .cmd-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .cmd-icon {
+    font-size: 20px;
+    color: var(--mint);
+  }
+
+  /* INTERACTIVE CALCULATOR SLIDE */
+  .calc-box {
+    background: var(--card-bg);
+    border: 1px solid var(--mint);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  .slider-row {
+    margin-bottom: 24px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .calc-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 99px;
+    background: #231a30;
+    outline: none;
+    accent-color: var(--mint);
+  }
+  .calc-results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .calc-res-card {
+    text-align: center;
+    padding: 16px;
+    background: rgba(12, 10, 16, 0.6);
+    border-radius: 14px;
+    border: 1px solid var(--card-border);
+  }
+  .calc-num {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--mint);
+    margin-bottom: 4px;
+  }
+  .calc-lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* BOTTOM CONTROLS */
+  .bottom-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(18, 14, 24, 0.85);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(16px);
+    padding: 8px 18px;
+    border-radius: 99px;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .ctrl-btn {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ctrl-btn:hover {
+    color: var(--mint);
+    background: rgba(255,255,255,0.08);
+  }
+  .ctrl-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: 6px;
+    border-left: 1px solid rgba(255,255,255,0.12);
+    padding-left: 12px;
+  }
+
+  /* QR VOTING SLIDE SPECIAL */
+  .qr-center-box {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .qr-card-big {
+    background: var(--card-bg);
+    border: 2px solid var(--mint);
+    border-radius: 24px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(101, 242, 207, 0.25);
+    flex-shrink: 0;
+  }
+  .qr-img {
+    width: 220px;
+    height: 220px;
+    border-radius: 12px;
+    background: #fff;
+    padding: 8px;
+  }
+  .vote-live-bars {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .vbar-row {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 14px 18px;
+  }
+  .vbar-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .vbar-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .vbar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.1, 0.9, 0.2, 1);
+  }
+
+  /* MODAL NOTES / HUD */
+  #speakerHUD {
+    position: fixed;
+    bottom: 80px; right: 24px;
+    width: 360px;
+    background: rgba(18, 14, 24, 0.95);
+    border: 1px solid var(--gold);
+    border-radius: 16px;
+    padding: 18px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-light);
+    z-index: 200;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    display: none;
+  }
+  #speakerHUD h4 {
+    color: var(--gold);
+    font-size: 13px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND VIDEO -->
+<video id="videoBackdrop" autoplay loop muted playsinline>
+  <source src="assets/studio-flight.mp4" type="video/mp4">
+</video>
+<div id="videoOverlay"></div>
+
+<!-- TOP PROGRESS -->
+<div class="progress-container">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-nav">
+  <div class="top-left">
+    <img src="assets/approved-logo.png" alt="Сильные стороны" class="brand-logo-img">
+    <div class="brand-pill">
+      <span class="pulse-dot"></span>
+      ТПП КК · 27 НОЯБРЯ
+    </div>
+  </div>
+  <div class="top-right">
+    <button class="nav-btn" onclick="toggleVideo()">🎬 <span id="vBtnText">Видео-фон</span></button>
+    <button class="nav-btn" onclick="toggleSpeakerHUD()">🎙 Подсказки (N)</button>
+    <button class="nav-btn" onclick="toggleFullscreen()">⛶ На весь экран (F)</button>
+    <span class="slide-counter" id="slideNum">01 / 14</span>
+  </div>
+</div>
+
+<!-- SPEAKER HUD (PROMPTER) -->
+<div id="speakerHUD">
+  <h4>🎙 ШПАРГАЛКА СПИКЕРОВ <span style="cursor:pointer;" onclick="toggleSpeakerHUD()">✕</span></h4>
+  <p id="hudContent">Алексей начинает: «Добрый день, коллеги! Никаких отчетов, сегодня говорим о бизнесе и деньгах...»</p>
+</div>
+
+<!-- SLIDES CONTAINER -->
+<div class="slides-container" id="slidesWrapper">
+
+  <!-- ==================== SLIDE 01: HERO ==================== -->
+  <div class="slide active" data-hud="Алексей начинает встречу. Представление команды: Алексей Бармин, Дмитрий Кравченко и Агент ИВАН. Задаем темп: без скучных отчетов, чисто о деньгах и кадрах.">
+    <div class="hero-wrapper">
+      <div class="hero-logo-box">
+        <img src="assets/approved-logo.png" alt="Ладья" class="hero-logo-big">
+      </div>
+      <div class="slide-tag" style="color: var(--gold);">ЗНАКОМЫЙ ЗНАК · НОВАЯ ГЛУБИНА · ИНЖЕНЕРИЯ КОМАНД</div>
+      <h1 class="hero-h1">СИЛЬНЫЕ СТОРОНЫ & АГЕНТ ИВАН</h1>
+      <p class="hero-p">
+        Как преодолеть кадровый голод на Кубани, перестать сливать ФОТ и вырастить производительность бизнеса на 40% с помощью акмеологии и прикладного ИИ
+      </p>
+      <button class="hero-cta-btn" onclick="nextSlide()">
+        <span>НАЧАТЬ ПОКАЗ</span>
+        <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 02: КАДРОВЫЙ ДЕФИЦИТ ==================== -->
+  <div class="slide" data-hud="Алексей вскрывает боли: дефицит кадров 1 к 5 на Кубани, стоимость закрытия +180%, иллюзия резюме (нанимаем по Hard, увольняем за характер). Взрослых переучивать невозможно.">
+    <div class="slide-header">
+      <span class="slide-tag">РЕАЛЬНОСТЬ РЫНКА ТРУДА КУБАНИ 2026</span>
+      <h2 class="slide-title">Почему старые методы найма разоряют кубанский бизнес</h2>
+      <p class="slide-subtitle">Дефицит людей физический — переучивать или просто «платить больше» больше не работает</p>
+    </div>
+    <div class="grid-3">
+      <div class="glass-card card-red">
+        <div class="card-num" style="color:var(--red);">МЕТРИКА 01</div>
+        <div class="card-title">ДЕФИЦИТ 1 К 5</div>
+        <div class="card-desc">
+          На одного соискателя приходится 5 вакансий. Стоимость закрытия выросла в 2.8 раза. Пытаться просто «перекупать людей с рынка» ведет к кассовым разрывам.
+        </div>
+      </div>
+      <div class="glass-card card-gold">
+        <div class="card-num" style="color:var(--gold);">МЕТРИКА 02</div>
+        <div class="card-title">ИЛЛЮЗИЯ РЕЗЮМЕ</div>
+        <div class="card-desc">
+          Нанимаем по строчкам в резюме (Hard skills), а увольняем за характер, токсичность, выгорание и срыв сроков (Soft traits). Ошибочный найм сжигает 3-4 оклада.
+        </div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-num" style="color:var(--mint);">МЕТРИКА 03</div>
+        <div class="card-title">ТУПИК ПЕРЕУЧИВАНИЯ</div>
+        <div class="card-desc">
+          Психологические установки взрослого человека неизменны. Сажать прирожденного переговорщика на рутинные таблицы в Excel — верный способ потерять сотрудника.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 03: АКМЕОЛОГИЯ И СИНЕРГИЯ ==================== -->
+  <div class="slide" data-hud="Алексей объясняет акмеологию: наследие РАНХиГС (кафедра Деркача) + Юнг/MBTI. Главный принцип: слабые стороны развивать не надо, их замещают сильными сторонами партнеров или отдают ИИ.">
+    <div class="slide-header">
+      <span class="slide-tag">НАУЧНЫЙ ФУНДАМЕНТ</span>
+      <h2 class="slide-title">Акмеология: наука о достижении профессионального максимума</h2>
+      <p class="slide-subtitle">Познав себя — поймешь другого; поняв другого — соберешь непобедимую команду</p>
+    </div>
+    <div class="grid-2">
+      <div class="glass-card card-gold">
+        <div class="card-title" style="color:var(--gold);">ФУНДАМЕНТ СИСТЕМЫ</div>
+        <div class="card-desc" style="font-size:14px; display:flex; flex-direction:column; gap:12px;">
+          <div>✔ <b>Кафедра акмеологии РАНХиГС:</b> Научная школа под рук. А.А. Деркача. Практика формирования управленческих команд высшего эшелона.</div>
+          <div>✔ <b>Типология Карла Юнга & MBTI:</b> 16 устойчивых психологических профилей. Когнитивная оптика: как человек принимает решения и где черпает энергию.</div>
+          <div>✔ <b>Проектный менеджмент PMBOK:</b> Структура компании строится под измеримые цели бизнеса, а не под случайных людей.</div>
+        </div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-title" style="color:var(--mint);">ГЛАВНЫЙ ЗАКОН СИНЕРГИИ</div>
+        <div class="card-desc" style="font-size:14px; display:flex; flex-direction:column; gap:12px;">
+          <div>★ <b>Слабые стороны развивать НЕ НАДО:</b> Попытка переделать человека сжигает ресурсы. Слабые стороны замещаются сильными сторонами коллег.</div>
+          <div>★ <b>Деньги — не на первом месте:</b> Люди выгорают не от зарплаты, а от противоестественной роли и психологического давления.</div>
+          <div>★ <b>Инженерная точность:</b> Когда каждый человек находится на своей природной роли, трение исчезает, а прибыль бизнеса растет в 1.7 раза.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 04: СВЯЗАННАЯ МОДЕЛЬ ==================== -->
+  <div class="slide" data-hud="Дмитрий берет слово: показывает, что команда — это не штатное расписание, а инженерная цепочка из 7 уровней. Модель выявляет дубли, разрывы и показывает, кого нанимать, а кого автоматизировать.">
+    <div class="slide-header">
+      <span class="slide-tag">АРХИТЕКТУРА ОРГАНИЗАЦИИ</span>
+      <h2 class="slide-title">Что внутри цифровой модели: команда как связанная система</h2>
+      <p class="slide-subtitle">Не список сотрудников в Excel, а сквозная цепочка от целей собственника до автоматизации</p>
+    </div>
+    <div class="grid-2">
+      <div class="glass-card card-purple">
+        <div class="card-title" style="color:var(--purple);">СКВОЗНАЯ ЦЕПОЧКА УПРАВЛЕНИЯ</div>
+        <div class="card-desc" style="font-size:13px; display:flex; flex-direction:column; gap:8px;">
+          <div>▶ <b>01 Бизнес-цели:</b> Куда идет бизнес, целевая выручка и маржинальность.</div>
+          <div>▶ <b>02 Процессы:</b> Регламентированные маршруты создания ценности.</div>
+          <div>▶ <b>03 Функции:</b> Конкретные операции, требующие безошибочности.</div>
+          <div>▶ <b>04 Роли:</b> Профили компетенций и требований к исполнителю.</div>
+          <div>▶ <b>05 Люди:</b> Живые сотрудники с их природными психотипами.</div>
+          <div>▶ <b>06 KPI и ресурсы:</b> Метрики результата и обеспеченность.</div>
+          <div>▶ <b>07 AI / Автоматизация:</b> Цифровые агенты, страхующие рутину.</div>
+        </div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-title" style="color:var(--mint);">ЧТО ПОКАЗЫВАЕТ МОДЕЛЬ СОБСТВЕННИКУ:</div>
+        <div class="card-desc" style="font-size:14px; display:flex; flex-direction:column; gap:14px;">
+          <div>🔍 <b>Кто реально владеет результатом:</b> Персональная ответственность за каждый шаг воронки прибыли.</div>
+          <div>⚡ <b>Где дубли и перегрузки:</b> Кто из ключевых специалистов делает чужую работу и сгорает.</div>
+          <div>🚩 <b>Где есть разрыв в ответственности:</b> Брошенные участки, из-за которых срываются сделки.</div>
+          <div>💡 <b>Что выгоднее:</b> Точный расчет: нанять, переставить сотрудника или передать операцию ИИ.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 05: AI-КАРТА ЗАДАЧ ==================== -->
+  <div class="slide" data-hud="Дмитрий объясняет прагматичный подход к ИИ: «Не всё, что можно автоматизировать, нужно автоматизировать». 5 фильтров задачи и 3 исхода: Автоматизировать / AI+Человек / Оставить человеку.">
+    <div class="slide-header">
+      <span class="slide-tag">ПРАГМАТИЧНЫЙ ИИ</span>
+      <h2 class="slide-title">AI-карта задач: Не всё, что можно автоматизировать, нужно автоматизировать</h2>
+      <p class="slide-subtitle">Каждая операция оценивается до выбора инструмента: AI — один из вариантов архитектуры работы</p>
+    </div>
+    <div class="grid-2">
+      <div class="glass-card card-gold">
+        <div class="card-title" style="color:var(--gold);">5 КРИТЕРИЕВ ОЦЕНКИ ОПЕРАЦИИ</div>
+        <div class="card-desc" style="font-size:13px; display:flex; flex-direction:column; gap:10px;">
+          <div><b>01. Частота:</b> Как часто повторяется операция (каждые 10 мин или раз в квартал).</div>
+          <div><b>02. Повторяемость:</b> Насколько жестко регламентированы шаги выполнения.</div>
+          <div><b>03. Данные:</b> Есть ли достаточный цифровой контекст для анализа.</div>
+          <div><b>04. Цена ошибки:</b> Каков реальный финансовый ущерб от сбоя.</div>
+          <div><b>05. Суждение человека (Judgement):</b> Нужны ли эмпатия, переговоры и личное доверие.</div>
+        </div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-title" style="color:var(--mint);">3 ЗОНЫ РЕШЕНИЙ</div>
+        <div class="card-desc" style="font-size:13px; display:flex; flex-direction:column; gap:12px;">
+          <div style="border-left: 3px solid var(--mint); padding-left: 10px;">
+            <b style="color:var(--mint);">АВТОМАТИЗИРОВАТЬ (AI)</b><br>
+            Низкий риск, высокая повторяемость (предквалификация, парсинг, ответы на FAQ, статус счетов).
+          </div>
+          <div style="border-left: 3px solid var(--gold); padding-left: 10px;">
+            <b style="color:var(--gold);">AI + ЧЕЛОВЕК (ГИБРИД)</b><br>
+            AI готовит проект решения, человек утверждает (анализ воронки, подготовка сложного КП).
+          </div>
+          <div style="border-left: 3px solid var(--red); padding-left: 10px;">
+            <b style="color:var(--red);">ОСТАВИТЬ ЧЕЛОВЕКУ</b><br>
+            Высокая цена ошибки, стратегические переговоры, подбор ключевых партнеров.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 06: ИНТЕРАКТИВ «ПУЛЬС ЗАЛА» ==================== -->
+  <div class="slide" data-hud="WOW-блок! Дмитрий и Алексей просят зал достать смартфоны и навести камеру на QR-код. Зал голосует в https://kravchenko-dmitry1980.github.io/tpp-silnye-storony/vote-tpp.html, на экране в реальном времени бегут проценты и взлетают эмодзи.">
+    <div class="slide-header">
+      <span class="slide-tag">ЖИВОЙ ИНТЕРАКТИВ С ЗАЛОМ</span>
+      <h2 class="slide-title">«Пульс бизнеса Кубани»: Где ваша компания теряет больше всего денег?</h2>
+      <p class="slide-subtitle">Достаньте телефоны, наведите камеру на QR-код — голосуем прямо сейчас в реальном времени</p>
+    </div>
+    <div class="qr-center-box">
+      <div class="qr-card-big">
+        <img src="assets/tpp-vote-qr.png" alt="QR голосование" class="qr-img">
+        <div style="font-size:12px; font-weight:800; color:var(--mint); margin-top:12px;">СКАНИРУЙТЕ ЭКРАН</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">https://kravchenko-dmitry1980.github.io/tpp-silnye-storony/vote-tpp.html</div>
+        <button class="nav-btn" style="margin-top:14px; width:100%; justify-content:center;" onclick="simulateAudienceVote()">🎲 Симуляция зала (+10)</button>
+      </div>
+      <div class="vote-live-bars">
+        <div class="vbar-row">
+          <div class="vbar-meta">
+            <span>01 · Слив лидов в продажах</span>
+            <span style="color:var(--mint);" id="pctA">42%</span>
+          </div>
+          <div class="vbar-track"><div class="vbar-fill" id="barA" style="width:42%; background:var(--mint);"></div></div>
+        </div>
+        <div class="vbar-row">
+          <div class="vbar-meta">
+            <span>02 · Выгорание экспертов в рутине</span>
+            <span style="color:var(--gold);" id="pctB">28%</span>
+          </div>
+          <div class="vbar-track"><div class="vbar-fill" id="barB" style="width:28%; background:var(--gold);"></div></div>
+        </div>
+        <div class="vbar-row">
+          <div class="vbar-meta">
+            <span>03 · Собственник замкнул всё на себя</span>
+            <span style="color:var(--purple);" id="pctC">18%</span>
+          </div>
+          <div class="vbar-track"><div class="vbar-fill" id="barC" style="width:18%; background:var(--purple);"></div></div>
+        </div>
+        <div class="vbar-row">
+          <div class="vbar-meta">
+            <span>04 · Ошибки найма и текучка новичков</span>
+            <span style="color:var(--red);" id="pctD">12%</span>
+          </div>
+          <div class="vbar-track"><div class="vbar-fill" id="barD" style="width:12%; background:var(--red);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 07: КЕЙС ОП (АРХИТЕКТУРА) ==================== -->
+  <div class="slide" data-hud="Алексей комментирует результаты голосования: «70% зала теряют деньги в продажах и рутине». Переходим к разбору кейса коммерческого блока и распределению функций по 4 психотипам.">
+    <div class="slide-header">
+      <span class="slide-tag">РЕАЛЬНЫЙ БИЗНЕС-КЕЙС</span>
+      <h2 class="slide-title">Кейс: Архитектура коммерческого блока без перегрузок</h2>
+      <p class="slide-subtitle">Как распределение ролей по природным психотипам прекращает потерю горячих клиентов</p>
+    </div>
+    <div class="grid-4">
+      <div class="glass-card card-mint">
+        <div class="card-num">РОП (ЛИДЕР)</div>
+        <div class="card-title">ESTJ (АДМИНИСТРАТОР)</div>
+        <div class="card-desc">
+          Системный контроль дисциплины, соблюдение регламентов, жесткое выполнение нормативов воронки.
+        </div>
+      </div>
+      <div class="glass-card card-gold">
+        <div class="card-num">РАЗРАБОТКА КП</div>
+        <div class="card-title">INTP (АНАЛИТИК)</div>
+        <div class="card-desc">
+          Творческий анализ рынка, сегментация целевой аудитории, точный расчет ценности и отстройка от конкурентов.
+        </div>
+      </div>
+      <div class="glass-card card-purple">
+        <div class="card-num">ХОЛОДНЫЕ ЗВОНКИ</div>
+        <div class="card-title">ISTJ / INTJ (СИСТЕМЩИК)</div>
+        <div class="card-desc">
+          Четкая работа strictly по утвержденным скриптам, фиксация фактов в CRM, высокая стрессоустойчивость.
+        </div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-num">ПРЯМЫЕ ПЕРЕГОВОРЫ</div>
+        <div class="card-title">ENFP (КОММУНИКАТОР)</div>
+        <div class="card-desc">
+          Живой контакт, вскрытие скрытой мотивации клиента, снятие возражений и дожим сделки до подписания.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 08: КЕЙС ОП (РЕЗУЛЬТАТ +40%) ==================== -->
+  <div class="slide" data-hud="Дмитрий и Алексей разбирают кейс менеджера прямых переговоров: ENFP тонул в отчетах (конверсия 14%), оцифровали компетенции (SLS-04 17%, SLS-07 15%, SLS-10 14%, SLS-15 12%) -> конверсия выросла до 25% (+40%).">
+    <div class="slide-header">
+      <span class="slide-tag">ОЦИФРОВКА КОМПЕТЕНЦИЙ</span>
+      <h2 class="slide-title">Кейс: Профиль переговорщика и результат (+40% к конверсии)</h2>
+      <p class="slide-subtitle">Разбор роли менеджера прямых переговоров из реальной практики внедрения</p>
+    </div>
+    <div class="grid-3">
+      <div class="glass-card card-red">
+        <div class="card-title" style="color:var(--red);">1. КАК БЫЛО (ОШИБКА)</div>
+        <div class="card-desc" style="font-size:13px; display:flex; flex-direction:column; gap:10px;">
+          <div>• <b>Сотрудник ENFP:</b> Прирожденный харизматичный переговорщик.</div>
+          <div>• <b>Рутинный капкан:</b> На него повесили холодный обзвон, заполнение 40 полей CRM и расчет смет.</div>
+          <div>• <b>Следствие:</b> 65% дня в рутине. Хроническое выгорание, срыв дедлайнов, конверсия всего 14%.</div>
+        </div>
+      </div>
+      <div class="glass-card card-gold">
+        <div class="card-title" style="color:var(--gold);">2. ЧТО СДЕЛАЛИ</div>
+        <div class="card-desc" style="font-size:12px; display:flex; flex-direction:column; gap:6px;">
+          <div>✔ <b>Вывели из рутины:</b> Роль «Прямые переговоры».</div>
+          <div>✔ <b>Оцифровали веса компетенций:</b></div>
+          <div style="padding-left:8px; color:var(--text-light);">
+            • SLS-04 Скрытая потребность: <b>17%</b><br>
+            • SLS-07 Ценность продукта: <b>15%</b><br>
+            • SLS-10 Содержательные возражения: <b>14%</b><br>
+            • SLS-15 Закрытие сделки / Дожим: <b>12%</b>
+          </div>
+          <div>✔ Рутину и отчеты передали AI-агенту.</div>
+        </div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-title" style="color:var(--mint);">3. РЕЗУЛЬТАТ В ЦИФРАХ</div>
+        <div class="card-desc" style="font-size:13px; display:flex; flex-direction:column; gap:10px;">
+          <div><b style="font-size:22px; color:var(--mint);">+40%</b><br>Рост конверсии диалогов в контракт (с 14% до 25%).</div>
+          <div><b style="font-size:22px; color:var(--gold);">-35%</b><br>Сокращение цикла сделки без задержек.</div>
+          <div><b style="font-size:22px; color:var(--purple);">0 руб.</b><br>Нового ФОТ: результат на текущей команде.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 09: ЭКОНОМИКА ИЗМЕНЕНИЙ (ИНТЕРАКТИВНЫЙ КАЛЬКУЛЯТОР) ==================== -->
+  <div class="slide" data-hud="Дмитрий демонстрирует интерактивный калькулятор окупаемости прямо на экране. Двигаем ползунок штата компании (например, 25 человек) -> мгновенно пересчитывается экономия ФОТ и рост маржи.">
+    <div class="slide-header">
+      <span class="slide-tag">ФИНАНСОВЫЙ КАЛЬКУЛЯТОР</span>
+      <h2 class="slide-title">Экономика изменений: Расчет эффекта для вашего бизнеса</h2>
+      <p class="slide-subtitle">Сценарии сравниваются до принятия кадровых решений: найм, перераспределение или AI</p>
+    </div>
+    <div class="calc-box">
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>Численность сотрудников компании:</span>
+          <span style="color:var(--mint); font-size:18px;" id="teamVal">25 человек</span>
+        </div>
+        <input type="range" min="5" max="150" value="25" class="calc-slider" id="teamSlider" oninput="updateCalc()">
+      </div>
+      <div class="calc-results-grid">
+        <div class="calc-res-card">
+          <div class="calc-num" id="fotSaved">1.8 млн ₽</div>
+          <div class="calc-lbl">Предотвращенный ФОТ в год</div>
+        </div>
+        <div class="calc-res-card">
+          <div class="calc-num" id="hoursFreed">320 ч/мес</div>
+          <div class="calc-lbl">Высвобожденное время экспертов</div>
+        </div>
+        <div class="calc-res-card">
+          <div class="calc-num" style="color:var(--gold);" id="extraProfit">+3.4 млн ₽</div>
+          <div class="calc-lbl">Ожидаемый рост маржинальности</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 10: АГЕНТ ИВАН (LIVE КОНСОЛЬ) ==================== -->
+  <div class="slide" data-hud="Ключевой интерактивный блок! Дмитрий кликает или произносит команды ИВАНУ. Агент отвечает голосом через Web Speech API, аудиоволна оживает, на экран выводятся отчеты аудита.">
+    <div class="slide-header">
+      <span class="slide-tag">ЖИВАЯ ДЕМОНСТРАЦИЯ ИИ</span>
+      <h2 class="slide-title">Агент ИВАН: Цифровой операционный директор на службе бизнеса</h2>
+      <p class="slide-subtitle">Персональный ИИ в защищенном локальном контуре, который связывает роли, людей и KPI</p>
+    </div>
+    <div class="ivan-stage-box">
+      <div class="ivan-visual-panel">
+        <div class="ivan-header">
+          <div class="ivan-name-badge">
+            <span class="pulse-dot"></span>
+            AGENT IVAN · LOCAL v3.2
+          </div>
+          <div class="ivan-status-pill" id="ivanStatus">СЛУШАЮ</div>
+        </div>
+        <div class="ivan-display-screen" id="ivanConsole">
+&gt; ИВАН готов к работе. Защищенный локальный контур активирован.
+&gt; Ожидание команды руководителя...
+        </div>
+        <div class="ivan-wave-box" id="ivanWaves">
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+        </div>
+      </div>
+      <div class="ivan-cmd-list">
+        <button class="cmd-btn" onclick="triggerIvanCmd(1)">
+          <div>
+            <div class="cmd-title">🎙 «Иван, разверни цифровую модель»</div>
+            <div class="cmd-desc">Агент строит сквозную цепочку: Цели → Люди → KPI</div>
+          </div>
+          <span class="cmd-icon">▶</span>
+        </button>
+        <button class="cmd-btn" onclick="triggerIvanCmd(2)">
+          <div>
+            <div class="cmd-title">🎙 «Иван, покажи сбой в отделе продаж»</div>
+            <div class="cmd-desc">Иван выявляет перегрузку рутиной и слив лидов</div>
+          </div>
+          <span class="cmd-icon">▶</span>
+        </button>
+        <button class="cmd-btn" onclick="triggerIvanCmd(3)">
+          <div>
+            <div class="cmd-title">🎙 «Иван, пересчитай экономику изменений»</div>
+            <div class="cmd-desc">Мгновенный расчет окупаемости и роста выручки</div>
+          </div>
+          <span class="cmd-icon">▶</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 11: ПРАКТИКУМ В ЗАЛЕ ==================== -->
+  <div class="slide" data-hud="Алексей вызывает добровольца-предпринимателя из зала. Задает 3 вопроса. Дмитрий запускает экспресс-диагностику в ИВАНЕ. ИВАН за 2 секунды выдает точный диагноз и решение без увольнений.">
+    <div class="slide-header">
+      <span class="slide-tag">ЖИВОЙ ПРАКТИКУМ</span>
+      <h2 class="slide-title">Разбор реальной кадровой ситуации предпринимателя прямо в зале</h2>
+      <p class="slide-subtitle">Вызываем одного добровольца к микрофону и за 5 минут находим решение кадрового тупика</p>
+    </div>
+    <div class="glass-card card-gold" style="max-width:1100px; margin:0 auto; padding:32px;">
+      <div class="grid-2">
+        <div>
+          <div style="font-size:14px; font-weight:800; color:var(--gold); margin-bottom:14px;">4 ВОПРОСА К СОБСТВЕННИКУ:</div>
+          <div style="font-size:13px; line-height:1.6; color:var(--text-light); display:flex; flex-direction:column; gap:10px;">
+            <div><b>1. Роль и KPI:</b> Какая должность буксует и за какую финансовую метрику отвечает человек?</div>
+            <div><b>2. Симптом проблемы:</b> Что конкретно происходит? (Отличный специалист, но срывает сроки / ругается с людьми).</div>
+            <div><b>3. Что пробовали:</b> Штрафы, обучение, регламенты?</div>
+            <div><b>4. Поведение в стрессе:</b> Уходит в эмоции или замыкается в таблицах?</div>
+          </div>
+        </div>
+        <div style="background:rgba(12,10,16,0.7); border:1px solid var(--card-border); border-radius:14px; padding:18px;">
+          <div style="font-size:12px; font-weight:800; color:var(--mint); margin-bottom:10px;">ЭКСПРЕСС-ВЕРДИКТ АГЕНТА ИВАНА:</div>
+          <div style="font-size:12px; line-height:1.55; color:#cbd5e1;">
+            • <b>Диагноз:</b> Психотип сотрудника противоречит должностной инструкции (например, экстраверт посажен на монотонный учет).<br><br>
+            • <b>Управленческое решение:</b> Снять непрофильную рутину, передать учет AI-агенту, высвободить природную суперсилу человека.<br><br>
+            • <b>Итог:</b> Рост отдачи от роли без увольнения и без нового найма.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 12: ДОКАЗАННАЯ ЭФФЕКТИВНОСТЬ ==================== -->
+  <div class="slide" data-hud="Алексей подводит итог: это доказанная наука. Данные исследований АНО МИКС (2020-2024 гг.): прибыль в 1.7 раза выше, конверсия +40%, вовлеченность +60%.">
+    <div class="slide-header">
+      <span class="slide-tag">ИССЛЕДОВАНИЯ И СТАТИСТИКА</span>
+      <h2 class="slide-title">Доказанная эффективность акмеолого-компетентностного подхода</h2>
+      <p class="slide-subtitle">Результаты масштабных прикладных исследований АНО «МИКС» (2020–2024 гг.)</p>
+    </div>
+    <div class="grid-4">
+      <div class="glass-card card-mint">
+        <div class="card-num" style="font-size:26px; color:var(--mint);">+40%</div>
+        <div class="card-title">Конверсия продаж</div>
+        <div class="card-desc">При распределении обязанностей в коммерческом блоке по сильным сторонам.</div>
+      </div>
+      <div class="glass-card card-gold">
+        <div class="card-num" style="font-size:26px; color:var(--gold);">1.7 раза</div>
+        <div class="card-title">Рост прибыли</div>
+        <div class="card-desc">У компаний, внедривших связанную модель ролей, относительно конкурентов.</div>
+      </div>
+      <div class="glass-card card-purple">
+        <div class="card-num" style="font-size:26px; color:var(--purple);">78%</div>
+        <div class="card-title">Производительность</div>
+        <div class="card-desc">Сотрудников подтверждают рост личной отдачи на своем рабочем месте.</div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-num" style="font-size:26px; color:var(--mint);">+60%</div>
+        <div class="card-title">Вовлеченность</div>
+        <div class="card-desc">Команды в процесс и полная ликвидация токсичности и скрытого выгорания.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 13: СПЕЦИАЛЬНЫЙ ОФФЕР ТПП ==================== -->
+  <div class="slide" data-hud="Алексей объявляет оффер для зала: Пилотный экспресс-аудит одного подразделения для первых 5 компаний из зала. Сканируют QR-код прямо сейчас.">
+    <div class="slide-header">
+      <span class="slide-tag">СОТРУДНИЧЕСТВО</span>
+      <h2 class="slide-title">Специальное предложение для членов ТПП Краснодарского края</h2>
+      <p class="slide-subtitle">Пилотный экспресс-аудит ключевого подразделения вашей компании</p>
+    </div>
+    <div class="glass-card card-mint" style="max-width:1100px; margin:0 auto; padding:30px;">
+      <div class="grid-2">
+        <div>
+          <div style="font-size:14px; font-weight:800; color:var(--gold); margin-bottom:12px;">ЧТО ВХОДИТ В ПАКЕТ АУДИТА:</div>
+          <div style="font-size:13px; line-height:1.6; color:var(--text-light); display:flex; flex-direction:column; gap:8px;">
+            <div>✔ <b>Диагностика команды (до 5 ключевых людей):</b> Определение психотипов и скрытых зон выгорания.</div>
+            <div>✔ <b>Инженерная карта ролей:</b> Где теряется ответственность за прибыль и кто перегружен рутиной.</div>
+            <div>✔ <b>AI-карта задач автоматизации:</b> Какие операции можно передать цифровым агентам.</div>
+            <div>✔ <b>План роста производительности:</b> Пошаговый маршрут без раздувания зарплатного фонда.</div>
+          </div>
+        </div>
+        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; border-left:1px solid rgba(255,255,255,0.1); padding-left:24px;">
+          <div style="font-size:13px; font-weight:800; color:var(--red); margin-bottom:10px;">★ ВСЕГО 5 КОМПАНИЙ ИЗ ЗАЛА</div>
+          <img src="assets/tpp-vote-qr.png" alt="QR" style="width:140px; height:140px; border-radius:10px; background:#fff; padding:6px;">
+          <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Регистрация в рамках Комитета ТПП КК</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 14: КОМАНДА И КОНТАКТЫ ==================== -->
+  <div class="slide" data-hud="Финал! Дмитрий дает команду ИВАНУ: «Иван, сохрани результаты и попрощайся с залом». ИВАН благодарит предпринимателей. Спикеры открывают сессию вопросов и ответов.">
+    <div class="slide-header">
+      <span class="slide-tag">КОМАНДА ПРОЕКТА</span>
+      <h2 class="slide-title">Сильные стороны: Научный подход в построении команд</h2>
+      <p class="slide-subtitle">Платформа управления человеческим потенциалом & Прикладные ИИ-агенты</p>
+    </div>
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="glass-card card-gold">
+        <div class="card-title" style="color:var(--gold); font-size:16px;">Ерагер Павел Александрович</div>
+        <div style="font-size:11px; font-weight:800; color:var(--mint); margin-bottom:8px;">ENFP · РУКОВОДИТЕЛЬ ПРОЕКТА</div>
+        <div class="card-desc">PR, GR, стратегические переговоры, поиск ресурсов и масштабирование проекта в Краснодарском крае.</div>
+      </div>
+      <div class="glass-card card-mint">
+        <div class="card-title" style="color:var(--mint); font-size:16px;">Кравченко Дмитрий Александрович</div>
+        <div style="font-size:11px; font-weight:800; color:var(--gold); margin-bottom:8px;">ISTJ · РАЗРАБОТЧИК ИИ & IT</div>
+        <div class="card-desc">Архитектура искусственного интеллекта, агент ИВАН, цифровая платформа оценки компетенций.</div>
+      </div>
+      <div class="glass-card card-purple">
+        <div class="card-title" style="color:var(--purple); font-size:16px;">Бармин Алексей Викторович</div>
+        <div style="font-size:11px; font-weight:800; color:var(--mint); margin-bottom:8px;">INFP · РУКОВОДИТЕЛЬ ПРОЕКТНОГО ОФИСА</div>
+        <div class="card-desc">Главный идеолог, методология акмеолого-компетентностного подхода, проектный менеджмент.</div>
+      </div>
+    </div>
+    <div class="glass-card card-mint" style="padding:16px 24px; text-align:center;">
+      <div style="font-size:15px; font-weight:800; color:var(--mint);">САЙТ: akmehr.ru  ·  ТЕЛЕФОН: +7-938-481-78-00  ·  +7-996-052-36-36</div>
+      <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">г. Краснодар · Комитет по рынку труда и социальному партнёрству ТПП КК</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAR CONTROLS -->
+<div class="bottom-bar">
+  <button class="ctrl-btn" onclick="prevSlide()" title="Назад (←)">◀</button>
+  <button class="ctrl-btn" onclick="nextSlide()" title="Вперед (→ / Space)">▶</button>
+  <span class="ctrl-hint">Клавиши: <b>←</b> / <b>→</b> / <b>Пробел</b> · <b>F</b> (Экран) · <b>N</b> (Подсказки)</span>
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  const slideNumEl = document.getElementById('slideNum');
+  const progressBar = document.getElementById('progressBar');
+  const hudContent = document.getElementById('hudContent');
+
+  function updateSlide(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= totalSlides) idx = totalSlides - 1;
+    currentSlide = idx;
+
+    slides.forEach((s, i) => {
+      if (i === currentSlide) s.classList.add('active');
+      else s.classList.remove('active');
+    });
+
+    const numStr = String(currentSlide + 1).padStart(2, '0');
+    const totStr = String(totalSlides).padStart(2, '0');
+    slideNumEl.innerText = `${numStr} / ${totStr}`;
+    progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+
+    const activeSlide = slides[currentSlide];
+    const hud = activeSlide.getAttribute('data-hud');
+    if (hud) hudContent.innerText = hud;
+  }
+
+  function nextSlide() { updateSlide(currentSlide + 1); }
+  function prevSlide() { updateSlide(currentSlide - 1); }
+
+  // Keyboard navigation
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'PageUp') {
+      prevSlide();
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    } else if (e.key === 'n' || e.key === 'N') {
+      toggleSpeakerHUD();
+    } else if (e.key === 'v' || e.key === 'V') {
+      toggleVideo();
+    } else if (e.key === 'Home') {
+      updateSlide(0);
+    } else if (e.key === 'End') {
+      updateSlide(totalSlides - 1);
+    }
+  });
+
+  // Fullscreen
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(()=>{});
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+    }
+  }
+
+  // Video Toggle
+  let videoOn = true;
+  function toggleVideo() {
+    const v = document.getElementById('videoBackdrop');
+    const btn = document.getElementById('vBtnText');
+    videoOn = !videoOn;
+    if (videoOn) {
+      v.style.opacity = '0.32';
+      v.play();
+      btn.innerText = 'Видео-фон ВКЛ';
+    } else {
+      v.style.opacity = '0';
+      v.pause();
+      btn.innerText = 'Видео-фон ВЫКЛ';
+    }
+  }
+
+  // Speaker HUD
+  function toggleSpeakerHUD() {
+    const hud = document.getElementById('speakerHUD');
+    if (hud.style.display === 'block') {
+      hud.style.display = 'none';
+    } else {
+      hud.style.display = 'block';
+    }
+  }
+
+  // Interactive Calculator
+  function updateCalc() {
+    const slider = document.getElementById('teamSlider');
+    const val = parseInt(slider.value, 10);
+    document.getElementById('teamVal').innerText = `${val} человек`;
+
+    // Formulas:
+    const fot = (val * 0.072).toFixed(1);
+    const hrs = Math.round(val * 12.8);
+    const profit = (val * 0.136).toFixed(1);
+
+    document.getElementById('fotSaved').innerText = `${fot} млн ₽`;
+    document.getElementById('hoursFreed').innerText = `${hrs} ч/мес`;
+    document.getElementById('extraProfit').innerText = `+${profit} млн ₽`;
+  }
+
+  // Simulated Audience Votes
+  let voteTallies = [42, 28, 18, 12];
+  function simulateAudienceVote() {
+    voteTallies[0] += Math.floor(Math.random() * 5) + 2;
+    voteTallies[1] += Math.floor(Math.random() * 4) + 1;
+    voteTallies[2] += Math.floor(Math.random() * 3);
+    voteTallies[3] += Math.floor(Math.random() * 2);
+
+    const total = voteTallies.reduce((a, b) => a + b, 0);
+    const p0 = Math.round((voteTallies[0] / total) * 100);
+    const p1 = Math.round((voteTallies[1] / total) * 100);
+    const p2 = Math.round((voteTallies[2] / total) * 100);
+    const p3 = 100 - p0 - p1 - p2;
+
+    document.getElementById('pctA').innerText = p0 + '%';
+    document.getElementById('barA').style.width = p0 + '%';
+
+    document.getElementById('pctB').innerText = p1 + '%';
+    document.getElementById('barB').style.width = p1 + '%';
+
+    document.getElementById('pctC').innerText = p2 + '%';
+    document.getElementById('barC').style.width = p2 + '%';
+
+    document.getElementById('pctD').innerText = p3 + '%';
+    document.getElementById('barD').style.width = p3 + '%';
+  }
+
+  // Agent IVAN Live Trigger
+  function triggerIvanCmd(cmdId) {
+    const consoleEl = document.getElementById('ivanConsole');
+    const statusEl = document.getElementById('ivanStatus');
+    const waveEl = document.getElementById('ivanWaves');
+
+    statusEl.innerText = 'ВЫПОЛНЯЮ...';
+    statusEl.style.borderColor = 'var(--gold)';
+    statusEl.style.color = 'var(--gold)';
+    waveEl.classList.add('wave-active');
+
+    let speechText = '';
+
+    if (cmdId === 1) {
+      consoleEl.innerHTML += '<br><br>&gt; <span style="color:var(--mint);">[КОМАНДА]: Развернуть цифровую модель управления.</span><br>' +
+        '&gt; [ИВАН]: Связываю 7 слоев компании: Цели → Процессы → Функции → Роли → Люди → KPI → AI.<br>' +
+        '&gt; Карта синхронизирована. Обнаружено 2 дублирующих процесса в коммерческом блоке.';
+      speechText = 'Приветствую предпринимателей Кубани. Связанная модель компании развернута. Готов к аудиту.';
+    } else if (cmdId === 2) {
+      consoleEl.innerHTML += '<br><br>&gt; <span style="color:var(--gold);">[КОМАНДА]: Анализ отдела продаж.</span><br>' +
+        '&gt; [ИВАН]: Роль «Менеджер прямых переговоров» (психотип ENFP).<br>' +
+        '&gt; Выявлен конфликт: 65% рабочего времени отведено под монотонный ввод данных в CRM.<br>' +
+        '&gt; Риск выгорания: 85%. Рекомендовано перераспределение функций.';
+      speechText = 'Внимание: ведущий переговорщик перегружен рутинным заполнением базы. Снятие рутины поднимет конверсию на 40 процентов.';
+    } else if (cmdId === 3) {
+      consoleEl.innerHTML += '<br><br>&gt; <span style="color:var(--purple);">[КОМАНДА]: Расчет экономики изменений.</span><br>' +
+        '&gt; [ИВАН]: Эффект = Предотвращенный ФОТ (1.8 млн ₽) + Высвобожденное время (320 ч) + Дополнительная маржа.<br>' +
+        '&gt; Итоговый чистый эффект: свыше 3.2 млн рублей в год.';
+      speechText = 'Экономический эффект рассчитан. Ожидаемая чистая экономия и рост маржи составляют более трех миллионов рублей в год.';
+    }
+
+    // Web Speech API Voice synthesis if supported
+    if ('speechSynthesis' in window && speechText) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(speechText);
+      utterance.lang = 'ru-RU';
+      utterance.rate = 1.05;
+      utterance.pitch = 0.95;
+      utterance.onend = () => {
+        statusEl.innerText = 'ГОТОВО';
+        statusEl.style.borderColor = 'var(--mint)';
+        statusEl.style.color = 'var(--mint)';
+        waveEl.classList.remove('wave-active');
+      };
+      window.speechSynthesis.speak(utterance);
+    } else {
+      setTimeout(() => {
+        statusEl.innerText = 'ГОТОВО';
+        statusEl.style.borderColor = 'var(--mint)';
+        statusEl.style.color = 'var(--mint)';
+        waveEl.classList.remove('wave-active');
+      }, 2500);
+    }
+
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  // Initialize
+  updateSlide(0);
+  updateCalc();
+</script>
+
+</body>
+</html>
