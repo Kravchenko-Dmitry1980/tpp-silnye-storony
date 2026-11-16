@@ -585,7 +585,237 @@
     color: var(--text-light);
     overflow-y: auto;
   }
+
+  /* ==================== SUPER-POWERS CSS ==================== */
+  /* 1. SPOTLIGHT / DRIVER.JS OVERLAY */
+  #spotlightSvg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 800;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  #spotlightSvg.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #spotlightBorder {
+    fill: none;
+    stroke: url(#spotlightGrad);
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 16px rgba(101,242,207,0.7));
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  #spotlightCutout {
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .spotlight-popover {
+    position: fixed;
+    z-index: 850;
+    max-width: 380px;
+    background: rgba(18, 14, 26, 0.95);
+    border: 1px solid rgba(228, 201, 150, 0.4);
+    box-shadow: 0 16px 45px rgba(0,0,0,0.8), 0 0 25px rgba(101,242,207,0.2);
+    border-radius: 16px;
+    padding: 18px 22px;
+    color: var(--text-light);
+    backdrop-filter: blur(16px);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.96);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .spotlight-popover.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+  .spotlight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .spotlight-badge {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--mint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .spotlight-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .spotlight-body {
+    font-size: 12.5px;
+    color: #c9c3d6;
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+  .spotlight-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .spotlight-btn {
+    background: rgba(228, 201, 150, 0.15);
+    border: 1px solid rgba(228, 201, 150, 0.35);
+    color: var(--gold);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .spotlight-btn:hover {
+    background: var(--gold);
+    color: #0c0a10;
+  }
+  .spotlight-btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--mint));
+    border: none;
+    color: #0c0a10;
+    font-weight: 800;
+  }
+
+  /* 2. HOLO GESTURE HUD */
+  .gesture-hud {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 700;
+    background: rgba(15, 12, 22, 0.88);
+    border: 1px solid rgba(101, 242, 207, 0.35);
+    border-radius: 20px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6), 0 0 20px rgba(101,242,207,0.15);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+  }
+  .gesture-hud:hover {
+    border-color: var(--mint);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 25px rgba(101,242,207,0.3);
+  }
+  .gesture-cam-preview {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(101, 242, 207, 0.4);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gesture-cam-preview video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    opacity: 0.85;
+  }
+  .gesture-cam-scan {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: var(--mint);
+    box-shadow: 0 0 8px var(--mint);
+    animation: camScan 2s linear infinite;
+  }
+  @keyframes camScan {
+    0% { top: 0; opacity: 0.8; }
+    50% { top: 100%; opacity: 0.2; }
+    100% { top: 0; opacity: 0.8; }
+  }
+  .gesture-toast {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(18, 14, 26, 0.95);
+    border: 1px solid var(--mint);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 25px var(--mint-glow);
+    border-radius: 99px;
+    padding: 10px 24px;
+    color: var(--mint);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    z-index: 950;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gesture-toast.active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* 3. THREE.JS 3D KNOWLEDGE GRAPH MODAL */
+  .graph-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 900;
+    background: radial-gradient(circle at 50% 50%, rgba(20, 15, 30, 0.94) 0%, rgba(6, 4, 10, 0.99) 85%);
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.04);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .graph-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+  .graph-top-bar {
+    padding: 18px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(228, 201, 150, 0.2);
+    background: rgba(12, 9, 18, 0.6);
+  }
+  .graph-canvas-container {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .graph-info-card {
+    position: absolute;
+    bottom: 28px;
+    left: 36px;
+    background: rgba(20, 15, 30, 0.9);
+    border: 1px solid rgba(101, 242, 207, 0.4);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 25px rgba(101,242,207,0.2);
+    border-radius: 16px;
+    padding: 18px 24px;
+    max-width: 440px;
+    color: var(--text-light);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+  }
+
 </style>
+  <script src="assets/vendor/three/three.core.js"></script>
 </head>
 <body>
 
@@ -717,6 +947,10 @@
         </div>
       </div>
 
+      
+      <button class="ctrl-btn" id="topFocusBtn" onclick="startModuleTour()" title="Сценарный фокус Driver.js (T)">🎯 Фокус [ T ]</button>
+      <button class="ctrl-btn" id="topGestureBtn" onclick="toggleGestures()" title="Управление жестами через камеру (G)">🖐️ Жесты [ G ]</button>
+      <button class="ctrl-btn" id="topGraphBtn" onclick="toggle3DGraph()" title="Интерактивная 3D-карта компетенций (E)">🌐 3D Граф [ E ]</button>
       <button class="ctrl-btn" onclick="toggleIntro()" title="Вернуть заставку">🎬 Заставка</button>
       <button class="ctrl-btn" onclick="toggleSpeakerHUD()" title="Суфлёр [N]">📝 Суфлёр [N]</button>
       <button class="ctrl-btn" onclick="toggleFullscreen()" title="Полный экран [F]">⛶ [F]</button>
@@ -1340,6 +1574,581 @@
   }
 
   // KEYBOARD
+  
+  // ==================== SUPER-POWERS SCRIPT ENGINES ====================
+
+  // 1. DRIVER.JS / SPOTLIGHT ENGINE
+  let spotlightActive = false;
+  let currentTour = null;
+  let currentTourIndex = 0;
+
+  const toursData = {
+    0: [
+      {
+        target: ".card-primary",
+        title: "Региональный контекст: 1.8% безработицы",
+        text: "Исторический минимум на Кубани означает, что перекупать специалистов больше невозможно. Единственный путь роста бизнеса — раскрытие потенциала текущих кадров.",
+        badge: "ЭТАП 1 ИЗ 3"
+      },
+      {
+        target: ".factor-grid",
+        title: "6 нематериальных факторов мотивации",
+        text: "Психологический комфорт, признание и автономия дают долгосрочное удержание, тогда как повышение оклада работает в среднем лишь 87 дней.",
+        badge: "ЭТАП 2 ИЗ 3"
+      },
+      {
+        target: ".ivan-action-btn",
+        title: "Аналитическое подтверждение ИВАНА",
+        text: "Спикер вызывает цифрового ассистента, который подтверждает региональную статистику с инженерной точностью.",
+        badge: "ЭТАП 3 ИЗ 3"
+      }
+    ],
+    1: [
+      {
+        target: "#mod-1 .glass-card:first-child",
+        title: "Акмеология: Школа АНХ при Президенте РФ",
+        text: "Фундаментальная отечественная наука о вершинах человеческого развития и профессионализма (школа акад. А.А. Деркача).",
+        badge: "ЭТАП 1 ИЗ 3"
+      },
+      {
+        target: ".flip-card-wrapper",
+        title: "Буквенный код Юнга (4 шкалы)",
+        text: "Точное профилирование природных склонностей мышления, коммуникации и принятия решений (I/E, S/N, T/F, J/P).",
+        badge: "ЭТАП 2 ИЗ 3"
+      },
+      {
+        target: "#mod-1 .glass-card:first-child div:last-child",
+        title: "Золотой закон «Сильных сторон»",
+        text: "Развивай свои природные сильные стороны, а слабые зоны надежно замещай сильными сторонами команды или AI-агентов!",
+        badge: "ЭТАП 3 ИЗ 3"
+      }
+    ],
+    2: [
+      {
+        target: ".grid-5 .glass-card:nth-child(1)",
+        title: "Этап 01: Регламентация PMBOK",
+        text: "Формирование организационной структуры компании под цели бизнеса, стандарты проектного управления.",
+        badge: "ЭТАП 1 ИЗ 5"
+      },
+      {
+        target: ".grid-5 .glass-card:nth-child(2)",
+        title: "Этап 02: AI-Матрица ролей",
+        text: "Автоматизированная декомпозиция функционала должностей и определение ключевых KPI.",
+        badge: "ЭТАП 2 ИЗ 5"
+      },
+      {
+        target: ".grid-5 .glass-card:nth-child(3)",
+        title: "Этап 03: Тестирование Краснова",
+        text: "Глубокий психологический срез личности для выявления реального, а не декларируемого профиля.",
+        badge: "ЭТАП 3 ИЗ 5"
+      },
+      {
+        target: ".grid-5 .glass-card:nth-child(4)",
+        title: "Этап 04: Замещение рутины AI",
+        text: "Внедрение персональных ассистентов для снятия до 65% бюрократии и отчетности.",
+        badge: "ЭТАП 4 ИЗ 5"
+      },
+      {
+        target: ".grid-5 .glass-card:nth-child(5)",
+        title: "Этап 05: Персональный трек (ИПР)",
+        text: "Индивидуальная карта развития сотрудника на 6-12 месяцев без выгорания.",
+        badge: "ЭТАП 5 ИЗ 5"
+      }
+    ],
+    3: [
+      {
+        target: ".case-col-problem",
+        title: "Проблема: Выгорание менеджера ENFP",
+        text: "Коммуникатор тратил 65% рабочего времени на CRM и отчеты. Терялись ключевые клиенты и падала мотивация.",
+        badge: "ЭТАП 1 ИЗ 3"
+      },
+      {
+        target: ".case-col-solution",
+        title: "Решение: AI-Ассистент ИВАН",
+        text: "Агент взял на себя транскрибацию встреч, ведение базы и драфты КП. Человек полностью освобожден для переговоров.",
+        badge: "ЭТАП 2 ИЗ 3"
+      },
+      {
+        target: ".case-metric-highlight",
+        title: "Результат: +40% конверсия продаж",
+        text: "Кратный рост выручки компании без найма дополнительных людей и раздувания ФОТ.",
+        badge: "ЭТАП 3 ИЗ 3"
+      }
+    ]
+  };
+
+  function spotlightElement(selector, title, text, badge) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const pad = 8;
+
+    const svg = document.getElementById('spotlightSvg');
+    const cutout = document.getElementById('spotlightCutout');
+    const border = document.getElementById('spotlightBorder');
+    const popover = document.getElementById('spotlightPopover');
+
+    cutout.setAttribute('x', rect.left - pad);
+    cutout.setAttribute('y', rect.top - pad);
+    cutout.setAttribute('width', rect.width + pad * 2);
+    cutout.setAttribute('height', rect.height + pad * 2);
+
+    border.setAttribute('x', rect.left - pad);
+    border.setAttribute('y', rect.top - pad);
+    border.setAttribute('width', rect.width + pad * 2);
+    border.setAttribute('height', rect.height + pad * 2);
+
+    document.getElementById('spotlightTitle').innerText = title;
+    document.getElementById('spotlightBody').innerText = text;
+    document.getElementById('spotlightBadge').innerText = badge || "ФОКУС ИВАНА";
+
+    // Position popover
+    let popTop = rect.bottom + 16;
+    let popLeft = rect.left;
+    if (popTop + 200 > window.innerHeight) {
+      popTop = Math.max(10, rect.top - 200);
+    }
+    if (popLeft + 380 > window.innerWidth) {
+      popLeft = window.innerWidth - 400;
+    }
+    popover.style.top = popTop + 'px';
+    popover.style.left = Math.max(16, popLeft) + 'px';
+
+    svg.classList.add('active');
+    popover.classList.add('active');
+    spotlightActive = true;
+    playSound('click');
+  }
+
+  function closeSpotlight() {
+    document.getElementById('spotlightSvg').classList.remove('active');
+    document.getElementById('spotlightPopover').classList.remove('active');
+    spotlightActive = false;
+    currentTour = null;
+  }
+
+  function startModuleTour(modIndex) {
+    if (spotlightActive) {
+      closeSpotlight();
+      return;
+    }
+    const idx = (typeof modIndex === 'number') ? modIndex : currentMod;
+    const tour = toursData[idx];
+    if (!tour || !tour.length) {
+      showGestureToast("🎯 Фокус доступен для модулей 1, 2, 3 и 4");
+      return;
+    }
+    currentTour = tour;
+    currentTourIndex = 0;
+    const step = currentTour[0];
+    spotlightElement(step.target, step.title, step.text, step.badge);
+    showGestureToast("🎯 Сценарный фокус активирован");
+  }
+
+  function nextSpotlightStep() {
+    if (!currentTour) return;
+    currentTourIndex++;
+    if (currentTourIndex >= currentTour.length) {
+      closeSpotlight();
+      showGestureToast("🎯 Обзор завершен");
+      return;
+    }
+    const step = currentTour[currentTourIndex];
+    spotlightElement(step.target, step.title, step.text, step.badge);
+  }
+
+  function prevSpotlightStep() {
+    if (!currentTour || currentTourIndex <= 0) return;
+    currentTourIndex--;
+    const step = currentTour[currentTourIndex];
+    spotlightElement(step.target, step.title, step.text, step.badge);
+  }
+
+  // 2. HOLO GESTURE ENGINE (OPTICAL FLOW WEBCAM TRACKER)
+  let gesturesActive = false;
+  let gestureStream = null;
+  let gestureVideo = null;
+  let gestureCanvas = null;
+  let gestureCtx = null;
+  let gestureLastFrame = null;
+  let gestureLastTrigger = 0;
+  let gestureSmoothedX = 0.5;
+  let gestureSmoothedY = 0.5;
+  let gestureLastX = 0.5;
+  let gestureLastY = 0.5;
+  let gestureRafId = 0;
+
+  function showGestureToast(text, icon = "🖐️") {
+    const toast = document.getElementById('gestureToast');
+    document.getElementById('gestureToastIcon').innerText = icon;
+    document.getElementById('gestureToastText').innerText = text;
+    toast.classList.add('active');
+    setTimeout(() => toast.classList.remove('active'), 2200);
+  }
+
+  async function toggleGestures() {
+    if (gesturesActive) {
+      stopGestures();
+    } else {
+      await startGestures();
+    }
+  }
+
+  async function startGestures() {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        showGestureToast("Камера не поддерживается", "⚠️");
+        return;
+      }
+      gestureStream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 320 }, height: { ideal: 240 }, frameRate: { ideal: 30 } },
+        audio: false
+      });
+      gestureVideo = document.getElementById('gestureVideo');
+      gestureVideo.srcObject = gestureStream;
+      await gestureVideo.play();
+
+      gestureCanvas = document.createElement('canvas');
+      gestureCanvas.width = 32;
+      gestureCanvas.height = 24;
+      gestureCtx = gestureCanvas.getContext('2d', { willReadFrequently: true });
+
+      gesturesActive = true;
+      document.getElementById('gestureCamScan').style.display = 'block';
+      document.getElementById('gestureCamIcon').style.display = 'none';
+      document.getElementById('gestureStatusText').innerText = "ЖЕСТЫ (G): АКТИВНЫ";
+      document.getElementById('gestureSubText').innerText = "Взмах: слайд · Вверх: 3D · Щипок";
+      document.getElementById('topGestureBtn').style.color = "var(--mint)";
+      document.getElementById('topGestureBtn').style.borderColor = "var(--mint)";
+
+      showGestureToast("Камера активна. Управление жестами включено!", "🖐️");
+      playSound('portal');
+      gestureLoop();
+    } catch(err) {
+      showGestureToast("Камера недоступна (продолжаем с клавиатурой)", "⚠️");
+      gesturesActive = false;
+    }
+  }
+
+  function stopGestures() {
+    gesturesActive = false;
+    cancelAnimationFrame(gestureRafId);
+    if (gestureStream) {
+      gestureStream.getTracks().forEach(t => t.stop());
+      gestureStream = null;
+    }
+    if (gestureVideo) {
+      gestureVideo.srcObject = null;
+    }
+    document.getElementById('gestureCamScan').style.display = 'none';
+    document.getElementById('gestureCamIcon').style.display = 'inline';
+    document.getElementById('gestureStatusText').innerText = "ЖЕСТЫ (G): ВЫКЛ";
+    document.getElementById('gestureSubText').innerText = "Клик или 'G' для пуска камеры";
+    document.getElementById('topGestureBtn').style.color = "var(--text-muted)";
+    document.getElementById('topGestureBtn').style.borderColor = "var(--card-border)";
+    showGestureToast("Жесты выключены", "💤");
+  }
+
+  function gestureLoop() {
+    if (!gesturesActive) return;
+    if (gestureVideo && gestureVideo.readyState >= 2 && gestureCtx) {
+      const W = 32, H = 24;
+      gestureCtx.drawImage(gestureVideo, 0, 0, W, H);
+      const imgData = gestureCtx.getImageData(0, 0, W, H);
+      const cur = imgData.data;
+
+      if (gestureLastFrame) {
+        let totalDiff = 0, massX = 0, massY = 0, motionPx = 0;
+        for (let i = 0; i < cur.length; i += 4) {
+          const diff = Math.abs(cur[i] - gestureLastFrame[i]) +
+                       Math.abs(cur[i+1] - gestureLastFrame[i+1]) +
+                       Math.abs(cur[i+2] - gestureLastFrame[i+2]);
+          if (diff > 55) {
+            const pIdx = i / 4;
+            massX += pIdx % W;
+            massY += Math.floor(pIdx / W);
+            motionPx++;
+            totalDiff += diff;
+          }
+        }
+
+        const now = Date.now();
+        if (motionPx > 16 && totalDiff > 2200) {
+          const rawCenterX = (massX / motionPx) / W;
+          const rawCenterY = (massY / motionPx) / H;
+          gestureSmoothedX += (rawCenterX - gestureSmoothedX) * 0.45;
+          gestureSmoothedY += (rawCenterY - gestureSmoothedY) * 0.45;
+
+          const dx = gestureSmoothedX - gestureLastX;
+          const dy = gestureSmoothedY - gestureLastY;
+
+          if (now - gestureLastTrigger > 700) {
+            // Hand moved to presenter's right (camera mirror dx < -0.16)
+            if (dx < -0.16) {
+              gestureLastTrigger = now;
+              nextModule();
+              showGestureToast("ВЗМАХ ВПРАВО → СЛЕДУЮЩИЙ МОДУЛЬ", "👉");
+            } else if (dx > 0.16) {
+              gestureLastTrigger = now;
+              prevModule();
+              showGestureToast("ВЗМАХ ВЛЕВО ← ПРЕДЫДУЩИЙ МОДУЛЬ", "👈");
+            } else if (dy < -0.18) {
+              gestureLastTrigger = now;
+              toggle3DGraph(true);
+              showGestureToast("ВЗМАХ ВВЕРХ ↑ ОТКРЫТИЕ 3D-ГРАФА", "🌐");
+            } else if (dy > 0.22) {
+              gestureLastTrigger = now;
+              if (graphModalActive) toggle3DGraph(false);
+              else if (spotlightActive) closeSpotlight();
+              showGestureToast("ВЗМАХ ВНИЗ ↓ СБРОС", "👇");
+            }
+          }
+          gestureLastX = gestureSmoothedX;
+          gestureLastY = gestureSmoothedY;
+        }
+      }
+      gestureLastFrame = new Uint8ClampedArray(cur);
+    }
+    gestureRafId = requestAnimationFrame(gestureLoop);
+  }
+
+  // 3. THREE.JS 3D KNOWLEDGE & COMPETENCY GRAPH ENGINE
+  let graphModalActive = false;
+  let threeInitialized = false;
+  let graphScene, graphCamera, graphRenderer, graphNodesGroup, graphEdgesGroup;
+  let graphAnimId = 0;
+  let graphHoveredNode = null;
+  let graphRaycaster, graphMouse;
+
+  function toggle3DGraph(forceState) {
+    const modal = document.getElementById('graphModal');
+    const newState = (typeof forceState === 'boolean') ? forceState : !graphModalActive;
+    if (newState) {
+      modal.classList.add('active');
+      graphModalActive = true;
+      playSound('portal');
+      if (!threeInitialized) {
+        initThree3DGraph();
+      }
+      startGraphAnimation();
+    } else {
+      modal.classList.remove('active');
+      graphModalActive = false;
+      cancelAnimationFrame(graphAnimId);
+      playSound('click');
+    }
+  }
+
+  function initThree3DGraph() {
+    if (!window.THREE) {
+      console.warn("Three.js not loaded yet");
+      return;
+    }
+    const container = document.getElementById('graphCanvasContainer');
+    const width = container.clientWidth || window.innerWidth;
+    const height = container.clientHeight || (window.innerHeight - 80);
+
+    graphScene = new THREE.Scene();
+    graphCamera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    graphCamera.position.set(0, 0, 85);
+
+    graphRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    graphRenderer.setSize(width, height);
+    graphRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(graphRenderer.domElement);
+
+    // Lights
+    const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+    graphScene.add(ambLight);
+
+    const dirLight = new THREE.DirectionalLight(0xe4c996, 1.2);
+    dirLight.position.set(20, 40, 50);
+    graphScene.add(dirLight);
+
+    const pointLight = new THREE.PointLight(0x65f2cf, 1.5, 120);
+    pointLight.position.set(0, 0, 10);
+    graphScene.add(pointLight);
+
+    graphNodesGroup = new THREE.Group();
+    graphEdgesGroup = new THREE.Group();
+    graphScene.add(graphEdgesGroup);
+    graphScene.add(graphNodesGroup);
+
+    // Central Core: СИЛЬНЫЕ СТОРОНЫ
+    const coreGeo = new THREE.DodecahedronGeometry(6, 1);
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0xe4c996,
+      emissive: 0x9f6aff,
+      emissiveIntensity: 0.35,
+      metalness: 0.8,
+      roughness: 0.2,
+      wireframe: false
+    });
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    coreMesh.userData = {
+      title: "Акмеологическая экосистема «Сильные стороны»",
+      cat: "ЦЕНТРАЛЬНОЕ ЯДРО СИСТЕМЫ",
+      desc: "Фундаментальная платформа управления человеческим капиталом: объединяет акмеологию, проектное управление PMBOK и прикладных AI-агентов.",
+      stat: "СИНЕРГИЯ НАУКИ И ПРИКЛАДНОГО AI"
+    };
+    graphNodesGroup.add(coreMesh);
+
+    // Wireframe halo for core
+    const haloGeo = new THREE.DodecahedronGeometry(7.2, 1);
+    const haloMat = new THREE.MeshBasicMaterial({ color: 0x65f2cf, wireframe: true, transparent: true, opacity: 0.3 });
+    const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+    coreMesh.add(haloMesh);
+
+    // Satellite Nodes Data
+    const nodes = [
+      // Psychotypes (Inner Orbit, radius ~24)
+      { id: 'enfp', label: 'ENFP Коммуникатор', cat: 'ПСИХОТИП ЮНГА', color: 0xe4c996, radius: 24, angle: 0,
+        desc: 'Природный талант вдохновения и продаж. Зона риска: тонет в отчетах. Решение: связка с AI-агентом ИВАНОМ.', stat: '+40% КОНВЕРСИЯ СДЕЛОК' },
+      { id: 'intj', label: 'INTJ Стратег', cat: 'ПСИХОТИП ЮНГА', color: 0x9f6aff, radius: 24, angle: Math.PI / 4,
+        desc: 'Глубокий системный архитектор. Зона риска: холодные продажи. Место: стратегическое планирование и аналитика.', stat: 'СТРАТЕГИЧЕСКИЙ РАСЧЕТ' },
+      { id: 'estp', label: 'ESTP Лидер действия', cat: 'ПСИХОТИП ЮНГА', color: 0x65f2cf, radius: 24, angle: Math.PI / 2,
+        desc: 'Кризис-менеджер и реализатор тактических прорывов. Зона риска: рутинное администрирование.', stat: 'ТАКТИЧЕСКИЙ ПРОРЫВ' },
+      { id: 'infj', label: 'INFJ Наставник', cat: 'ПСИХОТИП ЮНГА', color: 0x38bdf8, radius: 24, angle: 3 * Math.PI / 4,
+        desc: 'Развитие талантов, удержание команды, наставничество и передача корпоративного ДНК.', stat: 'УДЕРЖАНИЕ КОМАНДЫ' },
+      { id: 'entj', label: 'ENTJ Командир', cat: 'ПСИХОТИП ЮНГА', color: 0xe4c996, radius: 24, angle: Math.PI,
+        desc: 'Масштабирование бизнеса, координация проектов, жесткий контроль стратегических целей.', stat: 'МАСШТАБИРОВАНИЕ' },
+      { id: 'istj', label: 'ISTJ Администратор', cat: 'ПСИХОТИП ЮНГА', color: 0x94a3b8, radius: 24, angle: 5 * Math.PI / 4,
+        desc: 'Стандарты, регламенты, финансовая дисциплина и безупречное соблюдение процессов.', stat: 'РЕГЛАМЕНТАЦИЯ' },
+
+      // PMBOK Pillars (Middle Orbit, radius ~36)
+      { id: 'pmbok-1', label: 'PMBOK: Проектный офис', cat: 'РЕГЛАМЕНТАЦИЯ БИЗНЕСА', color: 0x65f2cf, radius: 36, angle: 0.3,
+        desc: 'Четкие границы ответственности, устранение хаоса и дублирования функций на предприятии.', stat: 'ЭТАП 01' },
+      { id: 'pmbok-2', label: 'AI-Матрица ролей', cat: 'ДЕКОМПОЗИЦИЯ ФУНКЦИОНАЛА', color: 0xe4c996, radius: 36, angle: 1.8,
+        desc: 'Сопоставление задач бизнеса с профилем необходимых психологических компетенций.', stat: 'ЭТАП 02' },
+      { id: 'krasnov', label: 'Тестирование Краснова', cat: 'ВАЛИДИРОВАННАЯ ПСИХОМЕТРИЯ', color: 0x9f6aff, radius: 36, angle: 3.4,
+        desc: 'Научный срез личностных качеств (СФУ / АНХ). Исключает искажения и социальную желательность.', stat: 'ЭТАП 03' },
+      { id: 'ipr', label: 'Индивидуальный трек (ИПР)', cat: 'КАДРОВЫЙ СУВЕРЕНИТЕТ', color: 0x38bdf8, radius: 36, angle: 4.8,
+        desc: 'Персонифицированная траектория обучения и роста ключевых сотрудников без выгорания.', stat: 'ЭТАП 05' },
+
+      // AI Agents (Outer Cluster, radius ~46)
+      { id: 'ivan', label: 'AI-Агент ИВАН (Снятие рутины)', cat: 'ПРИКЛАДНОЙ AI-КОНТУР', color: 0x65f2cf, radius: 46, angle: 0.1,
+        desc: 'Автономная обработка звонков, транскрибация, заполнение CRM и сборка коммерческих предложений.', stat: 'СНЯТИЕ 65% РУТИНЫ' },
+      { id: 'neuro-hr', label: 'AI-Агент Нейро-HR', cat: 'ПРИКЛАДНОЙ AI-КОНТУР', color: 0xe4c996, radius: 46, angle: 2.5,
+        desc: 'Автоматический первичный скрининг, сопоставление резюме с акмеологической матрицей роли.', stat: 'ТОЧНЫЙ НАЙМ' }
+    ];
+
+    const nodeMeshes = [];
+    nodes.forEach(n => {
+      const x = Math.cos(n.angle) * n.radius;
+      const y = Math.sin(n.angle) * n.radius * 0.75;
+      const z = (Math.sin(n.angle * 2)) * 12;
+
+      const geo = new THREE.SphereGeometry(2.4, 16, 16);
+      const mat = new THREE.MeshStandardMaterial({
+        color: n.color,
+        emissive: n.color,
+        emissiveIntensity: 0.35,
+        roughness: 0.3
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(x, y, z);
+      mesh.userData = {
+        title: n.label,
+        cat: n.cat,
+        desc: n.desc,
+        stat: n.stat
+      };
+      graphNodesGroup.add(mesh);
+      nodeMeshes.push(mesh);
+
+      // Line to center
+      const lineGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(x, y, z)
+      ]);
+      const lineMat = new THREE.LineBasicMaterial({ color: n.color, transparent: true, opacity: 0.22 });
+      const line = new THREE.Line(lineGeo, lineMat);
+      graphEdgesGroup.add(line);
+    });
+
+    // Special Glowing Bridge: ENFP ⇄ AI ИВАН
+    const enfpMesh = nodeMeshes.find(m => m.userData.title.includes('ENFP'));
+    const ivanMesh = nodeMeshes.find(m => m.userData.title.includes('ИВАН'));
+    if (enfpMesh && ivanMesh) {
+      const bridgeGeo = new THREE.BufferGeometry().setFromPoints([
+        enfpMesh.position,
+        ivanMesh.position
+      ]);
+      const bridgeMat = new THREE.LineBasicMaterial({ color: 0x65f2cf, linewidth: 2, transparent: true, opacity: 0.85 });
+      const bridge = new THREE.Line(bridgeGeo, bridgeMat);
+      graphEdgesGroup.add(bridge);
+    }
+
+    // Interaction (Drag to rotate)
+    let isDragging = false;
+    let prevMouseX = 0, prevMouseY = 0;
+    container.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+    window.addEventListener('mouseup', () => isDragging = false);
+    container.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const deltaX = e.clientX - prevMouseX;
+        const deltaY = e.clientY - prevMouseY;
+        graphNodesGroup.rotation.y += deltaX * 0.008;
+        graphNodesGroup.rotation.x += deltaY * 0.008;
+        graphEdgesGroup.rotation.y += deltaX * 0.008;
+        graphEdgesGroup.rotation.x += deltaY * 0.008;
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
+      }
+    });
+
+    // Raycasting for clicking nodes
+    graphRaycaster = new THREE.Raycaster();
+    graphMouse = new THREE.Vector2();
+    container.addEventListener('click', (e) => {
+      const rect = container.getBoundingClientRect();
+      graphMouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+      graphMouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+      graphRaycaster.setFromCamera(graphMouse, graphCamera);
+      const intersects = graphRaycaster.intersectObjects(graphNodesGroup.children, true);
+      if (intersects.length > 0) {
+        const hit = intersects[0].object;
+        if (hit.userData && hit.userData.title) {
+          document.getElementById('graphCardCategory').innerText = hit.userData.cat || "УЗЕЛ СИСТЕМЫ";
+          document.getElementById('graphCardTitle').innerText = hit.userData.title;
+          document.getElementById('graphCardDesc').innerText = hit.userData.desc;
+          document.getElementById('graphCardStat').innerText = hit.userData.stat || "";
+          playSound('click');
+        }
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (!graphRenderer || !container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      graphCamera.aspect = w / h;
+      graphCamera.updateProjectionMatrix();
+      graphRenderer.setSize(w, h);
+    });
+
+    threeInitialized = true;
+  }
+
+  function startGraphAnimation() {
+    function animate() {
+      if (!graphModalActive) return;
+      if (graphNodesGroup) {
+        graphNodesGroup.rotation.y += 0.0025;
+        graphEdgesGroup.rotation.y += 0.0025;
+      }
+      if (graphRenderer && graphScene && graphCamera) {
+        graphRenderer.render(graphScene, graphCamera);
+      }
+      graphAnimId = requestAnimationFrame(animate);
+    }
+    animate();
+  }
+
   window.addEventListener('keydown', (e) => {
     if (e.key === ' ' && introActive) {
       e.preventDefault();
@@ -1352,8 +2161,19 @@
       toggleFullscreen();
     } else if (e.key === 'n' || e.key === 'N') {
       toggleSpeakerHUD();
-    } else if (e.key === 'Escape') {
+        } else if (e.key === 'Escape') {
+      if (graphModalActive) { toggle3DGraph(false); return; }
+      if (spotlightActive) { closeSpotlight(); return; }
       toggleIntro();
+        } else if (e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') {
+      if (spotlightActive) nextSpotlightStep();
+      else startModuleTour();
+    } else if (e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') {
+      toggleGestures();
+    } else if (e.key === 'e' || e.key === 'E' || e.key === 'у' || e.key === 'У') {
+      toggle3DGraph();
+    } else if (e.key === 'i' || e.key === 'I' || e.key === 'ш' || e.key === 'Ш') {
+      triggerIvanVoiceCurrent();
     } else if (e.key === 's' || e.key === 'S') {
       stopIvanVoice();
     } else if (e.key === '1') sendReaction('🔥');
@@ -1466,6 +2286,95 @@
   // Initialize
   updateModule();
 </script>
+
+
+<!-- ==================== SUPER-POWERS OVERLAYS ==================== -->
+<!-- 1. SPOTLIGHT SVG OVERLAY (DRIVER.JS EQUIVALENT) -->
+<svg id="spotlightSvg">
+  <defs>
+    <linearGradient id="spotlightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e4c996" />
+      <stop offset="100%" stop-color="#65f2cf" />
+    </linearGradient>
+    <mask id="spotlightMask">
+      <rect x="0" y="0" width="100%" height="100%" fill="white" />
+      <rect id="spotlightCutout" x="0" y="0" width="0" height="0" rx="16" fill="black" />
+    </mask>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="rgba(6, 4, 10, 0.78)" mask="url(#spotlightMask)" />
+  <rect id="spotlightBorder" x="0" y="0" width="0" height="0" rx="16" />
+</svg>
+
+<div id="spotlightPopover" class="spotlight-popover">
+  <div class="spotlight-header">
+    <div class="spotlight-badge" id="spotlightBadge">ШАГ 1 ИЗ 3</div>
+    <div style="font-size:11px; color:var(--text-muted); cursor:pointer;" onclick="closeSpotlight()">✕ Закрыть</div>
+  </div>
+  <div class="spotlight-title" id="spotlightTitle">Заголовок шага</div>
+  <div class="spotlight-body" id="spotlightBody">Описание фокусируемого элемента и методологическое пояснение.</div>
+  <div class="spotlight-actions">
+    <button class="spotlight-btn" onclick="prevSpotlightStep()">← Назад</button>
+    <button class="spotlight-btn spotlight-btn-primary" onclick="nextSpotlightStep()">Далее (ПРОБЕЛ) →</button>
+  </div>
+</div>
+
+<!-- 2. HOLO GESTURE HUD & TOAST -->
+<div id="gestureToast" class="gesture-toast">
+  <span id="gestureToastIcon">🖐️</span>
+  <span id="gestureToastText">ЖЕСТ ОБНАРУЖЕН</span>
+</div>
+
+<div id="gestureHud" class="gesture-hud" onclick="toggleGestures()" title="Нажмите для включения/выключения распознавания жестов">
+  <div class="gesture-cam-preview">
+    <video id="gestureVideo" autoplay muted playsinline></video>
+    <div class="gesture-cam-scan" id="gestureCamScan" style="display:none;"></div>
+    <span id="gestureCamIcon" style="font-size:18px;">📷</span>
+  </div>
+  <div style="text-align:left; line-height:1.2;">
+    <div style="font-size:11px; font-weight:800; color:var(--mint); letter-spacing:0.04em;" id="gestureStatusText">ЖЕСТЫ (G): ВЫКЛ</div>
+    <div style="font-size:9.5px; color:var(--text-muted);" id="gestureSubText">Клик или 'G' для пуска камеры</div>
+  </div>
+</div>
+
+<!-- 3. THREE.JS 3D KNOWLEDGE & COMPETENCY GRAPH MODAL -->
+<div id="graphModal" class="graph-modal">
+  <div class="graph-top-bar">
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span style="font-size:24px;">🌐</span>
+      <div style="text-align:left;">
+        <div style="font-size:14px; font-weight:900; color:var(--gold); letter-spacing:0.06em; text-transform:uppercase;">
+          3D-КАРТА КОМПЕТЕНЦИЙ И СИСТЕМНЫХ СВЯЗЕЙ «СИЛЬНЫЕ СТОРОНЫ»
+        </div>
+        <div style="font-size:11px; color:var(--mint); font-weight:600;">
+          Интерактивная архитектура: 16 Психотипов Юнга · Регламенты PMBOK · AI-Агенты (ИВАН)
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="font-size:11px; color:var(--text-muted); background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:8px;">
+        Вращение: мышь или жест рукой · Сброс: 'E' или ESC
+      </div>
+      <button class="ctrl-btn" onclick="toggle3DGraph(false)" style="border-color:var(--gold); color:var(--gold);">✕ ЗАКРЫТЬ [ ESC ]</button>
+    </div>
+  </div>
+
+  <div class="graph-canvas-container" id="graphCanvasContainer">
+    <div class="graph-info-card" id="graphInfoCard">
+      <div style="font-size:10px; font-weight:800; color:var(--mint); text-transform:uppercase; margin-bottom:4px;" id="graphCardCategory">
+        КЛЮЧЕВАЯ СВЯЗКА КЕЙСА
+      </div>
+      <h3 style="font-size:18px; font-weight:900; color:var(--gold); margin-bottom:6px;" id="graphCardTitle">
+        Менеджер ENFP ⇄ AI-Агент ИВАН
+      </h3>
+      <p style="font-size:12px; color:var(--text-muted); line-height:1.45; margin-bottom:8px;" id="graphCardDesc">
+        Синергия природного таланта (вскрытие истинных мотивов ЛПР) и алгоритмического замещения рутины: агент ИВАН забирает 65% задач CRM, конверсия встреч возрастает на 40%.
+      </p>
+      <div style="font-size:11px; font-weight:700; color:var(--mint);" id="graphCardStat">
+        ЭФФЕКТ: +40% КОНВЕРСИЯ · 0 РАЗДУВАНИЯ ФОТ
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
