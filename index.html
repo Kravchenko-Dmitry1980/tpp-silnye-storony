@@ -1248,7 +1248,9 @@
     const screen = document.getElementById('introScreen');
     screen.classList.add('hidden');
     introActive = false;
-    triggerIvanVoice(0);
+    setTimeout(() => {
+      playIvanAudio('prologue');
+    }, 400);
   }
 
   function toggleIntro() {
@@ -1325,6 +1327,8 @@
       toggleSpeakerHUD();
     } else if (e.key === 'Escape') {
       toggleIntro();
+    } else if (e.key === 's' || e.key === 'S') {
+      stopIvanVoice();
     } else if (e.key === '1') sendReaction('🔥');
     else if (e.key === '2') sendReaction('🚀');
     else if (e.key === '3') sendReaction('💡');
@@ -1366,15 +1370,61 @@
     setTimeout(() => el.remove(), 2900);
   }
 
-  // AGENT IVAN SPEECH ENGINE
-  const ivanPhrases = [
-    "Внимание! Ситуационный центр ТПП активирован. Повышение зарплаты удерживает сотрудника в среднем на 87 дней. На первом месте для людей стоят психологический комфорт, признание и отсутствие мелочного контроля. Деньги не решают проблему несовпадения роли и человека.",
-    "Акмеология — это наука о вершинах человеческого потенциала. База заложена Зигмундом Фрейдом и Карлом Юнгом, развита кафедрой акмеологии АНХ при Президенте России. Главный принцип: развивай сильные стороны, а слабые замещай сильными сторонами команды или алгоритмами.",
-    "Комплексный пятишаговый подход агентства Сильные стороны соединяет стандарты управления проектами, искусственный интеллект, валидированное тестирование Краснова и персональные треки обучения. Это законченная экосистема роста бизнеса.",
-    "Разбор кейса отдела продаж. Менеджер с психотипом Коммуникатор тратил 65 процентов времени на заполнение CRM и рутинные отчеты. После внедрения меня как AI-ассистента рутина была снята, а конверсия выросла на 40 процентов.",
-    "Данные исследований АНО МИКС подтверждают: компании, использующие акмеологический подход, в 1.7 раза прибыльнее конкурентов. Вовлеченность сотрудников возрастает на 60 процентов, а производительность труда — на 78 процентов.",
-    "Благодарим руководство и членов Торгово-промышленной палаты Краснодарского края. Сканируйте QR-код для прохождения тестирования и получения бесплатного экспресс-аудита вашей ключевой позиции. До встречи в совместных проектах!"
-  ];
+  // HIGH-DEFINITION STUDIO AUDIO ENGINE (OPENAI NEURAL ONYX)
+  const ivanAudioTracks = {
+    prologue: 'assets/audio/ivan_prologue.mp3',
+    mod0: 'assets/audio/ivan_mod0.mp3',
+    mod1: 'assets/audio/ivan_mod1.mp3',
+    mod2: 'assets/audio/ivan_mod2.mp3',
+    mod3: 'assets/audio/ivan_mod3.mp3',
+    mod4: 'assets/audio/ivan_mod4.mp3',
+    mod5: 'assets/audio/ivan_mod5.mp3'
+  };
+
+  let activeAudio = null;
+
+  function stopIvanVoice() {
+    if (activeAudio) {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+      activeAudio = null;
+    }
+    const waveEl = document.getElementById('topWaveBars');
+    const subStatus = document.getElementById('ivanSubStatus');
+    if (waveEl) waveEl.classList.remove('wave-active');
+    if (subStatus) {
+      subStatus.innerText = 'НА СВЯЗИ · ГОТОВ';
+      subStatus.style.color = 'var(--gold)';
+    }
+  }
+
+  function playIvanAudio(trackKey) {
+    stopIvanVoice();
+    const src = ivanAudioTracks[trackKey];
+    if (!src) return;
+
+    const waveEl = document.getElementById('topWaveBars');
+    const subStatus = document.getElementById('ivanSubStatus');
+    if (waveEl) waveEl.classList.add('wave-active');
+    if (subStatus) {
+      subStatus.innerText = 'ВЕЩАЕТ В ЭФИРЕ...';
+      subStatus.style.color = 'var(--mint)';
+    }
+
+    activeAudio = new Audio(src);
+    activeAudio.play().catch(e => {
+      console.warn("Autoplay blocked or audio error:", e);
+    });
+
+    activeAudio.onended = () => {
+      if (waveEl) waveEl.classList.remove('wave-active');
+      if (subStatus) {
+        subStatus.innerText = 'НА СВЯЗИ · ГОТОВ';
+        subStatus.style.color = 'var(--gold)';
+      }
+      activeAudio = null;
+    };
+  }
 
   function triggerIvanVoiceCurrent() {
     triggerIvanVoice(currentMod);
@@ -1383,33 +1433,7 @@
   function triggerIvanVoice(modIdx) {
     playSound('click');
     sendReaction('🎙️');
-    const waveEl = document.getElementById('topWaveBars');
-    const subStatus = document.getElementById('ivanSubStatus');
-    subStatus.innerText = 'ВЕЩАЕТ В ЭФИРЕ...';
-    subStatus.style.color = 'var(--mint)';
-    waveEl.classList.add('wave-active');
-
-    const text = ivanPhrases[modIdx] || ivanPhrases[0];
-
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utt = new SpeechSynthesisUtterance(text);
-      utt.lang = 'ru-RU';
-      utt.rate = 1.05;
-      utt.pitch = 0.95;
-      utt.onend = () => {
-        subStatus.innerText = 'НА СВЯЗИ · ГОТОВ';
-        subStatus.style.color = 'var(--gold)';
-        waveEl.classList.remove('wave-active');
-      };
-      window.speechSynthesis.speak(utt);
-    } else {
-      setTimeout(() => {
-        subStatus.innerText = 'НА СВЯЗИ · ГОТОВ';
-        subStatus.style.color = 'var(--gold)';
-        waveEl.classList.remove('wave-active');
-      }, 3500);
-    }
+    playIvanAudio(`mod${modIdx}`);
   }
 
   // Initialize
