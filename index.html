@@ -2613,7 +2613,7 @@
     if (ambientAudio) return;
     ambientAudio = new Audio('assets/audio/welcome_ambient.mp3');
     ambientAudio.loop = true;
-    ambientAudio.volume = 0.35;
+    ambientAudio.volume = 0.14;
   }
 
   function playAmbient() {
@@ -2665,8 +2665,8 @@
     if (!ambientAudio || !ambientPlaying) return;
     let vol = ambientAudio.volume;
     const fadeTimer = setInterval(() => {
-      vol -= 0.04;
-      if (vol <= 0.02) {
+      vol -= 0.015;
+      if (vol <= 0.01) {
         clearInterval(fadeTimer);
         ambientAudio.pause();
         ambientAudio.currentTime = 0;
