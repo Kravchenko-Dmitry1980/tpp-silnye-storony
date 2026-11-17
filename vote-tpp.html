@@ -221,9 +221,9 @@
 <body>
 
 <header>
-  <div class="tag">ТПП КК · КОМИТЕТ ПО РЫНКУ ТРУДА</div>
+  <div class="tag">ТПП КК · КРУГЛЫЙ СТОЛ ПО РЫНКУ ТРУДА</div>
   <h1>Где ваш бизнес теряет деньги прямо сейчас?</h1>
-  <p class="subtitle">Выберите главную кадровую проблему — агент ИВАН сформирует тепловую карту зала в прямом эфире</p>
+  <p class="subtitle">Выберите главную кадровую проблему вашей компании — агент ИВАН выведет тепловую карту круглого стола на экран телевизора в прямом эфире</p>
 </header>
 
 <div class="cards">
@@ -275,7 +275,7 @@
 <div class="status-footer" id="statusText">Нажмите на карточку, чтобы проголосовать</div>
 
 <div class="reaction-section">
-  <div class="reaction-title">Живая реакция спикерам в зал</div>
+  <div class="reaction-title">Живая реакция спикерам на экран</div>
   <div class="reaction-bar">
     <button class="reaction-btn" onclick="sendReaction('🔥', event)">🔥 Огонь</button>
     <button class="reaction-btn" onclick="sendReaction('💡', event)">💡 Мысль</button>
@@ -304,22 +304,52 @@
 </div>
 
 <script>
+  const PUB_URL = 'https://ntfy.sh/tpp_krasnodar_roundtable_2026';
+  const SSE_URL = 'https://ntfy.sh/tpp_krasnodar_roundtable_2026/sse';
+  
   let myVote = -1;
-  // Local simulated vote tally or synchronized with server
-  let votes = [18, 14, 22, 10]; // baseline seed
+  let voterId = localStorage.getItem('tpp_voter_id');
+  if (!voterId) {
+    voterId = 'voter_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('tpp_voter_id', voterId);
+  }
+
+  // Live vote tally (synchronized with TV and all 30 participants)
+  let votes = [0, 0, 0, 0];
+  let voterMap = {}; // voterId -> optionIdx
+
+  function broadcast(data) {
+    try {
+      fetch(PUB_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).catch(() => {});
+    } catch(e) {}
+  }
 
   function updateBars() {
-    const total = votes.reduce((a, b) => a + b, 0) || 1;
+    const total = votes.reduce((a, b) => a + b, 0);
+    const countEl = document.getElementById('voteCountHeader');
+    if (countEl) {
+      countEl.innerText = `Круглый стол · ${total} ответов`;
+    }
+
     for (let i = 0; i < 4; i++) {
-      const pct = Math.round((votes[i] / total) * 100);
-      document.getElementById(`pct-${i}`).innerText = pct + '%';
-      document.getElementById(`bar-${i}`).style.width = pct + '%';
+      const pct = total > 0 ? Math.round((votes[i] / total) * 100) : 0;
+      const pctEl = document.getElementById(`pct-${i}`);
+      const barEl = document.getElementById(`bar-${i}`);
+      if (pctEl) pctEl.innerText = pct + '%';
+      if (barEl) barEl.style.width = pct + '%';
     }
   }
 
   function castVote(idx) {
     if (myVote === idx) return;
+    
+    // Local adjustment
     if (myVote >= 0) votes[myVote] = Math.max(0, votes[myVote] - 1);
+    const prevVote = myVote;
     myVote = idx;
     votes[idx]++;
 
@@ -330,29 +360,48 @@
     });
 
     const footer = document.getElementById('statusText');
-    footer.innerText = '✔ Ваш голос учтен! Данные обновлены на экране зала';
+    footer.innerText = '✔ Ваш выбор передан на экран круглого стола!';
     footer.classList.add('active');
 
     updateBars();
 
-    // Haptic feedback if available
-    if (navigator.vibrate) navigator.vibrate(40);
+    // Broadcast to main TV screen & other participants in real-time
+    broadcast({
+      type: 'vote',
+      option: idx,
+      prevOption: prevVote,
+      voterId: voterId,
+      time: Date.now()
+    });
+
+    if (navigator.vibrate) navigator.vibrate(45);
   }
 
   function sendReaction(emoji, e) {
+    // Local visual feedback on phone
     const el = document.createElement('div');
     el.className = 'floating-emoji';
     el.innerText = emoji;
-    const x = e.clientX || window.innerWidth / 2;
-    const y = e.clientY || window.innerHeight / 2;
+    const x = (e && e.clientX) ? e.clientX : (window.innerWidth / 2);
+    const y = (e && e.clientY) ? e.clientY : (window.innerHeight / 2);
     el.style.left = x + 'px';
     el.style.top = y + 'px';
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 800);
+    setTimeout(() => el.remove(), 900);
 
     const footer = document.getElementById('statusText');
-    footer.innerText = `Реакция ${emoji} отправлена на сцену!`;
+    footer.innerText = `Огонек ${emoji} отправлен на экран телевизора!`;
     footer.classList.add('active');
+
+    // Broadcast reaction to main TV screen
+    broadcast({
+      type: 'reaction',
+      emoji: emoji,
+      voterId: voterId,
+      time: Date.now()
+    });
+
+    if (navigator.vibrate) navigator.vibrate(30);
   }
 
   function sendQuestion() {
@@ -360,12 +409,24 @@
     const val = inp.value.trim();
     if (!val) return;
     inp.value = '';
+
     const footer = document.getElementById('statusText');
-    footer.innerText = '✔ Вопрос передан ведущим и агенту ИВАНУ!';
+    footer.innerText = '✔ Вопрос выведен на экран спикерам!';
     footer.classList.add('active');
+
+    // Broadcast question to main TV screen
+    broadcast({
+      type: 'question',
+      text: val,
+      author: 'Участник круглого стола',
+      time: Date.now()
+    });
+
     setTimeout(() => {
-      footer.innerText = '✔ Ваш голос учтен! Данные обновлены на экране зала';
-    }, 3000);
+      footer.innerText = '✔ Синхронизация с экраном круглого стола активна';
+    }, 4500);
+
+    if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
   }
 
   function sendLead() {
@@ -376,11 +437,56 @@
       return;
     }
     document.getElementById('leadStatus').style.display = 'block';
+
+    broadcast({
+      type: 'lead',
+      name: name,
+      contact: contact,
+      time: Date.now()
+    });
+
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
   }
 
-  // Initial draw
+  // BIDIRECTIONAL SSE LISTENER ON PHONE
+  function initPhoneSSE() {
+    try {
+      const es = new EventSource(SSE_URL);
+      es.onmessage = (e) => {
+        try {
+          const raw = JSON.parse(e.data);
+          if (!raw.message) return;
+          const msg = JSON.parse(raw.message);
+          
+          if (msg.type === 'vote') {
+            // Synchronize remote participant votes
+            if (msg.voterId !== voterId) {
+              if (msg.prevOption !== undefined && msg.prevOption >= 0 && msg.prevOption <= 3) {
+                votes[msg.prevOption] = Math.max(0, votes[msg.prevOption] - 1);
+              }
+              if (msg.option >= 0 && msg.option <= 3) {
+                votes[msg.option]++;
+              }
+              updateBars();
+            }
+          } else if (msg.type === 'baseline') {
+            if (Array.isArray(msg.votes)) {
+              votes = [...msg.votes];
+              updateBars();
+            }
+          } else if (msg.type === 'reset') {
+            votes = [0, 0, 0, 0];
+            updateBars();
+          }
+        } catch(err) {}
+      };
+      es.onerror = () => setTimeout(initPhoneSSE, 6000);
+    } catch(e) {}
+  }
+
+  // Initialize
   updateBars();
+  setTimeout(initPhoneSSE, 500);
 </script>
 
 </body>
