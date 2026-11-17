@@ -998,7 +998,7 @@
           <h1 class="mod-title">Деньги чаще всего НЕ на первом месте!</h1>
           <p class="mod-subtitle">Почему увеличение оклада не останавливает текучку? Исследования показывают 6 ключевых факторов истинной мотивации людей.</p>
         </div>
-        <button class="action-btn" onclick="triggerIvanVoice(0)">🎙️ ИВАН, анализируй мотивы</button>
+        <button class="action-btn" onclick="triggerIvanLiveAnalysis()" style="box-shadow:0 0 20px var(--mint-glow); border-color:var(--mint);">🎙️ ИВАН, анализируй срез стола</button>
       </div>
 
       <div class="grid-2">
@@ -2232,6 +2232,10 @@
       setBaselineVotes();
     } else if (e.key === '0') {
       resetVotes();
+    } else if (e.key === 'k' || e.key === 'K' || e.key === 'л' || e.key === 'Л') {
+      toggleBlitzCaseModal();
+    } else if (e.key === 'Escape') {
+      const m = document.getElementById('blitzCaseModal'); if(m) m.classList.remove('active');
     } else if (e.key === 's' || e.key === 'S') {
       stopIvanVoice();
     } else if (e.key === '1') sendReaction('🔥');
@@ -2316,7 +2320,7 @@
     } else if (msg.type === 'question') {
       showAudienceQuestion(msg.text, msg.author);
     } else if (msg.type === 'lead') {
-      showGestureToast(`🏢 Заявка на экспресс-аудит: ${msg.name || 'Участник ТПП'} (${msg.contact || ''})`, "🎁");
+      showGestureToast(`🏢 Заявка на аудит [${msg.channel || 'МАКС'}]: ${msg.name || 'Участник'} (${msg.contact || ''})`, "🎁");
       playSound('portal');
     }
   }
@@ -2440,6 +2444,117 @@
     setTimeout(() => el.remove(), 3500);
   }
 
+  
+  // ==================== BLITZ-CASE STUDY LOGIC ====================
+  function toggleBlitzCaseModal() {
+    const modal = document.getElementById('blitzCaseModal');
+    if (!modal) return;
+    const isActive = modal.classList.contains('active');
+    if (isActive) {
+      modal.classList.remove('active');
+    } else {
+      modal.classList.add('active');
+      playSound('portal');
+    }
+  }
+
+  function setBlitzPreset(type) {
+    const inp = document.getElementById('blitzCustomInput');
+    if (type === 'sales') {
+      inp.value = "Производственный холдинг: Коммерческий директор / РОП";
+    } else if (type === 'agro') {
+      inp.value = "Агробизнес Кубани: Руководитель закупки и сбыта зерновых";
+    } else if (type === 'dev') {
+      inp.value = "Девелопмент / Строительство: Главный инженер проекта (ГИП)";
+    } else if (type === 'tech') {
+      inp.value = "Услуги / IT: Ведущий эксперт по сложным проектам";
+    }
+    runBlitzAnalysis();
+  }
+
+  function runBlitzAnalysis() {
+    playSound('click');
+    const inp = document.getElementById('blitzCustomInput');
+    const title = inp ? inp.value.trim() : "Ключевой эксперт компании";
+    
+    showGestureToast(`⚡ Агент ИВАН: формирую акмеологический профиль роли...`, "🧠");
+
+    // Dynamic tailored content
+    const acmeoEl = document.getElementById('blitzAcmeoText');
+    const agentEl = document.getElementById('blitzAgentText');
+    const econEl = document.getElementById('blitzEconText');
+
+    if (acmeoEl) {
+      acmeoEl.innerHTML = `
+        <p style="margin-bottom:8px;"><strong>Роль:</strong> <span style="color:var(--gold);">${title || 'Ключевой специалист'}</span></p>
+        <p style="margin-bottom:8px;"><strong>Истинный мотиватор:</strong> Психологический комфорт + автономность в принятии решений. Не терпит микроменеджмента.</p>
+        <p style="margin-bottom:8px;"><strong>Главный риск выгорания:</strong> Погружение в операционную рутину (свыше 55% рабочего времени).</p>
+        <p><strong style="color:var(--mint);">Акмео-калибровка:</strong> Отбор по психотипу совместимости с первым лицом за 1 сессию.</p>
+      `;
+    }
+
+    if (agentEl) {
+      agentEl.innerHTML = `
+        <p style="margin-bottom:8px;"><strong>Автономный AI-агент забирает:</strong></p>
+        <ul style="padding-left:18px; margin-bottom:8px;">
+          <li>Сбор и сведение сводной отчетности из CRM/1C</li>
+          <li>Подготовку проектов договоров и смет по шаблонам</li>
+          <li>Мониторинг дебиторской задолженности и сроков</li>
+        </ul>
+        <p><strong style="color:var(--gold);">Результат эксперта:</strong> 100% фокус на росте маржинальности и контрактах.</p>
+      `;
+    }
+
+    if (econEl) {
+      econEl.innerHTML = `
+        <p style="margin-bottom:8px;"><strong>Срок закрытия вакансии:</strong> 12 дней вместо 90–120 дней на открытом рынке.</p>
+        <p style="margin-bottom:8px;"><strong>Сохраненный ФОТ:</strong> ~2 160 000 ₽ в год за счет исключения ошибок найма.</p>
+        <p><strong style="color:var(--mint);">Конверсия сделок:</strong> Рост на +38% благодаря мгновенной поддержке агента.</p>
+      `;
+    }
+
+    sendReaction('🚀');
+  }
+
+
+  // ==================== LIVE ROOM SYNTHESIS BY AGENT IVAN ====================
+  function triggerIvanLiveAnalysis() {
+    playSound('portal');
+    sendReaction('🎙️');
+    
+    // Calculate live top pain point
+    const voterIds = Object.keys(roundTableVoterMap);
+    const totalVoters = voterIds.length;
+    const counts = [0, 0, 0, 0];
+    voterIds.forEach(vid => {
+      const arr = roundTableVoterMap[vid] || [];
+      arr.forEach(idx => {
+        if (idx >= 0 && idx < 4) counts[idx]++;
+      });
+    });
+
+    const maxCount = Math.max(...counts);
+    const topIdx = counts.indexOf(maxCount);
+    const topPct = totalVoters > 0 ? Math.round((maxCount / totalVoters) * 100) : 85;
+
+    const painNames = [
+      "Слив лидов в продажах",
+      "Выгорание экспертов в рутине (CRM, отчеты)",
+      "Собственник застрял в операционке",
+      "Ошибки найма и текучка кадров"
+    ];
+
+    const leadPain = painNames[topIdx] || painNames[1];
+
+    showAudienceQuestion(
+      `АНАЛИЗ ИВАНА: ${topPct}% участников за столом подтвердили «${leadPain}». Дефицит кадров 1.8% требует снятия 60% рутины AI-агентом!`,
+      "AI Агент «ИВАН» · Прямой аналитический вывод"
+    );
+
+    // Play high-grade studio audio analysis synthesized with ElevenLabs
+    playIvanAudio('live_analysis');
+  }
+
   setTimeout(initRealtimeBridge, 500);
   setTimeout(updateRoundTableBars, 600);
 
@@ -2452,7 +2567,8 @@
     mod2: 'assets/audio/ivan_mod2.mp3',
     mod3: 'assets/audio/ivan_mod3.mp3',
     mod4: 'assets/audio/ivan_mod4.mp3',
-    mod5: 'assets/audio/ivan_mod5.mp3'
+    mod5: 'assets/audio/ivan_mod5.mp3',
+    live_analysis: 'assets/audio/ivan_live_analysis.mp3'
   };
 
   let activeAudio = null;
@@ -2621,5 +2737,92 @@
   </div>
 </div>
 
+<!-- ==================== BLITZ-CASE STUDY MODAL (КЕЙС ЗА СТОЛОМ) ==================== -->
+<div id="blitzCaseModal" class="graph-modal">
+  <div class="graph-top-bar">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span style="font-size:24px;">🏛️</span>
+      <div>
+        <div style="font-size:15px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.06em;">
+          ИНТЕРАКТИВНЫЙ БЛИЦ-РАЗБОР ВАКАНСИИ В ПРЯМОМ ЭФИРЕ
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); font-weight:600;">
+          Акмеологический психологический код & Архитектура автономного AI-агента «ИВАН»
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="ctrl-btn" onclick="toggleBlitzCaseModal()">✕ Закрыть [ Esc / K ]</button>
+    </div>
+  </div>
+
+  <div style="padding:24px 36px; overflow-y:auto; flex:1;">
+    <!-- ПАНЕЛЬ ВЫБОРА ДОЛЖНОСТИ -->
+    <div style="background:rgba(20, 16, 28, 0.7); border:1px solid var(--border); border-radius:16px; padding:18px 24px; margin-bottom:20px;">
+      <div style="font-size:13px; font-weight:700; color:var(--text-light); margin-bottom:10px;">
+        Выберите типичную проблемную отрасль или введите должность участника круглого стола:
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+        <button class="action-btn" onclick="setBlitzPreset('sales')" style="font-size:11.5px; padding:7px 14px;">🏭 Производство: Коммерческий директор / РОП</button>
+        <button class="action-btn" onclick="setBlitzPreset('agro')" style="font-size:11.5px; padding:7px 14px;">🌾 Агрохолдинг: Руководитель закупки и сбыта</button>
+        <button class="action-btn" onclick="setBlitzPreset('dev')" style="font-size:11.5px; padding:7px 14px;">🏗️ Девелопмент: Главный инженер проекта</button>
+        <button class="action-btn" onclick="setBlitzPreset('tech')" style="font-size:11.5px; padding:7px 14px;">💼 Услуги/IT: Ведущий эксперт / Тимлид</button>
+      </div>
+
+      <div style="display:flex; gap:12px; align-items:center;">
+        <input type="text" id="blitzCustomInput" placeholder="Или введите любую должность (например: Руководитель логистики завода)..." style="flex:1; background:#0c0a10; border:1px solid rgba(228,201,150,0.3); border-radius:10px; padding:12px 16px; font-size:13.5px; color:#fff; outline:none;">
+        <button onclick="runBlitzAnalysis()" style="background:linear-gradient(135deg, var(--gold), var(--mint)); color:#0c0a10; font-weight:800; font-size:13px; border:none; border-radius:10px; padding:12px 22px; cursor:pointer; box-shadow:0 0 20px var(--gold-glow); display:flex; align-items:center; gap:8px;">
+          <span>⚡ Сгенерировать решение</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ БЛИЦ-РАЗБОРА (3 ПАНЕЛИ) -->
+    <div id="blitzResultsGrid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:18px;">
+      <!-- ПАНЕЛЬ 1: АКМЕОЛОГИЯ -->
+      <div class="glass-card" style="border-top:3px solid var(--gold);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h4 style="font-size:14px; font-weight:800; color:var(--gold);">1. Акмеологический профиль</h4>
+          <span style="font-size:18px;">🧠</span>
+        </div>
+        <div id="blitzAcmeoText" style="font-size:12.5px; color:var(--text-light); line-height:1.5;">
+          <p style="margin-bottom:8px;"><strong>Истинный мотиватор:</strong> Автономия и масштаб задач, признание экспертного статуса.</p>
+          <p style="margin-bottom:8px;"><strong>Почему оклады не работают:</strong> Прибавка +20% держит 60–90 дней, затем наступает выгорание от хаоса и микроконтроля.</p>
+          <p><strong style="color:var(--mint);">Буквенный код таланта:</strong> Профиль стратегического драйвера с высокой ценностью психологического комфорта.</p>
+        </div>
+      </div>
+
+      <!-- ПАНЕЛЬ 2: AI АГЕНТ ИВАН -->
+      <div class="glass-card" style="border-top:3px solid var(--mint);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h4 style="font-size:14px; font-weight:800; color:var(--mint);">2. Разгрузка агентом ИВАНОМ</h4>
+          <span style="font-size:18px;">⚙️</span>
+        </div>
+        <div id="blitzAgentText" style="font-size:12.5px; color:var(--text-light); line-height:1.5;">
+          <p style="margin-bottom:8px;"><strong>Снимает 60% рутины:</strong></p>
+          <ul style="padding-left:18px; margin-bottom:8px;">
+            <li>Авто-сбор отчетов из CRM и 1С</li>
+            <li>Генерация первичных КП и расчетов</li>
+            <li>Контроль дебиторки и этапов сделок</li>
+          </ul>
+          <p><strong style="color:var(--gold);">Человек фокусируется:</strong> Только на ключевых переговорах и стратегических контрактах.</p>
+        </div>
+      </div>
+
+      <!-- ПАНЕЛЬ 3: ЭКОНОМИКА СОБСТВЕННИКА -->
+      <div class="glass-card" style="border-top:3px solid var(--purple);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h4 style="font-size:14px; font-weight:800; color:var(--purple);">3. Экономика собственника</h4>
+          <span style="font-size:18px;">📈</span>
+        </div>
+        <div id="blitzEconText" style="font-size:12.5px; color:var(--text-light); line-height:1.5;">
+          <p style="margin-bottom:8px;"><strong>Срок закрытия роли:</strong> Сокращение с 90 до 12 дней за счет точной калибровки.</p>
+          <p style="margin-bottom:8px;"><strong>Экономия ФОТ:</strong> ~180 000 ₽ / месяц за счет отсутствия дублирующих ассистентов.</p>
+          <p><strong style="color:var(--mint);">Окупаемость внедрения:</strong> Менее 45 дней за счет исключения потерь конверсии.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

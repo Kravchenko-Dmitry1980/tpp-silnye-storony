@@ -298,15 +298,39 @@
   </div>
 </div>
 
-<div class="qa-section" style="margin-top:24px; padding-top:18px; border-top:1px solid rgba(228,201,150,0.3); background:rgba(228,201,150,0.05); padding:16px; border-radius:14px;">
+<!-- МАТЕРИАЛЫ КРУГЛОГО СТОЛА (ОТКРЫТИЕ В ТЕЛЕФОНЕ / PDF БЕЗ МЕССЕНДЖЕРОВ) -->
+<div class="qa-section" style="margin-top:20px; padding:16px; background:linear-gradient(135deg, rgba(101,242,207,0.08), rgba(228,201,150,0.08)); border:1px solid rgba(101,242,207,0.35); border-radius:14px; text-align:center;">
+  <div style="font-size:11px; font-weight:800; color:var(--mint); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">🏛️ МАТЕРИАЛЫ ДЛЯ УЧАСТНИКОВ КРУГЛОГО СТОЛА</div>
+  <div style="font-size:14px; font-weight:800; color:var(--gold); margin-bottom:6px;">Меморандум & Чек-лист руководителя 2026</div>
+  <p style="font-size:12px; color:#c7bfd4; margin-bottom:12px; line-height:1.4;">
+    Дорожная карта перехода от кадрового дефицита к Акмеологии и AI-агентам (открывается прямо в браузере телефона, без ботов и приложений).
+  </p>
+  <a href="memo-tpp.html" target="_blank" style="display:inline-block; width:100%; box-sizing:border-box; background:var(--mint); color:#0c0a10; font-weight:800; font-size:13px; text-decoration:none; border-radius:10px; padding:12px; box-shadow:0 0 16px rgba(101,242,207,0.25);">
+    📥 Открыть меморандум и чек-лист (PDF)
+  </a>
+</div>
+
+<!-- ЗАЯВКА НА АУДИТ С ВЫБОРОМ МЕССЕНДЖЕРА (МАКС / TELEGRAM / WHATSAPP / ТЕЛЕФОН) -->
+<div class="qa-section" style="margin-top:16px; padding-top:16px; border-top:1px solid rgba(228,201,150,0.3); background:rgba(228,201,150,0.05); padding:16px; border-radius:14px;">
   <div class="qa-title" style="color:#e4c996;">🎁 Спецпредложение для членов ТПП КК</div>
   <p style="font-size:12px; color:#c7bfd4; margin-bottom:12px; line-height:1.4;">Забронируйте бесплатный психометрический аудит 1 ключевой позиции или отдела продаж от агентства «Сильные стороны»:</p>
+  
   <div style="display:flex; flex-direction:column; gap:8px;">
     <input type="text" id="leadName" placeholder="Ваше имя и компания" style="background:#191421; border:1px solid #3c2f4e; border-radius:10px; padding:10px 12px; font-size:13px; color:#f7f4ff; outline:none;">
-    <input type="text" id="leadContact" placeholder="Телефон или Telegram" style="background:#191421; border:1px solid #3c2f4e; border-radius:10px; padding:10px 12px; font-size:13px; color:#f7f4ff; outline:none;">
-    <button onclick="sendLead()" style="background:#e4c996; color:#0c0a10; font-weight:800; font-size:13px; border:none; border-radius:10px; padding:12px; cursor:pointer;">Забронировать аудит (0 ₽)</button>
+    
+    <!-- ВЫБОР КАНАЛА СВЯЗИ -->
+    <div style="font-size:11px; color:#a39bb1; font-weight:600; margin-top:2px;">Куда отправить результаты аудита:</div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:2px;" id="channelButtons">
+      <button type="button" class="channel-btn selected" onclick="selectChannel('МАКС', this)" style="flex:1; min-width:70px; background:#2a1f3d; border:1px solid #9f6aff; color:#fff; font-size:11px; font-weight:700; border-radius:8px; padding:7px 4px; cursor:pointer;">🟣 МАКС</button>
+      <button type="button" class="channel-btn" onclick="selectChannel('Telegram', this)" style="flex:1; min-width:70px; background:#191421; border:1px solid #3c2f4e; color:#a39bb1; font-size:11px; font-weight:700; border-radius:8px; padding:7px 4px; cursor:pointer;">✈️ Telegram</button>
+      <button type="button" class="channel-btn" onclick="selectChannel('WhatsApp', this)" style="flex:1; min-width:70px; background:#191421; border:1px solid #3c2f4e; color:#a39bb1; font-size:11px; font-weight:700; border-radius:8px; padding:7px 4px; cursor:pointer;">🟢 WhatsApp</button>
+      <button type="button" class="channel-btn" onclick="selectChannel('Телефон', this)" style="flex:1; min-width:70px; background:#191421; border:1px solid #3c2f4e; color:#a39bb1; font-size:11px; font-weight:700; border-radius:8px; padding:7px 4px; cursor:pointer;">📞 Звонок</button>
+    </div>
+
+    <input type="text" id="leadContact" placeholder="Номер телефона или контакт в МАКС" style="background:#191421; border:1px solid #3c2f4e; border-radius:10px; padding:10px 12px; font-size:13px; color:#f7f4ff; outline:none;">
+    <button onclick="sendLead()" style="background:#e4c996; color:#0c0a10; font-weight:800; font-size:13px; border:none; border-radius:10px; padding:12px; cursor:pointer; margin-top:4px;">Забронировать аудит (0 ₽)</button>
   </div>
-  <div id="leadStatus" style="font-size:12px; color:#65f2cf; font-weight:700; margin-top:8px; display:none;">✔ Заявка принята! Эксперты свяжутся с вами в течение дня.</div>
+  <div id="leadStatus" style="font-size:12px; color:#65f2cf; font-weight:700; margin-top:8px; display:none;">✔ Заявка принята! Эксперты свяжутся с вами в выбранном канале.</div>
 </div>
 
 <script>
@@ -494,6 +518,28 @@
     if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
   }
 
+    let selectedLeadChannel = 'МАКС';
+  function selectChannel(ch, btn) {
+    selectedLeadChannel = ch;
+    const btns = document.querySelectorAll('.channel-btn');
+    btns.forEach(b => {
+      b.style.background = '#191421';
+      b.style.borderColor = '#3c2f4e';
+      b.style.color = '#a39bb1';
+    });
+    btn.style.background = '#2a1f3d';
+    btn.style.borderColor = '#9f6aff';
+    btn.style.color = '#ffffff';
+
+    const inp = document.getElementById('leadContact');
+    if (inp) {
+      if (ch === 'МАКС') inp.placeholder = 'Номер телефона или ник в МАКС';
+      else if (ch === 'Telegram') inp.placeholder = '@username или телефон в Telegram';
+      else if (ch === 'WhatsApp') inp.placeholder = 'Номер телефона WhatsApp';
+      else inp.placeholder = 'Номер телефона для звонка';
+    }
+  }
+
   function sendLead() {
     const name = document.getElementById('leadName').value.trim();
     const contact = document.getElementById('leadContact').value.trim();
@@ -507,6 +553,7 @@
       type: 'lead',
       name: name,
       contact: contact,
+      channel: selectedLeadChannel,
       time: Date.now()
     });
 
