@@ -1032,7 +1032,7 @@
           </div>
         </div>
 
-                <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
+                        <div class="glass-card" style="border-top:3px solid var(--mint); display:flex; flex-direction:column; justify-content:space-between;">
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <h3 style="font-size:16px; font-weight:800; color:var(--text-light); display:flex; align-items:center; gap:8px;">
@@ -1040,65 +1040,65 @@
                 <span class="pulse-dot" style="background:var(--mint); width:8px; height:8px; display:inline-block; border-radius:50%; box-shadow:0 0 8px var(--mint);"></span>
               </h3>
               <span id="liveVotersCount" style="font-size:12px; color:var(--mint); font-weight:700; background:rgba(101,242,207,0.1); padding:4px 10px; border-radius:99px; border:1px solid rgba(101,242,207,0.3);">
-                Круглый стол · 0 ответов
+                Круглый стол · 0 участников
               </span>
             </div>
 
-            <div style="display:flex; gap:16px; align-items:center; margin-bottom:16px;">
+            <div style="display:flex; gap:16px; align-items:center; margin-bottom:14px;">
               <img src="assets/tpp-vote-qr.png" alt="QR" style="width:125px; height:125px; border-radius:12px; border:2px solid var(--gold); background:#fff; padding:6px; box-shadow:0 0 20px var(--gold-glow);">
               <div style="font-size:12.5px; color:var(--text-muted); line-height:1.45;">
                 Наведите камеру смартфона на QR-код.<br>
                 <strong style="color:var(--gold);">Вопрос участникам:</strong> <em>Где ваш бизнес теряет людей и деньги прямо сейчас?</em><br>
-                <span style="font-size:11px; color:var(--mint);">Голосование и реакции отображаются на этом экране в реальном времени.</span>
+                <span style="font-size:11px; color:var(--mint);">Мультивыбор: можно отметить одну, несколько или сразу все проблемы.</span>
               </div>
             </div>
 
-            <!-- LIVE REALTIME PROGRESS BARS (MATCHING PHONE OPTIONS) -->
+            <!-- LIVE REALTIME PROGRESS BARS (MULTIPLE-CHOICE PERCENTAGES) -->
             <div style="display:flex; flex-direction:column; gap:10px;" id="liveVoteBarsContainer">
               <div>
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
                   <span style="font-weight:600;">1. Слив лидов и сделок в продажах</span>
-                  <strong style="color:var(--mint);" id="livePct0">27%</strong>
+                  <strong style="color:var(--mint);" id="livePct0">0%</strong>
                 </div>
                 <div style="width:100%; height:9px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden;">
-                  <div id="liveBar0" style="width:27%; height:100%; background:var(--mint); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
+                  <div id="liveBar0" style="width:0%; height:100%; background:var(--mint); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
                 </div>
               </div>
 
               <div>
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
                   <span style="font-weight:600;">2. Выгорание экспертов в рутине (CRM, отчеты)</span>
-                  <strong style="color:var(--gold);" id="livePct1">40%</strong>
+                  <strong style="color:var(--gold);" id="livePct1">0%</strong>
                 </div>
                 <div style="width:100%; height:9px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden;">
-                  <div id="liveBar1" style="width:40%; height:100%; background:var(--gold); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
+                  <div id="liveBar1" style="width:0%; height:100%; background:var(--gold); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
                 </div>
               </div>
 
               <div>
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
                   <span style="font-weight:600;">3. Собственник застрял в операционке</span>
-                  <strong style="color:var(--purple);" id="livePct2">20%</strong>
+                  <strong style="color:var(--purple);" id="livePct2">0%</strong>
                 </div>
                 <div style="width:100%; height:9px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden;">
-                  <div id="liveBar2" style="width:20%; height:100%; background:var(--purple); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
+                  <div id="liveBar2" style="width:0%; height:100%; background:var(--purple); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
                 </div>
               </div>
 
               <div>
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
                   <span style="font-weight:600;">4. Ошибки найма и текучка кадров</span>
-                  <strong style="color:var(--red);" id="livePct3">13%</strong>
+                  <strong style="color:var(--red);" id="livePct3">0%</strong>
                 </div>
                 <div style="width:100%; height:9px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden;">
-                  <div id="liveBar3" style="width:13%; height:100%; background:var(--red); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
+                  <div id="liveBar3" style="width:0%; height:100%; background:var(--red); border-radius:99px; transition:width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
                 </div>
               </div>
             </div>
           </div>
 
           <div style="background:rgba(228,201,150,0.08); padding:10px 14px; border-radius:10px; border:1px solid rgba(228,201,150,0.3); font-size:12px; color:var(--gold); margin-top:12px;">
-            💡 <strong>Вывод экспертного консилиума:</strong> Мотивация деньгами живет 87 дней. Системный ответ дает Акмеология и автоматизация рутины AI-агентами!
+            💡 <strong>Расчет:</strong> % показывает долю присутствующих руководителей, отметивших проблему (сумма может быть >100%).
           </div>
         </div>
       </div>
@@ -2267,9 +2267,8 @@
   const SSE_ENDPOINT = 'https://ntfy.sh/tpp_krasnodar_roundtable_2026/sse';
   const PUB_ENDPOINT = 'https://ntfy.sh/tpp_krasnodar_roundtable_2026';
 
-  let roundTableVotes = [0, 0, 0, 0]; // starts from 0 for honest live tally
-  let roundTableVoters = new Set();
-  let voterSelections = {}; // voterId -> optionIdx
+  // Multi-choice state: voterId -> array of selected options [0, 1, 2]
+  let roundTableVoterMap = {};
   let questionsArchive = [];
   let sseEventSource = null;
 
@@ -2309,8 +2308,11 @@
 
     if (msg.type === 'reaction') {
       sendReaction(msg.emoji || '🔥');
+    } else if (msg.type === 'multi_vote') {
+      applyMultiVote(msg.voterId, msg.selections);
     } else if (msg.type === 'vote') {
-      applyRemoteVote(msg.option, msg.prevOption, msg.voterId);
+      // Backward compatibility for single vote
+      applyMultiVote(msg.voterId, [msg.option]);
     } else if (msg.type === 'question') {
       showAudienceQuestion(msg.text, msg.author);
     } else if (msg.type === 'lead') {
@@ -2319,60 +2321,72 @@
     }
   }
 
-  function applyRemoteVote(optionIdx, prevOption, voterId) {
-    if (typeof optionIdx !== 'number' || optionIdx < 0 || optionIdx > 3) return;
-
-    // Handle vote changing
-    if (voterId && voterSelections[voterId] !== undefined) {
-      const oldIdx = voterSelections[voterId];
-      if (oldIdx === optionIdx) return; // same vote
-      roundTableVotes[oldIdx] = Math.max(0, roundTableVotes[oldIdx] - 1);
-    } else if (prevOption !== undefined && prevOption >= 0 && prevOption <= 3) {
-      roundTableVotes[prevOption] = Math.max(0, roundTableVotes[prevOption] - 1);
-    }
-
-    roundTableVotes[optionIdx]++;
-    if (voterId) {
-      voterSelections[voterId] = optionIdx;
-      roundTableVoters.add(voterId);
-    }
+  function applyMultiVote(voterId, selections) {
+    if (!voterId) voterId = 'anon_' + Math.random().toString(36).substr(2, 6);
+    roundTableVoterMap[voterId] = Array.isArray(selections) ? selections : [];
 
     updateRoundTableBars();
     playSound('pop');
-    showGestureToast(`📊 Голос круглого стола: вариант 0${optionIdx + 1}`, "✔");
+    
+    const count = (roundTableVoterMap[voterId] || []).length;
+    showGestureToast(`📊 Голос круглого стола: выбрано ${count} из 4 проблем`, "✔");
   }
 
   function setBaselineVotes() {
-    roundTableVotes = [8, 12, 6, 4];
-    roundTableVoters = new Set(['demo1', 'demo2', 'demo3']);
+    // 30 participants benchmark:
+    // 25 selected option 1 (Burnout) -> 83%
+    // 22 selected option 0 (Lead drop) -> 73%
+    // 19 selected option 2 (Owner trapped) -> 63%
+    // 14 selected option 3 (Hiring errors) -> 47%
+    roundTableVoterMap = {};
+    for (let i = 1; i <= 30; i++) {
+      const sel = [];
+      if (i <= 22) sel.push(0);
+      if (i <= 25) sel.push(1);
+      if (i <= 19) sel.push(2);
+      if (i <= 14) sel.push(3);
+      roundTableVoterMap['bench_' + i] = sel;
+    }
     updateRoundTableBars();
-    broadcastPresentation({ type: 'baseline', votes: roundTableVotes });
-    showGestureToast("📊 Загружен ориентировочный бенчмарк (30 ответов)", "⚡");
+    broadcastPresentation({ type: 'baseline', voterMap: roundTableVoterMap });
+    showGestureToast("📊 Загружен ориентировочный бенчмарк (30 участников, мультивыбор)", "⚡");
   }
 
   function resetVotes() {
-    roundTableVotes = [0, 0, 0, 0];
-    roundTableVoters.clear();
-    voterSelections = {};
+    roundTableVoterMap = {};
     updateRoundTableBars();
     broadcastPresentation({ type: 'reset' });
     showGestureToast("🔄 Голосование сброшено в 0", "⚡");
   }
 
   function updateRoundTableBars() {
-    const total = roundTableVotes.reduce((a, b) => a + b, 0);
+    const voterIds = Object.keys(roundTableVoterMap);
+    const totalVoters = voterIds.length;
+
+    const counts = [0, 0, 0, 0];
+    voterIds.forEach(vid => {
+      const arr = roundTableVoterMap[vid] || [];
+      arr.forEach(idx => {
+        if (idx >= 0 && idx < 4) counts[idx]++;
+      });
+    });
+
     for (let i = 0; i < 4; i++) {
-      const pct = total > 0 ? Math.round((roundTableVotes[i] / total) * 100) : 0;
+      const pct = totalVoters > 0 ? Math.round((counts[i] / totalVoters) * 100) : 0;
       const barEl = document.getElementById(`liveBar${i}`);
       const pctEl = document.getElementById(`livePct${i}`);
       if (barEl) barEl.style.width = pct + '%';
-      if (pctEl) pctEl.innerText = pct + '%';
+      if (pctEl) {
+        pctEl.innerText = totalVoters > 0 ? `${pct}% (${counts[i]}/${totalVoters})` : '0%';
+      }
     }
 
     const countEl = document.getElementById('liveVotersCount');
     if (countEl) {
-      const votersCount = Math.max(roundTableVoters.size, total);
-      countEl.innerText = `Круглый стол · ${votersCount} ответов`;
+      const totalClicks = counts.reduce((a, b) => a + b, 0);
+      countEl.innerText = totalVoters > 0
+        ? `Круглый стол · ${totalVoters} участников (${totalClicks} отметок)`
+        : `Круглый стол · 0 участников`;
     }
   }
 
@@ -2391,7 +2405,6 @@
     if (toast) toast.classList.add('active');
     playSound('portal');
 
-    // Update speaker HUD with new question
     if (typeof updateSpeakerHUDQuestions === 'function') {
       updateSpeakerHUDQuestions();
     }
@@ -2408,7 +2421,6 @@
     clearTimeout(questionDismissTimer);
   }
 
-  // Send reaction (spawn across full width of TV screen)
   function sendReaction(emoji) {
     playSound('pop');
     const container = document.getElementById('reactionsContainer');
@@ -2418,7 +2430,6 @@
     el.className = 'floating-emoji';
     el.innerText = emoji;
     
-    // Spread across full TV width (8% to 92%)
     const leftPct = Math.floor(Math.random() * 84) + 8;
     const drift = (Math.random() * 160 - 80) + 'px';
     
@@ -2429,7 +2440,6 @@
     setTimeout(() => el.remove(), 3500);
   }
 
-  // Auto-init realtime bridge on load
   setTimeout(initRealtimeBridge, 500);
   setTimeout(updateRoundTableBars, 600);
 

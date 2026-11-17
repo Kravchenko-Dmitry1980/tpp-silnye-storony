@@ -223,15 +223,21 @@
 <header>
   <div class="tag">ТПП КК · КРУГЛЫЙ СТОЛ ПО РЫНКУ ТРУДА</div>
   <h1>Где ваш бизнес теряет деньги прямо сейчас?</h1>
-  <p class="subtitle">Выберите главную кадровую проблему вашей компании — агент ИВАН выведет тепловую карту круглого стола на экран телевизора в прямом эфире</p>
+  <p class="subtitle">Выберите одну, несколько или все проблемы вашей компании — агент ИВАН сформирует общую карту болей круглого стола в прямом эфире</p>
 </header>
 
 <div class="cards">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(228,201,150,0.3); border-radius:12px; padding:10px 14px;">
+    <span style="font-size:12px; color:#c7bfd4; font-weight:600;">💡 Можно выбрать несколько или все:</span>
+    <button id="toggleAllBtn" onclick="toggleSelectAll()" style="background:rgba(228,201,150,0.18); border:1px solid #e4c996; color:#e4c996; font-size:11px; font-weight:800; border-radius:8px; padding:6px 12px; cursor:pointer; transition:all 0.2s;">
+      ⚡ ВЫБРАТЬ ВСЕ 4
+    </button>
+  </div>
   <!-- Card 1 -->
-  <button class="vote-btn" style="--accent:#65f2cf; --accent-rgb:101,242,207;" onclick="castVote(0)">
+  <button class="vote-btn" id="btn-0" style="--accent:#65f2cf; --accent-rgb:101,242,207;" onclick="toggleOption(0)">
     <div class="bar" id="bar-0"></div>
     <div class="vote-btn-top">
-      <span class="door-num">ВАРИАНТ 01</span>
+      <span class="door-num" id="door-num-0">☐ ВАРИАНТ 01</span>
       <span class="vote-percent" id="pct-0">0%</span>
     </div>
     <div class="door-title">Слив лидов в продажах</div>
@@ -239,10 +245,10 @@
   </button>
 
   <!-- Card 2 -->
-  <button class="vote-btn" style="--accent:#e4c996; --accent-rgb:228,201,150;" onclick="castVote(1)">
+  <button class="vote-btn" id="btn-1" style="--accent:#e4c996; --accent-rgb:228,201,150;" onclick="toggleOption(1)">
     <div class="bar" id="bar-1"></div>
     <div class="vote-btn-top">
-      <span class="door-num">ВАРИАНТ 02</span>
+      <span class="door-num" id="door-num-1">☐ ВАРИАНТ 02</span>
       <span class="vote-percent" id="pct-1">0%</span>
     </div>
     <div class="door-title">Выгорание ключевых экспертов</div>
@@ -250,10 +256,10 @@
   </button>
 
   <!-- Card 3 -->
-  <button class="vote-btn" style="--accent:#9f6aff; --accent-rgb:159,106,255;" onclick="castVote(2)">
+  <button class="vote-btn" id="btn-2" style="--accent:#9f6aff; --accent-rgb:159,106,255;" onclick="toggleOption(2)">
     <div class="bar" id="bar-2"></div>
     <div class="vote-btn-top">
-      <span class="door-num">ВАРИАНТ 03</span>
+      <span class="door-num" id="door-num-2">☐ ВАРИАНТ 03</span>
       <span class="vote-percent" id="pct-2">0%</span>
     </div>
     <div class="door-title">Собственник застрял в рутине</div>
@@ -261,10 +267,10 @@
   </button>
 
   <!-- Card 4 -->
-  <button class="vote-btn" style="--accent:#f87171; --accent-rgb:248,113,113;" onclick="castVote(3)">
+  <button class="vote-btn" id="btn-3" style="--accent:#f87171; --accent-rgb:248,113,113;" onclick="toggleOption(3)">
     <div class="bar" id="bar-3"></div>
     <div class="vote-btn-top">
-      <span class="door-num">ВАРИАНТ 04</span>
+      <span class="door-num" id="door-num-3">☐ ВАРИАНТ 04</span>
       <span class="vote-percent" id="pct-3">0%</span>
     </div>
     <div class="door-title">Ошибки найма и текучка</div>
@@ -306,17 +312,18 @@
 <script>
   const PUB_URL = 'https://ntfy.sh/tpp_krasnodar_roundtable_2026';
   const SSE_URL = 'https://ntfy.sh/tpp_krasnodar_roundtable_2026/sse';
-  
-  let myVote = -1;
+
   let voterId = localStorage.getItem('tpp_voter_id');
   if (!voterId) {
     voterId = 'voter_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('tpp_voter_id', voterId);
   }
 
-  // Live vote tally (synchronized with TV and all 30 participants)
-  let votes = [0, 0, 0, 0];
-  let voterMap = {}; // voterId -> optionIdx
+  // Multi-choice state for current participant
+  let mySelections = new Set();
+  
+  // Aggregate state of the room: voterId -> array of choices
+  let roomVoterMap = {};
 
   function broadcast(data) {
     try {
@@ -328,57 +335,119 @@
     } catch(e) {}
   }
 
-  function updateBars() {
-    const total = votes.reduce((a, b) => a + b, 0);
-    const countEl = document.getElementById('voteCountHeader');
-    if (countEl) {
-      countEl.innerText = `Круглый стол · ${total} ответов`;
+  function toggleOption(idx) {
+    if (mySelections.has(idx)) {
+      mySelections.delete(idx);
+    } else {
+      mySelections.add(idx);
+    }
+
+    // Update local state in room map
+    roomVoterMap[voterId] = Array.from(mySelections);
+    
+    // Update local UI
+    updateLocalButtons();
+    updateRoomBars();
+
+    // Broadcast current complete multi-selection
+    broadcast({
+      type: 'multi_vote',
+      voterId: voterId,
+      selections: Array.from(mySelections),
+      time: Date.now()
+    });
+
+    if (navigator.vibrate) navigator.vibrate(35);
+  }
+
+  function toggleSelectAll() {
+    const btn = document.getElementById('toggleAllBtn');
+    if (mySelections.size === 4) {
+      mySelections.clear();
+      if (btn) btn.innerText = '⚡ ВЫБРАТЬ ВСЕ 4';
+    } else {
+      mySelections = new Set([0, 1, 2, 3]);
+      if (btn) btn.innerText = '✕ СНЯТЬ ВСЁ';
+    }
+
+    roomVoterMap[voterId] = Array.from(mySelections);
+    updateLocalButtons();
+    updateRoomBars();
+
+    broadcast({
+      type: 'multi_vote',
+      voterId: voterId,
+      selections: Array.from(mySelections),
+      time: Date.now()
+    });
+
+    if (navigator.vibrate) navigator.vibrate([40, 40]);
+  }
+
+  function updateLocalButtons() {
+    const btnAll = document.getElementById('toggleAllBtn');
+    if (btnAll) {
+      btnAll.innerText = (mySelections.size === 4) ? '✕ СНЯТЬ ВСЁ' : '⚡ ВЫБРАТЬ ВСЕ 4';
     }
 
     for (let i = 0; i < 4; i++) {
-      const pct = total > 0 ? Math.round((votes[i] / total) * 100) : 0;
+      const b = document.getElementById(`btn-${i}`);
+      const num = document.getElementById(`door-num-${i}`);
+      const isSel = mySelections.has(i);
+      
+      if (b) {
+        if (isSel) b.classList.add('selected');
+        else b.classList.remove('selected');
+      }
+      if (num) {
+        num.innerText = isSel ? `☑ ВАРИАНТ 0${i + 1} · ВЫБРАНО` : `☐ ВАРИАНТ 0${i + 1}`;
+      }
+    }
+
+    const footer = document.getElementById('statusText');
+    if (footer) {
+      if (mySelections.size === 0) {
+        footer.innerText = 'Нажмите на одну или несколько карточек';
+        footer.classList.remove('active');
+      } else if (mySelections.size === 4) {
+        footer.innerText = '✔ Выбраны ВСЕ 4 проблемы! Данные на экране ТВ';
+        footer.classList.add('active');
+      } else {
+        footer.innerText = `✔ Выбрано: ${mySelections.size} из 4 проблем. Передано на экран`;
+        footer.classList.add('active');
+      }
+    }
+  }
+
+  function updateRoomBars() {
+    const voterIds = Object.keys(roomVoterMap);
+    const totalVoters = voterIds.length;
+
+    const counts = [0, 0, 0, 0];
+    voterIds.forEach(vid => {
+      const arr = roomVoterMap[vid] || [];
+      arr.forEach(idx => {
+        if (idx >= 0 && idx < 4) counts[idx]++;
+      });
+    });
+
+    const countEl = document.getElementById('voteCountHeader');
+    if (countEl) {
+      countEl.innerText = totalVoters > 0 
+        ? `Круглый стол · ${totalVoters} уч. (${counts.reduce((a,b)=>a+b,0)} отметок)`
+        : `Круглый стол · 0 ответов`;
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const pct = totalVoters > 0 ? Math.round((counts[i] / totalVoters) * 100) : 0;
       const pctEl = document.getElementById(`pct-${i}`);
       const barEl = document.getElementById(`bar-${i}`);
-      if (pctEl) pctEl.innerText = pct + '%';
+      if (pctEl) pctEl.innerText = totalVoters > 0 ? `${pct}%` : '0%';
       if (barEl) barEl.style.width = pct + '%';
     }
   }
 
-  function castVote(idx) {
-    if (myVote === idx) return;
-    
-    // Local adjustment
-    if (myVote >= 0) votes[myVote] = Math.max(0, votes[myVote] - 1);
-    const prevVote = myVote;
-    myVote = idx;
-    votes[idx]++;
-
-    const btns = document.querySelectorAll('.vote-btn');
-    btns.forEach((b, i) => {
-      if (i === idx) b.classList.add('selected');
-      else b.classList.remove('selected');
-    });
-
-    const footer = document.getElementById('statusText');
-    footer.innerText = '✔ Ваш выбор передан на экран круглого стола!';
-    footer.classList.add('active');
-
-    updateBars();
-
-    // Broadcast to main TV screen & other participants in real-time
-    broadcast({
-      type: 'vote',
-      option: idx,
-      prevOption: prevVote,
-      voterId: voterId,
-      time: Date.now()
-    });
-
-    if (navigator.vibrate) navigator.vibrate(45);
-  }
-
   function sendReaction(emoji, e) {
-    // Local visual feedback on phone
     const el = document.createElement('div');
     el.className = 'floating-emoji';
     el.innerText = emoji;
@@ -393,7 +462,6 @@
     footer.innerText = `Огонек ${emoji} отправлен на экран телевизора!`;
     footer.classList.add('active');
 
-    // Broadcast reaction to main TV screen
     broadcast({
       type: 'reaction',
       emoji: emoji,
@@ -414,7 +482,6 @@
     footer.innerText = '✔ Вопрос выведен на экран спикерам!';
     footer.classList.add('active');
 
-    // Broadcast question to main TV screen
     broadcast({
       type: 'question',
       text: val,
@@ -422,9 +489,7 @@
       time: Date.now()
     });
 
-    setTimeout(() => {
-      footer.innerText = '✔ Синхронизация с экраном круглого стола активна';
-    }, 4500);
+    setTimeout(() => updateLocalButtons(), 4500);
 
     if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
   }
@@ -457,26 +522,22 @@
           const raw = JSON.parse(e.data);
           if (!raw.message) return;
           const msg = JSON.parse(raw.message);
-          
-          if (msg.type === 'vote') {
-            // Synchronize remote participant votes
-            if (msg.voterId !== voterId) {
-              if (msg.prevOption !== undefined && msg.prevOption >= 0 && msg.prevOption <= 3) {
-                votes[msg.prevOption] = Math.max(0, votes[msg.prevOption] - 1);
-              }
-              if (msg.option >= 0 && msg.option <= 3) {
-                votes[msg.option]++;
-              }
-              updateBars();
+
+          if (msg.type === 'multi_vote') {
+            if (msg.voterId) {
+              roomVoterMap[msg.voterId] = msg.selections || [];
+              updateRoomBars();
             }
           } else if (msg.type === 'baseline') {
-            if (Array.isArray(msg.votes)) {
-              votes = [...msg.votes];
-              updateBars();
+            if (msg.voterMap) {
+              roomVoterMap = { ...msg.voterMap };
+              updateRoomBars();
             }
           } else if (msg.type === 'reset') {
-            votes = [0, 0, 0, 0];
-            updateBars();
+            roomVoterMap = {};
+            mySelections.clear();
+            updateLocalButtons();
+            updateRoomBars();
           }
         } catch(err) {}
       };
@@ -484,8 +545,8 @@
     } catch(e) {}
   }
 
-  // Initialize
-  updateBars();
+  updateLocalButtons();
+  updateRoomBars();
   setTimeout(initPhoneSSE, 500);
 </script>
 
