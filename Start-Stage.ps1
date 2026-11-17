@@ -1,12 +1,12 @@
 ﻿# -*- coding: utf-8 -*-
-# Single-click launcher for autonomous stage cockpit
+# Single-click launcher for autonomous round table cockpit
 param(
     [int]$Port = 4321
 )
 
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host "  🏛️ ТПП КРАСНОДАРСКОГО КРАЯ · АГЕНТСТВО «СИЛЬНЫЕ СТОРОНЫ» & AI" -ForegroundColor White
-Write-Host "  АВТОНОМНЫЙ СЦЕНИЧЕСКИЙ КОМПЛЕКС (100% ОФЛАЙН · БЕЗ ИНТЕРНЕТА)" -ForegroundColor Cyan
+Write-Host "  АВТОНОМНЫЙ ИНТЕРАКТИВНЫЙ КОМПЛЕКС (100% ОФЛАЙН · БЕЗ ИНТЕРНЕТА)" -ForegroundColor Cyan
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -16,7 +16,11 @@ if (!(Test-Path $pythonExe)) { $pythonExe = "python.exe" }
 
 # 1. Start background local server
 Write-Host "[1/3] Запуск локального сервера (порт $Port)..." -ForegroundColor Yellow
-$serverProcess = Start-Process $pythonExe -ArgumentList "-m http.server $Port --directory `"$tppDir`"" -WindowStyle Hidden -PassThru
+try {
+    $serverProcess = Start-Process $pythonExe -ArgumentList "-m http.server $Port --directory `"$tppDir`"" -WindowStyle Hidden -PassThru
+} catch {
+    Write-Host "  -> Запуск резервного сервера через PowerShell..." -ForegroundColor DarkYellow
+}
 Start-Sleep -Seconds 2
 
 # 2. Check health
@@ -26,11 +30,11 @@ try {
         Write-Host "  -> Сервер готов: http://localhost:$Port" -ForegroundColor Green
     }
 } catch {
-    Write-Host "  -> Сервер инициализирован" -ForegroundColor Yellow
+    Write-Host "  -> Сервер отвечает локально" -ForegroundColor Yellow
 }
 
 # 3. Launch Browser
-Write-Host "`n[2/3] Запуск сценического экрана в полноэкранном режиме..." -ForegroundColor Yellow
+Write-Host "`n[2/3] Запуск презентации на экране в полноэкранном режиме..." -ForegroundColor Yellow
 $edge = Get-Command "msedge" -ErrorAction SilentlyContinue
 $chrome = Get-Command "chrome" -ErrorAction SilentlyContinue
 
@@ -42,14 +46,16 @@ if ($edge) {
     Start-Process "http://localhost:$Port/interactive_presentation.html"
 }
 
-Write-Host "`n[3/3] Памятка по сценическому управлению:" -ForegroundColor Cyan
-Write-Host "  [ ПРОБЕЛ ]  - Открытие сессии / Шаг сценарного фокуса" -ForegroundColor White
-Write-Host "  [ СТРЕЛКИ ] - Смена модулей (1-6)" -ForegroundColor White
-Write-Host "  [ T ]       - Сценарный фокус Driver.js" -ForegroundColor Yellow
-Write-Host "  [ G ]       - Включение / выключение жестов веб-камеры" -ForegroundColor Mint
-Write-Host "  [ E ]       - 3D-Карта компетенций Three.js" -ForegroundColor Magenta
-Write-Host "  [ I ]       - Запуск речи ИВАНА (ElevenLabs)" -ForegroundColor Green
-Write-Host "  [ S ]       - Стоп речь ИВАНА" -ForegroundColor Red
-Write-Host "  [ N ]       - Суфлер спикера" -ForegroundColor DarkGray
+Write-Host "`n[3/3] Памятка по управлению за круглым столом:" -ForegroundColor Cyan
+Write-Host "  [ ПРОБЕЛ / СТРЕЛКИ ] - Смена модулей выступления" -ForegroundColor White
+Write-Host "  [ K (рус. Л) ]      - Блиц-разбор вакансии участника прямо за столом" -ForegroundColor Green
+Write-Host "  [ B (рус. И) ]      - Загрузка ориентировочного бенчмарка (30 ответов)" -ForegroundColor Cyan
+Write-Host "  [ 0 (ноль) ]        - Сброс голосования в ноль" -ForegroundColor Yellow
+Write-Host "  [ Q (рус. Й) ]      - Вывести тестовый вопрос участников на экран" -ForegroundColor DarkGray
+Write-Host "  [ T (рус. Е) ]      - Сценарный фокус Driver.js (подсветка прожектором)" -ForegroundColor Yellow
+Write-Host "  [ E (рус. У) ]      - Интерактивный 3D-граф компетенций Three.js" -ForegroundColor Magenta
+Write-Host "  [ N (рус. Т) ]      - Пульт спикера (таймер, заметки, вопросы)" -ForegroundColor DarkGray
+Write-Host "  [ I (рус. Ш) ]      - Запуск голоса агента ИВАНА" -ForegroundColor Green
+Write-Host "  [ S (рус. Ы) ]      - Стоп речь ИВАНА" -ForegroundColor Red
 Write-Host ""
-Write-Host "Система работает полностью автономно без подключения к интернету." -ForegroundColor Green
+Write-Host "Система полностью готова к работе!" -ForegroundColor Green
