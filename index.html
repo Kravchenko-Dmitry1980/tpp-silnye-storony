@@ -922,7 +922,7 @@
       <!-- КНОПКА УПРАВЛЕНИЯ ФОНОВОЙ МУЗЫКОЙ СБОРА -->
     <div style="margin-bottom:16px; display:flex; justify-content:center; align-items:center; gap:14px;">
       <button id="btnAmbientToggle" onclick="toggleAmbient()" style="background:rgba(20, 16, 28, 0.8); border:1px solid rgba(101,242,207,0.4); color:var(--mint); font-size:12px; font-weight:700; border-radius:99px; padding:8px 20px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(0,0,0,0.4); transition:all 0.2s;">
-        <span>🎵 Музыка встречи: ВКЛ [ M ]</span>
+        <span>🎻 И.С. Бах · «Воздух» (Струнные) [ M ]</span>
       </button>
     </div>
 
@@ -2654,7 +2654,7 @@
     const btn = document.getElementById('btnAmbientToggle');
     if (btn) {
       btn.innerHTML = ambientPlaying 
-        ? '<span>🎵 Музыка встречи: ВКЛ [ M ]</span>' 
+        ? '<span>🎻 И.С. Бах · «Воздух» (Струнные) [ M ]</span>' 
         : '<span>🔇 Музыка встречи: ВЫКЛ [ M ]</span>';
       btn.style.color = ambientPlaying ? 'var(--mint)' : 'var(--text-muted)';
       btn.style.borderColor = ambientPlaying ? 'var(--mint)' : 'rgba(255,255,255,0.2)';
