@@ -919,6 +919,13 @@
     </div>
   </div>
 
+      <!-- КНОПКА УПРАВЛЕНИЯ ФОНОВОЙ МУЗЫКОЙ СБОРА -->
+    <div style="margin-bottom:16px; display:flex; justify-content:center; align-items:center; gap:14px;">
+      <button id="btnAmbientToggle" onclick="toggleAmbient()" style="background:rgba(20, 16, 28, 0.8); border:1px solid rgba(101,242,207,0.4); color:var(--mint); font-size:12px; font-weight:700; border-radius:99px; padding:8px 20px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(0,0,0,0.4); transition:all 0.2s;">
+        <span>🎵 Музыка встречи: ВКЛ [ M ]</span>
+      </button>
+    </div>
+
   <!-- START BUTTON -->
   <button class="start-btn" onclick="activateStage()" style="padding:16px 44px; font-size:15px; letter-spacing:0.06em;">
     <span>🏛️ НАЧАТЬ ПЛЕНАРНУЮ СЕССИЮ</span>
@@ -1432,7 +1439,7 @@
           <h1 class="mod-title">Акмеологический экспресс-аудит вашей команды</h1>
           <p class="mod-subtitle">Специальное предложение только для участников заседания Комитета по рынку труда ТПП Краснодарского края.</p>
         </div>
-        <button class="action-btn" onclick="triggerIvanVoice(5)">🎙️ ИВАН, подведи итог встречи</button>
+        <div style="display:flex; gap:10px;"><button class="action-btn" onclick="toggleQuestionsWall()" style="border-color:var(--gold); color:var(--gold); box-shadow:0 0 16px var(--gold-glow);">💬 Стена вопросов зала [ W ]</button><button class="action-btn" onclick="triggerIvanVoice(5)">🎙️ ИВАН, итог</button></div>
       </div>
 
       <div class="grid-2">
@@ -1594,6 +1601,7 @@
   // ACTIVATE STAGE FROM INTRO
   let introActive = true;
   function activateStage() {
+    fadeOutAmbient();
     playSound('start');
     const screen = document.getElementById('introScreen');
     screen.classList.add('hidden');
@@ -2271,6 +2279,10 @@
       resetVotes();
     } else if (e.key === 'k' || e.key === 'K' || e.key === 'л' || e.key === 'Л') {
       toggleBlitzCaseModal();
+    } else if (e.key === 'w' || e.key === 'W' || e.key === 'ц' || e.key === 'Ц') {
+      toggleQuestionsWall();
+    } else if (e.key === 'm' || e.key === 'M' || e.key === 'ь' || e.key === 'Ь') {
+      toggleAmbient();
     } else if (e.key === 'Escape') {
       const m = document.getElementById('blitzCaseModal'); if(m) m.classList.remove('active');
     } else if (e.key === 's' || e.key === 'S') {
@@ -2592,6 +2604,193 @@
     playIvanAudio('live_analysis');
   }
 
+  
+  // ==================== WELCOME AMBIENT AUDIO (ИДЕЯ 4) ====================
+  let ambientAudio = null;
+  let ambientPlaying = false;
+
+  function initWelcomeAmbient() {
+    if (ambientAudio) return;
+    ambientAudio = new Audio('assets/audio/welcome_ambient.mp3');
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0.35;
+  }
+
+  function playAmbient() {
+    initWelcomeAmbient();
+    ambientAudio.play().then(() => {
+      ambientPlaying = true;
+      updateAmbientBtn();
+    }).catch(() => {
+      // Browser autoplay policy waiting for first interaction
+      const unlock = () => {
+        if (!ambientPlaying && introActive) {
+          ambientAudio.play().then(() => {
+            ambientPlaying = true;
+            updateAmbientBtn();
+          }).catch(() => {});
+        }
+        window.removeEventListener('click', unlock);
+        window.removeEventListener('keydown', unlock);
+      };
+      window.addEventListener('click', unlock);
+      window.addEventListener('keydown', unlock);
+    });
+  }
+
+  function toggleAmbient() {
+    initWelcomeAmbient();
+    if (ambientPlaying) {
+      ambientAudio.pause();
+      ambientPlaying = false;
+    } else {
+      ambientAudio.play();
+      ambientPlaying = true;
+    }
+    updateAmbientBtn();
+  }
+
+  function updateAmbientBtn() {
+    const btn = document.getElementById('btnAmbientToggle');
+    if (btn) {
+      btn.innerHTML = ambientPlaying 
+        ? '<span>🎵 Музыка встречи: ВКЛ [ M ]</span>' 
+        : '<span>🔇 Музыка встречи: ВЫКЛ [ M ]</span>';
+      btn.style.color = ambientPlaying ? 'var(--mint)' : 'var(--text-muted)';
+      btn.style.borderColor = ambientPlaying ? 'var(--mint)' : 'rgba(255,255,255,0.2)';
+    }
+  }
+
+  function fadeOutAmbient() {
+    if (!ambientAudio || !ambientPlaying) return;
+    let vol = ambientAudio.volume;
+    const fadeTimer = setInterval(() => {
+      vol -= 0.04;
+      if (vol <= 0.02) {
+        clearInterval(fadeTimer);
+        ambientAudio.pause();
+        ambientAudio.currentTime = 0;
+        ambientPlaying = false;
+        updateAmbientBtn();
+      } else {
+        ambientAudio.volume = Math.max(0, vol);
+      }
+    }, 80);
+  }
+
+  // ==================== INTERACTIVE QUESTIONS WALL (ИДЕЯ 3) ====================
+  let defaultWallQuestions = [
+    {
+      text: "Как акмеологический подход решает проблему выгорания руководителя производства при 12-часовом графике?",
+      author: "Генеральный директор машиностроительного завода",
+      time: "10:14"
+    },
+    {
+      text: "Какая юридическая и финансовая ответственность лежит на действиях автономного AI-агента в CRM и документах?",
+      author: "Член Совета ТПП Краснодарского края",
+      time: "10:18"
+    },
+    {
+      text: "Сколько времени занимает первичное акмео-профилирование отдела продаж из 8 человек?",
+      author: "Коммерческий директор агрохолдинга",
+      time: "10:22"
+    },
+    {
+      text: "Возможна ли интеграция AI-агента ИВАНА с локальной базой 1С без выгрузки данных в стороннее облако?",
+      author: "IT-директор региональной торговой сети",
+      time: "10:26"
+    }
+  ];
+
+  let selectedSpotlightQuestion = null;
+
+  function toggleQuestionsWall() {
+    const modal = document.getElementById('questionsWallModal');
+    if (!modal) return;
+    const isActive = modal.classList.contains('active');
+    if (isActive) {
+      modal.classList.remove('active');
+    } else {
+      modal.classList.add('active');
+      renderQuestionsWall();
+      playSound('portal');
+    }
+  }
+
+  function renderQuestionsWall() {
+    const grid = document.getElementById('questionsWallGrid');
+    const countEl = document.getElementById('wallQuestionsCount');
+    if (!grid) return;
+
+    // Combine incoming phone questions + default executive questions
+    const allQuestions = [];
+    if (Array.isArray(questionsArchive) && questionsArchive.length > 0) {
+      questionsArchive.forEach(q => {
+        allQuestions.push({
+          text: q.text,
+          author: q.author || "Участник круглого стола",
+          time: q.time ? new Date(q.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Прямой эфир",
+          isLive: true
+        });
+      });
+    }
+
+    defaultWallQuestions.forEach(dq => {
+      if (!allQuestions.some(q => q.text === dq.text)) {
+        allQuestions.push(dq);
+      }
+    });
+
+    if (countEl) {
+      countEl.innerText = `В базе консилиума: ${allQuestions.length} вопросов и тезисов участников`;
+    }
+
+    grid.innerHTML = '';
+    allQuestions.forEach((q, idx) => {
+      const card = document.createElement('div');
+      const isSelected = (selectedSpotlightQuestion === idx);
+      
+      card.className = 'glass-card';
+      card.style.cursor = 'pointer';
+      card.style.transition = 'all 0.25s ease';
+      card.style.borderTop = q.isLive ? '3px solid var(--mint)' : '3px solid var(--gold)';
+      
+      if (isSelected) {
+        card.style.borderColor = 'var(--gold)';
+        card.style.boxShadow = '0 0 30px var(--gold-glow), 0 12px 35px rgba(0,0,0,0.8)';
+        card.style.background = 'rgba(32, 24, 46, 0.95)';
+        card.style.transform = 'scale(1.02)';
+      }
+
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span style="font-size:18px;">${q.isLive ? '⚡' : '💬'}</span>
+          <span style="font-size:10px; font-weight:800; color:${q.isLive ? 'var(--mint)' : 'var(--gold)'}; background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:99px;">
+            ${q.isLive ? 'ИЗ ЗАЛА (ОНЛАЙН)' : 'ЭКСПЕРТНЫЙ ТЕЗИС'} · ${q.time}
+          </span>
+        </div>
+        <div style="font-size:${isSelected ? '15px' : '13.5px'}; font-weight:700; color:var(--text-light); line-height:1.45; margin-bottom:12px;">
+          «${q.text}»
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.06); padding-top:8px;">
+          <span style="font-weight:600;">${q.author}</span>
+          <span style="color:${isSelected ? 'var(--gold)' : 'var(--mint)'}; font-weight:700;">
+            ${isSelected ? '✔ В ФОКУСЕ СПИКЕРОВ' : 'Выбрать вопрос →'}
+          </span>
+        </div>
+      `;
+
+      card.onclick = () => {
+        playSound('click');
+        selectedSpotlightQuestion = isSelected ? null : idx;
+        renderQuestionsWall();
+      };
+
+      grid.appendChild(card);
+    });
+  }
+
+  setTimeout(playAmbient, 800);
   setTimeout(initRealtimeBridge, 500);
   setTimeout(updateRoundTableBars, 600);
 
@@ -2858,6 +3057,41 @@
           <p><strong style="color:var(--mint);">Окупаемость внедрения:</strong> Менее 45 дней за счет исключения потерь конверсии.</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<!-- ==================== INTERACTIVE QUESTIONS WALL MODAL (ИДЕЯ 3) ==================== -->
+<div id="questionsWallModal" class="graph-modal">
+  <div class="graph-top-bar">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span style="font-size:26px;">💬</span>
+      <div>
+        <div style="font-size:16px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.06em;">
+          ИНТЕРАКТИВНАЯ СТЕНА ВОПРОСОВ КРУГЛОГО СТОЛА
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); font-weight:600;" id="wallQuestionsCount">
+          Открытый диалог: вопросы и тезисы участников заседания ТПП КК
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="ctrl-btn" onclick="toggleQuestionsWall()">✕ Закрыть [ Esc / W ]</button>
+    </div>
+  </div>
+
+  <div style="padding:28px 36px; overflow-y:auto; flex:1;">
+    <div style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div style="font-size:13px; color:var(--text-light);">
+        Кликните на любую карточку, чтобы вывести вопрос в центральный фокус внимания зала:
+      </div>
+      <div style="font-size:11px; color:var(--mint); font-weight:700; background:rgba(101,242,207,0.1); padding:4px 10px; border-radius:99px; border:1px solid rgba(101,242,207,0.3);">
+        Поступает в реальном времени со смартфонов
+      </div>
+    </div>
+
+    <!-- СЕТКА КАРТОЧЕК ВОПРОСОВ -->
+    <div id="questionsWallGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:18px;">
+      <!-- Генерируется через JS -->
     </div>
   </div>
 </div>
