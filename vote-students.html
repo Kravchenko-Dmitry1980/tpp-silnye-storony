@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Голосование зала · Сильные стороны</title>
+<link rel="icon" href="assets/approved-logo.png">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #0d0b11;
+    color: #f7f4ff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 16px 28px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #65f2cf;
+    background: rgba(101,242,207,0.12);
+    border: 1px solid rgba(101,242,207,0.3);
+    padding: 4px 10px;
+    border-radius: 99px;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  p.subtitle {
+    font-size: 13px;
+    color: #9a92a6;
+    line-height: 1.4;
+  }
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .vote-btn {
+    position: relative;
+    background: #191421;
+    border: 2px solid #2d243b;
+    border-radius: 16px;
+    padding: 16px 18px;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vote-btn:active {
+    transform: scale(0.97);
+  }
+  .vote-btn.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.35);
+    background: #231a30;
+  }
+  .vote-btn .bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0%;
+    background: rgba(var(--accent-rgb), 0.14);
+    pointer-events: none;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .vote-btn-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .door-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .vote-percent {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .door-title {
+    font-size: 17px;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+  }
+  .door-desc {
+    font-size: 12px;
+    color: #8c8299;
+    position: relative;
+    z-index: 2;
+  }
+  .status-footer {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #827891;
+    min-height: 24px;
+  }
+  .status-footer.active {
+    color: #65f2cf;
+    font-weight: 600;
+  }
+  .reaction-section {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+  }
+  .reaction-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #9a92a6;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .reaction-bar {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .reaction-btn {
+    flex: 1;
+    background: #231c2e;
+    border: 1px solid #3c2f4e;
+    border-radius: 12px;
+    padding: 12px 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f7f4ff;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.15s ease;
+  }
+  .reaction-btn:active {
+    transform: scale(0.9);
+    background: #3c2f4e;
+  }
+.floating-emoji {
+    position: fixed;
+    pointer-events: none;
+    font-size: 32px;
+    z-index: 100;
+    animation: floatUp 0.75s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8) translateY(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6) translateY(-90px); }
+  }
+  .combo-badge {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 94, 0, 0.92);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 6px 18px;
+    border-radius: 99px;
+    box-shadow: 0 0 24px rgba(255, 94, 0, 0.6);
+    pointer-events: none;
+    z-index: 101;
+    animation: popIn 0.2s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+  }
+  .combo-badge.overdrive {
+    background: linear-gradient(90deg, #ff5e00, #9f6aff, #65f2cf);
+    box-shadow: 0 0 28px rgba(101, 242, 207, 0.8);
+    font-size: 14px;
+  }
+  @keyframes popIn {
+    0% { transform: translateX(-50%) scale(0.6); opacity: 0; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+  }
+.pass-section {
+    margin-top: 14px;
+    text-align: center;
+  }
+  .pass-trigger-btn {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(159, 106, 255, 0.25) 0%, rgba(101, 242, 207, 0.25) 100%);
+    border: 1.5px solid #9f6aff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #f7f4ff;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(159, 106, 255, 0.3);
+    transition: transform 0.12s ease, box-shadow 0.2s ease;
+  }
+  .pass-trigger-btn:active {
+    transform: scale(0.98);
+  }
+  .qa-section {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .qa-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #9a92a6;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .qa-box {
+    display: flex;
+    gap: 8px;
+  }
+  .qa-box input {
+    flex: 1;
+    background: #191421;
+    border: 1px solid #3c2f4e;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #f7f4ff;
+    outline: none;
+  }
+  .qa-box input:focus {
+    border-color: #65f2cf;
+  }
+  .qa-box button {
+    background: #65f2cf;
+    color: #120e17;
+    font-weight: 700;
+    font-size: 13px;
+    border: none;
+    border-radius: 12px;
+    padding: 0 16px;
+    cursor: pointer;
+  }
+  .qa-box button:active {
+    transform: scale(0.95);
+  }
+  .qa-status {
+    font-size: 12px;
+    color: #65f2cf;
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  /* Modal Pass Dialog */
+  .pass-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 8, 16, 0.88);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .pass-modal[hidden] {
+    display: none;
+  }
+  .pass-dialog {
+    background: #181322;
+    border: 1.5px solid #9f6aff;
+    border-radius: 20px;
+    max-width: 420px;
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 0 35px rgba(159, 106, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .pass-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pass-header h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #f7f4ff;
+  }
+  .pass-close {
+    background: transparent;
+    border: none;
+    color: #9a92a6;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .quiz-step {
+    font-size: 13px;
+    color: #b49ade;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .quiz-opt {
+    background: #231a30;
+    border: 1px solid #3c2f4e;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #f7f4ff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.1s ease, border-color 0.2s ease;
+  }
+  .quiz-opt:active {
+    transform: scale(0.97);
+    border-color: #65f2cf;
+  }
+  #pass-canvas {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid #3c2f4e;
+  }
+  .pass-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pass-action-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+  }
+  .pass-action-btn.primary {
+    background: #65f2cf;
+    color: #120e17;
+  }
+  .pass-action-btn.secondary {
+    background: #2b2238;
+    color: #f7f4ff;
+    border: 1px solid #4a3a60;
+  }
+
+  /* Personality Test Section */
+  .personality-test-section {
+    margin-top: 18px;
+    margin-bottom: 18px;
+  }
+  .personality-test-card {
+    background: rgba(30, 19, 38, 0.95);
+    border: 1px solid rgba(226, 116, 169, 0.45);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .psycho-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #e274a9;
+    text-transform: uppercase;
+    background: rgba(226, 116, 169, 0.12);
+    border: 1px solid rgba(226, 116, 169, 0.3);
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .psycho-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #f7f4ff;
+    margin-bottom: 6px;
+  }
+  .psycho-desc {
+    font-size: 12px;
+    color: #b7a9cb;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .psycho-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #b49ade 0%, #e274a9 100%);
+    color: #120e17;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(226, 116, 169, 0.35);
+    transition: transform 0.12s ease;
+    box-sizing: border-box;
+  }
+  .psycho-action-btn:active {
+    transform: scale(0.98);
+  }
+  .psycho-qr {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .psycho-qr img {
+    width: 110px;
+    height: 110px;
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 4px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  }
+  .psycho-qr small {
+    font-size: 10px;
+    color: #7d728c;
+  }
+
+  /* Speaker Telegram Connection Section */
+  .speaker-telegram-section {
+    margin-top: 18px;
+    margin-bottom: 24px;
+  }
+  .speaker-tg-card {
+    background: rgba(27, 21, 36, 0.95);
+    border: 1px solid rgba(159, 106, 255, 0.45);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .speaker-tg-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #65f2cf;
+    text-transform: uppercase;
+    background: rgba(101, 242, 207, 0.12);
+    border: 1px solid rgba(101, 242, 207, 0.3);
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-bottom: 8px;
+  }
+  .speaker-tg-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f7f4ff;
+    margin-bottom: 6px;
+  }
+  .speaker-tg-desc {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #a499b2;
+    margin-bottom: 14px;
+  }
+  .speaker-tg-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0088cc 0%, #29b6f6 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 136, 204, 0.35);
+    transition: transform 0.12s ease;
+    box-sizing: border-box;
+  }
+  .speaker-tg-action:active {
+    transform: scale(0.98);
+  }
+  .speaker-tg-qr {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .speaker-tg-qr img {
+    width: 110px;
+    height: 110px;
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 4px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  }
+  .speaker-tg-qr small {
+    font-size: 10px;
+    color: #7d728c;
+  }
+</style>
+</head>
+<body>
+<header>
+  <span class="tag">25 ноября 2026 · Интерактив</span>
+  <h1>Куда пойдём сначала?</h1>
+  <p class="subtitle">Ваш голос прямо сейчас отражается на большом экране проектора</p>
+</header>
+
+<div class="cards">
+  <button class="vote-btn" data-door="0" style="--accent: #65f2cf; --accent-rgb: 101, 242, 207;">
+    <div class="bar"></div>
+    <div class="vote-btn-top"><span class="door-num">01 / КОМПАНИЯ</span><span class="vote-percent">0%</span></div>
+    <div class="door-title">Карьера в компании</div>
+    <div class="door-desc">Команда, масштабные задачи и профессиональный рост</div>
+  </button>
+
+  <button class="vote-btn" data-door="1" style="--accent: #b49ade; --accent-rgb: 180, 154, 222;">
+    <div class="bar"></div>
+    <div class="vote-btn-top"><span class="door-num">02 / СТАРТАП</span><span class="vote-percent">0%</span></div>
+    <div class="door-title">Своё дело</div>
+    <div class="door-desc">Идея, прототип продукта и ответственность за результат</div>
+  </button>
+
+  <button class="vote-btn" data-door="2" style="--accent: #9ad8bc; --accent-rgb: 154, 216, 188;">
+    <div class="bar"></div>
+    <div class="vote-btn-top"><span class="door-num">03 / СООБЩЕСТВО</span><span class="vote-percent">0%</span></div>
+    <div class="door-title">Общественные проекты</div>
+    <div class="door-desc">Полезные изменения, объединение людей и социальный эффект</div>
+  </button>
+
+  <button class="vote-btn" data-door="3" style="--accent: #c7b2e1; --accent-rgb: 199, 178, 225;">
+    <div class="bar"></div>
+    <div class="vote-btn-top"><span class="door-num">04 / ГОРОД</span><span class="vote-percent">0%</span></div>
+    <div class="door-title">Политика и госуправление</div>
+    <div class="door-desc">Smart City, масштабные решения и развитие инфраструктуры</div>
+  </button>
+</div>
+
+<div class="reaction-section">
+  <div class="reaction-title">РЕАКЦИИ В ЗАЛ (фейерверки на экране):</div>
+  <div class="reaction-bar">
+    <button class="reaction-btn" data-reaction="fire">🔥 Огонь</button>
+    <button class="reaction-btn" data-reaction="rocket">🚀 Ракета</button>
+    <button class="reaction-btn" data-reaction="energy">⚡ Энергия</button>
+    <button class="reaction-btn" data-reaction="idea">💡 Идея</button>
+  </div>
+</div>
+<div class="pass-section">
+  <button id="open-pass-btn" class="pass-trigger-btn">🎟️ Получить свой IT-пропуск в будущее</button>
+</div>
+
+<div class="qa-section">
+  <div class="qa-title">ЗАДАТЬ ВОПРОС СПИКЕРАМ (на экран):</div>
+  <div class="qa-box">
+    <input type="text" id="qa-text-input" placeholder="Например: 'Берёте без опыта?'" maxlength="90">
+    <button id="qa-submit-btn">Отправить ↗</button>
+  </div>
+  <div id="qa-notice" class="qa-status" hidden></div>
+</div>
+
+<div class="personality-test-section">
+  <div class="personality-test-card">
+    <div class="psycho-badge">🧠 ТЕСТИРОВАНИЕ ПО ПСИХОТИПАМ</div>
+    <div class="psycho-title">Узнай свой психотип и сильные стороны</div>
+    <p class="psycho-desc">Пройди экспресс-тест платформы BSEvolve (блок Алексея), чтобы определить свои командные роли и предрасположенности:</p>
+    <a id="personality-test-btn" href="https://bsevolve.com/public/testing/MTExMTExMTEtMTExMS0xMTExLTExMTEtMTExMTExMTExMTExOjg1Yzg3MmVlLTY4Y2MtNDFkNC04OTExLTU1NDNmNTIwM2ExZDpzdGF0aWM6MDowLjhjMTdjN2Y0YTE0MGQwMzRkNTliZmVmNGE1OTFmNGE2OTBkOTQ4YmVmNTc0MTFlYTU5NjVmMDIxZWUyY2YzNWM" target="_blank" class="psycho-action-btn">
+      <span>Пройти тест психотипа (BSEvolve) ↗</span>
+    </a>
+    <div class="psycho-qr">
+      <img src="assets/psychotype-qr.png" alt="QR-код теста психотипов" />
+      <small>или отсканируйте QR-код теста</small>
+    </div>
+  </div>
+</div>
+
+<div class="speaker-telegram-section">
+  <div class="speaker-tg-card">
+    <div class="speaker-tg-badge">💬 ПРЯМАЯ СВЯЗЬ СО СПИКЕРОМ</div>
+    <div class="speaker-tg-title">Дмитрий Кравченко</div>
+    <p class="speaker-tg-desc">Напишите напрямую в Telegram о вашем выборе направления, стажировке или задайте вопрос:</p>
+    <a id="speaker-tg-btn" href="https://t.me/kravchenkoda1980" target="_blank" class="speaker-tg-action">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" fill="currentColor"/></svg>
+      <span>Написать в Telegram (@kravchenkoda1980)</span>
+    </a>
+    <div class="speaker-tg-qr">
+      <img src="assets/telegram-qr.png" alt="Telegram @kravchenkoda1980" />
+      <small>или отсканируйте QR-код</small>
+    </div>
+  </div>
+</div>
+
+<div class="status-footer" id="status">Нажмите на направление, чтобы проголосовать</div>
+
+<!-- Pass Modal Dialog -->
+<div id="pass-modal" class="pass-modal" hidden>
+  <div class="pass-dialog">
+    <div class="pass-header">
+      <h2>Твой персональный IT-пропуск</h2>
+      <button id="close-pass-btn" class="pass-close">✕</button>
+    </div>
+    
+    <div id="pass-quiz-1">
+      <p class="quiz-step">Шаг 1 из 2: Что тебя больше драйвит?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-choice-1="code">💻 Писать код и алгоритмы</button>
+        <button class="quiz-opt" data-choice-1="product">🎯 Создавать крутые продукты</button>
+      </div>
+    </div>
+
+    <div id="pass-quiz-2" hidden>
+      <p class="quiz-step">Шаг 2 из 2: Твоя рабочая суперсила?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-choice-2="arch">🏛️ Чёткая надёжная архитектура</button>
+        <button class="quiz-opt" data-choice-2="chaos">⚡ Быстрый темп и эксперименты</button>
+      </div>
+    </div>
+
+    <div id="pass-result" hidden>
+      <canvas id="pass-canvas" width="600" height="780"></canvas>
+      <div class="pass-actions">
+        <button id="save-pass-btn" class="pass-action-btn primary">💾 Сохранить пропуск (PNG)</button>
+        <button id="share-tg-btn" class="pass-action-btn secondary">📲 Поделиться в Telegram</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let selectedDoor = null;
+  let cooldown = false;
+  const statusEl = document.getElementById('status');
+  const buttons = document.querySelectorAll('.vote-btn');
+
+  function updateBars(data) {
+    if (!data || !data.percentages) return;
+    buttons.forEach((btn, idx) => {
+      const pct = data.percentages[idx] || 0;
+      btn.querySelector('.bar').style.width = pct + '%';
+      btn.querySelector('.vote-percent').textContent = pct + '%';
+    });
+  }
+
+  function getVoterId() {
+    let id = localStorage.getItem('career_voter_id');
+    if (!id) {
+      id = 'voter_' + Math.random().toString(36).substring(2, 9);
+      try { localStorage.setItem('career_voter_id', id); } catch {}
+    }
+    return id;
+  }
+  const voterId = getVoterId();
+
+  const NTFY_TOPIC = 'career_krasnodar_students_2026';
+  const NTFY_PUB = `https://ntfy.sh/${NTFY_TOPIC}`;
+  const NTFY_SSE = `https://ntfy.sh/${NTFY_TOPIC}/sse`;
+
+  function sendToNtfy(data) {
+    try {
+      fetch(NTFY_PUB, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).catch(() => {});
+    } catch {}
+  }
+
+  // Always connect to ntfy SSE for real-time votes over 4G
+  try {
+    const ntfyEs = new EventSource(NTFY_SSE);
+    ntfyEs.onmessage = e => {
+      try {
+        const raw = JSON.parse(e.data);
+        if (!raw.message) return;
+        const msg = JSON.parse(raw.message);
+        if (msg.type === 'votes' && msg.percentages) {
+          updateBars(msg);
+        }
+      } catch {}
+    };
+  } catch {}
+
+  // Connect to local server only if not hosted on GitHub Pages
+  if (!location.hostname.includes('github.io')) {
+    try {
+      const es = new EventSource('/api/events?role=preview');
+      es.addEventListener('votes', e => {
+        try { updateBars(JSON.parse(e.data)); } catch {}
+      });
+      fetch('/api/votes').then(r => r.json()).then(updateBars).catch(() => {});
+    } catch {}
+  }
+
+  // Procedural Web Audio micro-tick & haptic vibration
+  let tapCtx = null;
+  function playTap(freq = 920, dur = 0.035) {
+    try {
+      if (!tapCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) tapCtx = new AC();
+      }
+      if (!tapCtx) return;
+      if (tapCtx.state === 'suspended') tapCtx.resume();
+      const osc = tapCtx.createOscillator();
+      const gain = tapCtx.createGain();
+      osc.frequency.setValueAtTime(freq, tapCtx.currentTime);
+      gain.gain.setValueAtTime(0.18, tapCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, tapCtx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(tapCtx.destination);
+      osc.start();
+      osc.stop(tapCtx.currentTime + dur);
+    } catch {}
+  }
+
+  function vibrate(pattern) {
+    if (navigator.vibrate) {
+      try { navigator.vibrate(pattern); } catch {}
+    }
+  }
+
+  // Floating emoji reaction on mobile screen
+  function spawnFloatingEmoji(x, y, emoji) {
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    el.textContent = emoji;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 750);
+  }
+
+  // Audience Combo Counter
+  let comboCount = 0;
+  let comboTimer = null;
+  let comboEl = null;
+
+  function bumpCombo() {
+    comboCount++;
+    clearTimeout(comboTimer);
+    if (!comboEl) {
+      comboEl = document.createElement('div');
+      document.body.appendChild(comboEl);
+    }
+    if (comboCount >= 10) {
+      comboEl.className = 'combo-badge overdrive';
+      comboEl.textContent = `💥 OVERDRIVE x${comboCount}! ЭКРАН ВЗОРВАН!`;
+      vibrate([30, 60, 30, 60]);
+    } else if (comboCount >= 2) {
+      comboEl.className = 'combo-badge';
+      comboEl.textContent = `⚡ СТРИМ x${comboCount}!`;
+    }
+    comboTimer = setTimeout(() => {
+      comboCount = 0;
+      if (comboEl) { comboEl.remove(); comboEl = null; }
+    }, 2800);
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      if (cooldown) return;
+      playTap(750, 0.05);
+      vibrate([25, 45, 25]);
+      const door = Number(btn.dataset.door);
+      buttons.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedDoor = door;
+      const DOOR_NAMES = ['Карьера в компании', 'Своё дело', 'Общественные проекты', 'Политика и госуправление'];
+      const tgActionBtn = document.getElementById('speaker-tg-btn');
+      if (tgActionBtn) {
+        const msg = encodeURIComponent(`Привет, Дмитрий! Я с лекции «Карьера без автопилота». Выбрал направление: «${DOOR_NAMES[door]}»! 🚀`);
+        tgActionBtn.href = `https://t.me/kravchenkoda1980?text=${msg}`;
+      }
+      cooldown = true;
+      statusEl.className = 'status-footer active';
+      statusEl.textContent = '✓ Ваш голос отправлен на большой экран!';
+
+      sendToNtfy({ type: 'vote', door, voterId, at: Date.now() });
+
+      try {
+        const res = await fetch('/api/vote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ door })
+        });
+        const data = await res.json();
+        updateBars(data);
+      } catch (e) {
+        statusEl.textContent = '✓ Отправлено через мобильный интернет (4G)';
+      }
+
+      setTimeout(() => {
+        cooldown = false;
+        statusEl.textContent = 'Вы можете изменить выбор в любой момент';
+        statusEl.className = 'status-footer';
+      }, 1500);
+    });
+  });
+
+  const EMOJI_MAP = { fire: '🔥', rocket: '🚀', energy: '⚡', idea: '💡' };
+
+  document.querySelectorAll('.reaction-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const type = btn.dataset.reaction;
+      playTap(1200, 0.025);
+      vibrate(18);
+      btn.style.transform = 'scale(0.88)';
+      setTimeout(() => btn.style.transform = '', 120);
+
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX || (rect.left + rect.width / 2);
+      const y = e.clientY || rect.top;
+      spawnFloatingEmoji(x, y, EMOJI_MAP[type] || '🔥');
+      bumpCombo();
+
+      sendToNtfy({ type: 'reaction', reaction: type, at: Date.now() });
+
+      fetch('/api/reaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type })
+      }).catch(() => {});
+    });
+  });
+
+  // ============================================================
+  // 1. LIVE Q&A TICKER TO STAGE
+  // ============================================================
+  const qaInput = document.getElementById('qa-text-input');
+  const qaSubmit = document.getElementById('qa-submit-btn');
+  const qaNotice = document.getElementById('qa-notice');
+
+  async function submitQuestion() {
+    const text = qaInput.value.trim();
+    if (!text) return;
+    playTap(950, 0.04);
+    vibrate(20);
+    qaInput.value = '';
+    qaSubmit.disabled = true;
+    qaNotice.textContent = 'Отправка вопроса…';
+    qaNotice.hidden = false;
+
+    sendToNtfy({ type: 'question', text, author: 'Студент Дома Молодёжи', at: Date.now() });
+
+    try {
+      const res = await fetch('/api/question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        qaNotice.textContent = '✓ Вопрос отправлен на экран спикерам!';
+        vibrate([20, 40, 20]);
+      } else {
+        qaNotice.textContent = data.error || 'Отправлено';
+      }
+    } catch {
+      qaNotice.textContent = '✓ Вопрос отправлен через 4G/LTE!';
+      vibrate([20, 40, 20]);
+    }
+
+    setTimeout(() => {
+      qaSubmit.disabled = false;
+      qaNotice.hidden = true;
+    }, 3000);
+  }
+
+  qaSubmit.addEventListener('click', submitQuestion);
+  qaInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitQuestion(); });
+
+  // ============================================================
+  // 2. PERSONAL IT ARCHETYPE PASS GENERATOR (HTML5 CANVAS)
+  // ============================================================
+  const passModal = document.getElementById('pass-modal');
+  const openPassBtn = document.getElementById('open-pass-btn');
+  const closePassBtn = document.getElementById('close-pass-btn');
+  const quiz1 = document.getElementById('pass-quiz-1');
+  const quiz2 = document.getElementById('pass-quiz-2');
+  const passResult = document.getElementById('pass-result');
+  const passCanvas = document.getElementById('pass-canvas');
+  const savePassBtn = document.getElementById('save-pass-btn');
+  const shareTgBtn = document.getElementById('share-tg-btn');
+
+  let choice1 = null;
+  let choice2 = null;
+
+  openPassBtn.addEventListener('click', () => {
+    playTap(1100, 0.03);
+    passModal.hidden = false;
+    quiz1.hidden = false;
+    quiz2.hidden = true;
+    passResult.hidden = true;
+  });
+
+  closePassBtn.addEventListener('click', () => {
+    passModal.hidden = true;
+  });
+
+  document.querySelectorAll('[data-choice-1]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      choice1 = btn.dataset.choice1;
+      playTap(900, 0.03);
+      vibrate(15);
+      quiz1.hidden = true;
+      quiz2.hidden = false;
+    });
+  });
+
+  document.querySelectorAll('[data-choice-2]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      choice2 = btn.dataset.choice2;
+      playTap(1200, 0.04);
+      vibrate([25, 50, 25]);
+      quiz2.hidden = true;
+      passResult.hidden = false;
+      renderPassCard(choice1, choice2);
+    });
+  });
+
+  function renderPassCard(c1, c2) {
+    const ctx = passCanvas.getContext('2d');
+    const w = passCanvas.width;
+    const h = passCanvas.height;
+
+    // Background gradient
+    const bg = ctx.createLinearGradient(0, 0, w, h);
+    bg.addColorStop(0, '#0e0b16');
+    bg.addColorStop(0.5, '#181226');
+    bg.addColorStop(1, '#0b0912');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    // Glowing cybernetic border
+    ctx.strokeStyle = '#9f6aff';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(16, 16, w - 32, h - 32);
+
+    // Inner mint border accent
+    ctx.strokeStyle = 'rgba(101, 242, 207, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(24, 24, w - 48, h - 48);
+
+    // Corner brackets
+    const bracket = 24;
+    ctx.strokeStyle = '#65f2cf';
+    ctx.lineWidth = 5;
+    // Top-left
+    ctx.beginPath(); ctx.moveTo(16, 16 + bracket); ctx.lineTo(16, 16); ctx.lineTo(16 + bracket, 16); ctx.stroke();
+    // Top-right
+    ctx.beginPath(); ctx.moveTo(w - 16 - bracket, 16); ctx.lineTo(w - 16, 16); ctx.lineTo(w - 16, 16 + bracket); ctx.stroke();
+    // Bottom-left
+    ctx.beginPath(); ctx.moveTo(16, h - 16 - bracket); ctx.lineTo(16, h - 16); ctx.lineTo(16 + bracket, h - 16); ctx.stroke();
+    // Bottom-right
+    ctx.beginPath(); ctx.moveTo(w - 16 - bracket, h - 16); ctx.lineTo(w - 16, h - 16); ctx.lineTo(w - 16, h - 16 - bracket); ctx.stroke();
+
+    // Company Header
+    ctx.fillStyle = '#65f2cf';
+    ctx.font = 'bold 15px -apple-system, sans-serif';
+    ctx.letterSpacing = '3px';
+    ctx.fillText('IT КОМПАНИЯ «СИЛЬНЫЕ СТОРОНЫ»', 42, 64);
+
+    ctx.fillStyle = '#f7f4ff';
+    ctx.font = 'bold 24px -apple-system, sans-serif';
+    ctx.fillText('КАРЬЕРА БЕЗ АВТОПИЛОТА', 42, 98);
+
+    ctx.fillStyle = '#9a92a6';
+    ctx.font = '13px -apple-system, sans-serif';
+    ctx.fillText('ВСТРЕЧА СО СТУДЕНТАМИ · 25 НОЯБРЯ 2026', 42, 122);
+
+    // Divider
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(42, 142); ctx.lineTo(w - 42, 142); ctx.stroke();
+
+    // Archetype Determination
+    let archetype = 'SYSTEM ARCHITECT';
+    let track = 'Карьера в компании / Core Engineering';
+    let badgeColor = '#65f2cf';
+    let recommendation = 'Тебе подходит решение масштабных инженерных задач, проектирование высоконагруженных систем и путь Senior-архитектора.';
+
+    if (c1 === 'code' && c2 === 'chaos') {
+      archetype = 'CYBER-INVENTOR';
+      track = 'RnD-Лаборатория / Инновации';
+      badgeColor = '#ffa600';
+      recommendation = 'Твоя стихия — хакатоны, AI-эксперименты, прототипирование решений на острие стека и быстрое создание ценности.';
+    } else if (c1 === 'product' && c2 === 'arch') {
+      archetype = 'TECH STRATEGIST';
+      track = 'Smart City / Системное лидерство';
+      badgeColor = '#9f6aff';
+      recommendation = 'Ты умеешь связывать технологии и людей, направлять команду и строить продукты с долгосрочным эффектом.';
+    } else if (c1 === 'product' && c2 === 'chaos') {
+      archetype = 'STARTUP DISRUPTOR';
+      track = 'Своё дело / Продуктовый драйв';
+      badgeColor = '#ff5e00';
+      recommendation = 'Твой путь — запуск смелых стартапов, поиск продакт-маркет фита и ответственность за продукт от нуля до релиза.';
+    }
+
+    // Archetype Box
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.fillRect(42, 168, w - 84, 150);
+    ctx.strokeStyle = badgeColor;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(42, 168, w - 84, 150);
+
+    ctx.fillStyle = badgeColor;
+    ctx.font = 'bold 12px -apple-system, sans-serif';
+    ctx.fillText('ТВОЙ IT-АРХЕТИП:', 60, 202);
+
+    ctx.fillStyle = '#f7f4ff';
+    ctx.font = 'bold 30px -apple-system, sans-serif';
+    ctx.fillText(archetype, 60, 244);
+
+    ctx.fillStyle = '#b49ade';
+    ctx.font = '14px -apple-system, sans-serif';
+    ctx.fillText(`Направление: ${track}`, 60, 280);
+
+    // Recommendation Section
+    ctx.fillStyle = '#65f2cf';
+    ctx.font = 'bold 13px -apple-system, sans-serif';
+    ctx.fillText('КАРЬЕРНАЯ ТРАЕКТОРИЯ:', 42, 355);
+
+    ctx.fillStyle = '#e4e1ff';
+    ctx.font = '15px -apple-system, sans-serif';
+    wrapText(ctx, recommendation, 42, 385, w - 84, 22);
+
+    // Pass ID & Barcode
+    const passId = `PASS #2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    ctx.fillStyle = '#65f2cf';
+    ctx.font = 'bold 18px monospace';
+    ctx.fillText(passId, 42, 540);
+
+    ctx.fillStyle = '#9a92a6';
+    ctx.font = '12px -apple-system, sans-serif';
+    ctx.fillText('ПРЕДЪЯВИТЕ ЭТОТ ПРОПУСК НА СТАЖИРОВКУ В КОМПАНИЮ', 42, 565);
+
+    // Decorative Barcode
+    for (let x = 42; x < w - 42; x += Math.random() > 0.4 ? 6 : 3) {
+      ctx.fillStyle = Math.random() > 0.25 ? '#65f2cf' : '#9f6aff';
+      ctx.fillRect(x, 600, 2.5, 50);
+    }
+
+    ctx.fillStyle = '#827891';
+    ctx.font = '11px monospace';
+    ctx.fillText('VERIFIED // DECENTRALISED CAMPUS PASSPORT // STRONG SIDES 2026', 42, 680);
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(' ');
+    let line = '';
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && n > 0) {
+        ctx.fillText(line, x, y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x, y);
+  }
+
+  savePassBtn.addEventListener('click', () => {
+    playTap(1400, 0.05);
+    vibrate([30, 60, 30]);
+    const link = document.createElement('a');
+    link.download = 'it-pass-2026.png';
+    link.href = passCanvas.toDataURL('image/png');
+    link.click();
+  });
+
+  shareTgBtn.addEventListener('click', () => {
+    playTap(1100, 0.03);
+    const DOOR_NAMES = ['Карьера в компании', 'Своё дело', 'Общественные проекты', 'Политика и госуправление'];
+    const chosenName = selectedDoor !== null ? DOOR_NAMES[selectedDoor] : 'IT-карьера';
+    const text = encodeURIComponent(`Привет, Дмитрий! Получил свой персональный IT-пропуск на встрече «Карьера без автопилота». Моё направление: «${chosenName}»! 🚀`);
+    window.open(`https://t.me/kravchenkoda1980?text=${text}`, '_blank');
+  });
+</script>
+</body>
+</html>
